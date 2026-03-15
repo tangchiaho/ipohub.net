@@ -1,0 +1,388 @@
+/** IPOHub Modern Minimal Fintech Stylesheet **/
+
+:root {
+  --bg: #f8f9fc;
+  --surface: #ffffff;
+  --text: #1a1d29;
+  --text-muted: #5c6178;
+  --accent: #0f62fe;
+  --accent-hover: #0043ce;
+  --border: #e4e7ef;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 3px rgba(0,0,0,0.06);
+  --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+  --transition: 0.18s cubic-bezier(.4,0,.2,1);
+}
+
+/*---------------------*
+ * 1. GLOBAL SETTINGS  *
+ *---------------------*/
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+.container {
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+section, .section {
+  margin-top: 48px;
+  margin-bottom: 48px;
+}
+
+/* Typography */
+h1, .h1 {
+  font-size: 2.4rem;
+  font-weight: 700;
+  margin-bottom: 0.6em;
+  letter-spacing: -1px;
+}
+
+h2, .h2 {
+  font-size: 1.55rem;
+  font-weight: 700;
+  margin-bottom: 0.45em;
+}
+
+h3, .h3 {
+  font-size: 1.18rem;
+  font-weight: 600;
+  margin-bottom: 0.3em;
+}
+
+p, .p, .subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 1em;
+}
+
+.subtitle {
+  font-size: 1.15rem;
+  font-weight: 500;
+}
+
+a {
+  color: var(--accent);
+  text-decoration: none;
+  transition: color var(--transition);
+}
+a:hover, a:focus {
+  color: var(--accent-hover);
+}
+
+/*---------------------*
+ * 2. NAVIGATION BAR   *
+ *---------------------*/
+
+.navbar, header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+}
+
+.logo, .navbar .logo {
+  font-weight: 800;
+  font-size: 1.6rem;
+  color: var(--accent-hover);
+  letter-spacing: -2px;
+  text-transform: uppercase;
+  user-select: none;
+  transition: color var(--transition);
+}
+
+.nav-links, .navbar ul {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+}
+
+.nav-links li a, .navbar a {
+  font-weight: 500;
+  color: var(--text-muted);
+  padding: 2px 2px 2px 2px;
+  border-radius: var(--radius-sm);
+  transition: background var(--transition), color var(--transition);
+}
+
+.nav-links li a.active, .nav-links li a:hover, .navbar a.active, .navbar a:focus, .navbar a:hover {
+  color: var(--accent);
+  background: rgba(15,98,254,0.09);
+}
+
+/*---------------------*
+ * 3. HERO SECTION     *
+ *---------------------*/
+
+.hero {
+  padding: 60px 0 40px;
+  text-align: center;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-lg);
+  margin-bottom: 32px;
+}
+.hero .headline, .hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 16px;
+  color: var(--text);
+  letter-spacing: -1.5px;
+}
+.hero .subheadline, .hero p {
+  color: var(--text-muted);
+  font-size: 1.2rem;
+  margin-bottom: 32px;
+}
+.hero-buttons, .hero .actions {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+.btn, .button {
+  display: inline-block;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+  font-size: 1.05rem;
+  padding: 11px 28px;
+  border: none;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  transition: background var(--transition), box-shadow var(--transition);
+  text-align: center;
+}
+.btn:hover, .button:hover, .btn:focus, .button:focus {
+  background: var(--accent-hover);
+  box-shadow: 0 2px 12px rgba(15,98,254,0.09);
+}
+
+.btn.secondary, .button.secondary {
+  background: #f1f4fd;
+  color: var(--accent);
+  box-shadow: none;
+  border: 1px solid var(--accent);
+}
+.btn.secondary:hover, .button.secondary:hover {
+  background: #e7efff;
+}
+
+/*---------------------*
+ * 4. CARDS            *
+ *---------------------*/
+
+/* Card Containers */
+.cards-grid, .sector-cards-grid {
+  display: grid;
+  grid-gap: 32px;
+  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  margin-top: 24px;
+}
+
+.sector-card,
+.feature-card,
+.company-card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 28px 24px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: transform 0.12s cubic-bezier(.4,0,.2,1), box-shadow var(--transition);
+  border: 1px solid var(--border);
+}
+
+.sector-card:hover,
+.feature-card:hover,
+.company-card:hover {
+  transform: translateY(-3px) scale(1.015);
+  box-shadow: var(--shadow-lg);
+  border-color: #d6def7;
+}
+
+.sector-card h2,
+.feature-card h3,
+.company-card .company-name {
+  font-size: 1.18rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 7px;
+  letter-spacing: -0.5px;
+}
+
+.sector-card .card-desc,
+.feature-card .card-desc,
+.company-card .company-desc {
+  color: var(--text-muted);
+  font-size: 1rem;
+  margin-bottom: 8px;
+}
+
+.company-card .company-meta {
+  font-size: 0.96rem;
+  color: var(--text-muted);
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.sector-card .market-observation,
+.company-card .market-observation {
+  background: #f3f6fc;
+  border-left: 3px solid var(--accent);
+  color: var(--accent-hover);
+  padding: 8px 13px;
+  border-radius: var(--radius-sm);
+  font-size: 0.98rem;
+  margin-top: 8px;
+}
+
+
+/*---------------------*
+ * 5. TABLES           *
+ *---------------------*/
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-top: 20px;
+}
+
+table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  border-radius: var(--radius);
+  overflow: hidden;
+  font-size: 1.03rem;
+}
+
+table thead tr {
+  background: #f1f4fd;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+th, td {
+  padding: 14px 18px;
+  text-align: left;
+}
+
+th {
+  font-size: 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--border);
+}
+
+tr {
+  border-bottom: 1px solid var(--border);
+  transition: background var(--transition);
+}
+
+tbody tr:hover {
+  background: #f6f9fe;
+}
+
+.company-name {
+  font-weight: 600;
+  color: var(--text);
+}
+
+/*---------------------*
+ * 6. STATUS TAGS / PILLS   *
+ *---------------------*/
+
+.pill, .status-pill {
+  display: inline-block;
+  font-size: 0.93rem;
+  font-weight: 600;
+  padding: 4px 14px;
+  border-radius: 24px;
+  background: #e4e7ef;
+  color: #3b4860;
+  margin-right: 3px;
+  letter-spacing: 0.01em;
+  vertical-align: middle;
+}
+
+/* Custom pills by status */
+.pill.filed,      .status-pill.filed      { background: #eaeaff; color: #5c67c9; }
+.pill.expected,   .status-pill.expected   { background: #fff1da; color: #a58041; }
+.pill.priced,     .status-pill.priced     { background: #e5f5e2; color: #278146; }
+.pill.listed,     .status-pill.listed     { background: #e7f0fe; color: #0f62fe; }
+.pill.withdrawn,  .status-pill.withdrawn  { background: #fde4e4; color: #c93f3f; }
+
+
+/*---------------------*
+ * 7. FOOTER           *
+ *---------------------*/
+
+.footer, footer {
+  background: var(--surface);
+  border-top: 1px solid var(--border);
+  color: var(--text-muted);
+  text-align: center;
+  padding: 30px 0 22px 0;
+  margin-top: 48px;
+  font-size: 0.99rem;
+  letter-spacing: 0.02em;
+}
+
+.footer .container, footer .container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+/* Responsive adjustments */
+@media (max-width: 800px) {
+  .container {
+    padding: 0 12px;
+  }
+  .cards-grid, .sector-cards-grid {
+    grid-template-columns: 1fr;
+  }
+  .hero {
+    padding: 36px 6px;
+  }
+  table, th, td {
+    font-size: 0.99rem;
+  }
+}
+
+/* Subtle fade-in effect on appearance */
+.fade-in {
+  opacity: 0;
+  animation: fadeInUp 0.7s ease forwards;
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(16px);}
+  to   { opacity: 1; transform: none;}
+}
