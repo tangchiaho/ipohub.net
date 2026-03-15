@@ -4,532 +4,370 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>IPOHub — 台灣 IPO 資本市場情報</title>
-<meta name="description" content="整合公開資訊觀測站、櫃買中心、證交所，追蹤台灣公司從公開發行到上市掛牌的完整 IPO 管線進度。">
+<meta name="description" content="整合公開資訊觀測站、櫃買中心、證交所，AI 自動追蹤台灣 IPO 管線進度。">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg:     #070910;
+  --bg2:    #0d1017;
+  --bg3:    #13171f;
+  --bg4:    #181d28;
+  --b1:     rgba(255,255,255,0.06);
+  --b2:     rgba(255,255,255,0.11);
+  --b3:     rgba(255,255,255,0.18);
+  --tx:     #dde1e9;
+  --tx2:    #7c8494;
+  --tx3:    #434a58;
+  --blue:   #4f8ef7;
+  --blue2:  #2563eb;
+  --purple: #9d7dfa;
+  --teal:   #2dd4bf;
+  --green:  #34d399;
+  --amber:  #fbbf24;
+  --mono:   'DM Mono', monospace;
+  --sans:   'DM Sans', 'Noto Sans TC', sans-serif;
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg); color: var(--tx);
+  font-family: var(--sans); font-size: 15px;
+  line-height: 1.6; -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
 
-  :root {
-    --bg:       #0a0c0f;
-    --bg2:      #111318;
-    --bg3:      #181c23;
-    --border:   rgba(255,255,255,0.07);
-    --border2:  rgba(255,255,255,0.12);
-    --text:     #e8eaed;
-    --text2:    #8b909a;
-    --text3:    #555b66;
-    --accent:   #3b82f6;
-    --accent2:  #1d4ed8;
-    --green:    #22c55e;
-    --amber:    #f59e0b;
-    --red:      #ef4444;
-    --purple:   #a78bfa;
-    --mono:     'DM Mono', monospace;
-    --sans:     'DM Sans', 'Noto Sans TC', sans-serif;
-  }
+/* AMBIENT */
+.ambient { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.orb {
+  position: absolute; border-radius: 50%; filter: blur(130px);
+  animation: drift 20s ease-in-out infinite alternate;
+}
+.orb1 { width:700px; height:500px; top:-200px; left:-100px; background:radial-gradient(circle,#2b4ef0,transparent 70%); opacity:.16; }
+.orb2 { width:500px; height:400px; top:80px; right:-80px; background:radial-gradient(circle,#6d28d9,transparent 70%); opacity:.11; animation-delay:-7s; }
+.orb3 { width:400px; height:350px; bottom:15%; left:28%; background:radial-gradient(circle,#0d9488,transparent 70%); opacity:.09; animation-delay:-14s; }
+@keyframes drift {
+  0%   { transform: translate(0,0) scale(1); }
+  50%  { transform: translate(40px,30px) scale(1.07); }
+  100% { transform: translate(-20px,50px) scale(0.95); }
+}
+body::before {
+  content:''; position:fixed; inset:0; z-index:0; pointer-events:none;
+  background-image: linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px), linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);
+  background-size: 48px 48px;
+}
 
-  html { scroll-behavior: smooth; }
+/* NAV */
+nav {
+  position:fixed; top:0; left:0; right:0; z-index:200;
+  display:flex; align-items:center; justify-content:space-between;
+  padding:0 36px; height:56px;
+  background:rgba(7,9,16,.82); backdrop-filter:blur(20px);
+  border-bottom:1px solid var(--b1);
+}
+.nav-logo {
+  font-family:var(--mono); font-size:15px; font-weight:500;
+  color:var(--tx); text-decoration:none; letter-spacing:-.02em;
+  display:flex; align-items:center; gap:10px;
+}
+.nav-mark {
+  width:26px; height:26px; border-radius:6px;
+  background:linear-gradient(135deg,#3b5ff7,#7c3aed);
+  display:flex; align-items:center; justify-content:center;
+  font-size:12px; font-weight:700; color:#fff;
+}
+.nav-logo em { color:var(--blue); font-style:normal; }
+.ai-pill {
+  display:flex; align-items:center; gap:5px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.07em;
+  color:var(--purple); background:rgba(157,125,250,.08);
+  border:1px solid rgba(157,125,250,.2); padding:3px 10px; border-radius:20px;
+}
+.ai-pill-dot { width:6px; height:6px; border-radius:50%; background:var(--purple); animation:sparkle 2.5s ease-in-out infinite; }
+@keyframes sparkle { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.35;transform:scale(.75)} }
+.nav-links { display:flex; gap:24px; align-items:center; }
+.nav-links a { color:var(--tx2); text-decoration:none; font-size:13px; transition:color .15s; }
+.nav-links a:hover { color:var(--tx); }
+.nav-cta {
+  background:linear-gradient(135deg,var(--blue2),#4f46e5);
+  color:#fff !important; padding:6px 18px; border-radius:7px;
+  font-weight:500 !important; font-size:13px !important;
+  box-shadow:0 0 20px rgba(79,142,247,.25);
+  transition:opacity .15s, transform .1s !important;
+}
+.nav-cta:hover { opacity:.88 !important; transform:translateY(-1px); }
 
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 15px;
-    line-height: 1.6;
-    -webkit-font-smoothing: antialiased;
-  }
+/* HERO */
+.hero { position:relative; z-index:1; padding:128px 36px 72px; max-width:1100px; margin:0 auto; }
+.hero-eyebrow {
+  display:inline-flex; align-items:center; gap:8px; margin-bottom:28px;
+  font-family:var(--mono); font-size:11px; letter-spacing:.08em; color:var(--blue);
+  background:rgba(79,142,247,.08); border:1px solid rgba(79,142,247,.2);
+  padding:5px 14px; border-radius:20px;
+}
+.live-dot {
+  width:6px; height:6px; border-radius:50%; background:var(--green);
+  box-shadow:0 0 8px var(--green); animation:livepulse 2s ease-in-out infinite;
+}
+@keyframes livepulse { 0%,100%{box-shadow:0 0 8px var(--green)} 50%{box-shadow:0 0 18px var(--green)} }
+h1 {
+  font-size:clamp(36px,5.5vw,58px); font-weight:300; line-height:1.12;
+  letter-spacing:-.04em; color:#fff; margin-bottom:24px;
+}
+h1 .grad {
+  background:linear-gradient(135deg,#4f8ef7 0%,#9d7dfa 50%,#2dd4bf 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.tw-cursor { border-right:2px solid var(--blue); padding-right:2px; animation:blink 1s step-end infinite; }
+@keyframes blink { 0%,100%{border-color:var(--blue)} 50%{border-color:transparent} }
+.hero-sub {
+  font-size:17px; color:var(--tx2); max-width:540px;
+  line-height:1.75; margin-bottom:36px; font-weight:300;
+}
+.hero-sub b { color:var(--tx); font-weight:400; }
+.hero-btns { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:60px; }
+.btn-p {
+  background:linear-gradient(135deg,var(--blue2),#4f46e5); color:#fff;
+  padding:11px 26px; border-radius:8px; text-decoration:none;
+  font-size:14px; font-weight:500; display:flex; align-items:center; gap:8px;
+  box-shadow:0 0 24px rgba(79,142,247,.3);
+  transition:transform .15s, box-shadow .15s;
+}
+.btn-p:hover { transform:translateY(-2px); box-shadow:0 0 36px rgba(79,142,247,.45); }
+.btn-g {
+  background:transparent; color:var(--tx2); padding:11px 26px;
+  border-radius:8px; border:1px solid var(--b2); text-decoration:none;
+  font-size:14px; transition:border-color .15s, color .15s;
+}
+.btn-g:hover { border-color:var(--b3); color:var(--tx); }
 
-  /* ─── NAV ─────────────────────────────────── */
-  nav {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
-    display: flex; align-items: center; justify-content: space-between;
-    padding: 0 32px;
-    height: 56px;
-    background: rgba(10,12,15,0.85);
-    backdrop-filter: blur(12px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-logo {
-    font-family: var(--mono);
-    font-size: 16px;
-    font-weight: 500;
-    color: var(--text);
-    text-decoration: none;
-    letter-spacing: -0.02em;
-  }
-  .nav-logo span { color: var(--accent); }
-  .nav-links { display: flex; gap: 28px; align-items: center; }
-  .nav-links a {
-    color: var(--text2);
-    text-decoration: none;
-    font-size: 13px;
-    font-weight: 400;
-    letter-spacing: 0.01em;
-    transition: color 0.15s;
-  }
-  .nav-links a:hover { color: var(--text); }
-  .nav-cta {
-    background: var(--accent);
-    color: #fff !important;
-    padding: 6px 16px;
-    border-radius: 6px;
-    font-weight: 500 !important;
-    transition: background 0.15s !important;
-  }
-  .nav-cta:hover { background: var(--accent2) !important; }
+/* STATS */
+.stats-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:12px; margin-bottom:72px; }
+.sc {
+  background:var(--bg2); border:1px solid var(--b1); border-radius:12px; padding:20px 22px;
+  position:relative; overflow:hidden;
+  opacity:0; transform:translateY(14px); transition:opacity .5s,transform .5s,border-color .2s;
+}
+.sc.in { opacity:1; transform:translateY(0); }
+.sc:hover { border-color:var(--b2); }
+.sc::before {
+  content:''; position:absolute; inset:0; opacity:0; transition:opacity .3s;
+  background:radial-gradient(circle at 50% 0%,rgba(79,142,247,.07),transparent 60%);
+}
+.sc:hover::before { opacity:1; }
+.sc-n {
+  font-family:var(--mono); font-size:30px; font-weight:500;
+  letter-spacing:-.04em; line-height:1; margin-bottom:6px; color:#fff;
+}
+.sc-n.g { color:var(--green); text-shadow:0 0 20px rgba(52,211,153,.4); }
+.sc-n.a { color:var(--amber); text-shadow:0 0 20px rgba(251,191,36,.35); }
+.sc-n.b { color:var(--blue);  text-shadow:0 0 20px rgba(79,142,247,.4); }
+.sc-n.p { color:var(--purple);text-shadow:0 0 20px rgba(157,125,250,.35); }
+.sc-l { font-family:var(--mono); font-size:11px; color:var(--tx3); letter-spacing:.05em; }
+.sc-d { position:absolute; top:16px; right:16px; font-family:var(--mono); font-size:10px; color:var(--green); }
 
-  /* ─── HERO ────────────────────────────────── */
-  .hero {
-    padding: 120px 32px 64px;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  .hero-tag {
-    display: inline-flex; align-items: center; gap: 8px;
-    background: rgba(59,130,246,0.1);
-    border: 1px solid rgba(59,130,246,0.25);
-    color: var(--accent);
-    font-family: var(--mono);
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    padding: 4px 12px;
-    border-radius: 4px;
-    margin-bottom: 24px;
-  }
-  .hero-tag::before {
-    content: '';
-    width: 6px; height: 6px;
-    background: var(--accent);
-    border-radius: 50%;
-    animation: pulse 2s ease-in-out infinite;
-  }
-  @keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
-  }
-  .hero h1 {
-    font-size: clamp(32px, 5vw, 52px);
-    font-weight: 300;
-    line-height: 1.15;
-    letter-spacing: -0.03em;
-    color: var(--text);
-    margin-bottom: 20px;
-  }
-  .hero h1 strong {
-    font-weight: 500;
-    color: #fff;
-  }
-  .hero h1 em {
-    font-style: normal;
-    color: var(--accent);
-  }
-  .hero-sub {
-    font-size: 16px;
-    color: var(--text2);
-    max-width: 580px;
-    line-height: 1.7;
-    margin-bottom: 36px;
-  }
-  .hero-sub b { color: var(--text); font-weight: 400; }
-  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
-  .btn-primary {
-    background: var(--accent);
-    color: #fff;
-    padding: 10px 24px;
-    border-radius: 7px;
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.15s, transform 0.1s;
-  }
-  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
-  .btn-ghost {
-    background: transparent;
-    color: var(--text2);
-    padding: 10px 24px;
-    border-radius: 7px;
-    border: 1px solid var(--border2);
-    text-decoration: none;
-    font-size: 14px;
-    font-weight: 400;
-    transition: border-color 0.15s, color 0.15s;
-  }
-  .btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
+/* SECTION */
+.sec { position:relative; z-index:1; padding:0 36px 72px; max-width:1100px; margin:0 auto; }
+.sh { display:flex; justify-content:space-between; align-items:flex-end; margin-bottom:24px; padding-bottom:16px; border-bottom:1px solid var(--b1); }
+.sk { font-family:var(--mono); font-size:10px; letter-spacing:.1em; color:var(--tx3); text-transform:uppercase; margin-bottom:4px; }
+.sh-title { font-size:20px; font-weight:500; color:var(--tx); letter-spacing:-.02em; }
+.sh-link { font-family:var(--mono); font-size:11px; color:var(--blue); text-decoration:none; letter-spacing:.03em; }
+.sh-link:hover { text-decoration:underline; }
+.sep { border:none; border-top:1px solid var(--b1); margin:0 0 64px; position:relative; z-index:1; }
 
-  /* ─── STATS BAR ───────────────────────────── */
-  .stats-bar {
-    display: flex; gap: 0;
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    overflow: hidden;
-    background: var(--bg2);
-    margin-bottom: 64px;
-  }
-  .stat {
-    flex: 1; padding: 20px 24px;
-    border-right: 1px solid var(--border);
-  }
-  .stat:last-child { border-right: none; }
-  .stat-num {
-    font-family: var(--mono);
-    font-size: 26px;
-    font-weight: 500;
-    color: #fff;
-    letter-spacing: -0.03em;
-    line-height: 1;
-    margin-bottom: 4px;
-  }
-  .stat-num.green { color: var(--green); }
-  .stat-num.amber { color: var(--amber); }
-  .stat-num.blue  { color: var(--accent); }
-  .stat-label {
-    font-size: 12px;
-    color: var(--text3);
-    font-family: var(--mono);
-    letter-spacing: 0.04em;
-  }
+/* STAGE TRACK */
+.stage-track { display:flex; align-items:flex-start; margin-bottom:40px; position:relative; }
+.stage-track::before {
+  content:''; position:absolute; top:15px; left:15px; right:15px; height:1px;
+  background:linear-gradient(90deg,var(--blue2),transparent); opacity:.3;
+}
+.si { flex:1; display:flex; flex-direction:column; align-items:center; gap:8px; position:relative; }
+.sn {
+  width:30px; height:30px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono); font-size:10px; font-weight:500; z-index:1; position:relative;
+}
+.sn.done  { background:rgba(79,142,247,.14); border:1px solid rgba(79,142,247,.4);  color:var(--blue); }
+.sn.act   { background:rgba(251,191,36,.14); border:1px solid rgba(251,191,36,.5);  color:var(--amber); box-shadow:0 0 14px rgba(251,191,36,.22); }
+.sn.idle  { background:var(--bg3); border:1px solid var(--b1); color:var(--tx3); }
+.sl { font-family:var(--mono); font-size:10px; color:var(--tx3); text-align:center; letter-spacing:.03em; }
+.sct { font-family:var(--mono); font-size:14px; font-weight:500; color:var(--tx2); }
 
-  /* ─── SECTION HEADER ─────────────────────── */
-  .section { padding: 0 32px 72px; max-width: 1100px; margin: 0 auto; }
-  .section-header {
-    display: flex; justify-content: space-between; align-items: flex-end;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 1px solid var(--border);
-  }
-  .section-title {
-    font-size: 11px;
-    font-family: var(--mono);
-    letter-spacing: 0.1em;
-    color: var(--text3);
-    text-transform: uppercase;
-    margin-bottom: 4px;
-  }
-  .section-heading {
-    font-size: 20px;
-    font-weight: 500;
-    color: var(--text);
-    letter-spacing: -0.02em;
-  }
-  .section-link {
-    font-size: 12px;
-    font-family: var(--mono);
-    color: var(--accent);
-    text-decoration: none;
-    letter-spacing: 0.02em;
-  }
-  .section-link:hover { text-decoration: underline; }
+/* TABLE */
+.pt { width:100%; border-collapse:collapse; font-size:13px; }
+.pt th { text-align:left; font-family:var(--mono); font-size:10px; letter-spacing:.08em; color:var(--tx3); padding:0 14px 10px; font-weight:400; text-transform:uppercase; }
+.pt td { padding:13px 14px; border-top:1px solid var(--b1); vertical-align:middle; }
+.pt tr { transition:background .15s; }
+.pt tr:hover td { background:rgba(255,255,255,.018); }
+.cn { font-weight:500; color:var(--tx); font-size:14px; }
+.cc { font-family:var(--mono); font-size:11px; color:var(--tx3); margin-top:2px; }
+.badge {
+  display:inline-flex; align-items:center; gap:5px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.04em;
+  padding:3px 10px; border-radius:20px; font-weight:500; white-space:nowrap;
+}
+.badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; flex-shrink:0; }
+.be  { background:rgba(157,125,250,.1); color:var(--purple); border:1px solid rgba(157,125,250,.22); }
+.bt  { background:rgba(251,191,36,.1);  color:var(--amber);  border:1px solid rgba(251,191,36,.22); }
+.bp  { background:rgba(79,142,247,.1);  color:var(--blue);   border:1px solid rgba(79,142,247,.22); }
+.bpub{ background:rgba(100,110,130,.1); color:var(--tx2);    border:1px solid var(--b2); }
+.bl  { background:rgba(52,211,153,.1);  color:var(--green);  border:1px solid rgba(52,211,153,.22); }
+.pb  { display:flex; gap:3px; }
+.pp  { width:24px; height:3px; border-radius:2px; background:var(--bg4); }
+.pp.d { background:var(--blue); }
+.pp.a { background:var(--amber); }
+.dm  { font-family:var(--mono); font-size:12px; color:var(--tx2); }
+.chip{ font-size:11px; color:var(--tx3); background:var(--bg3); padding:2px 9px; border-radius:4px; border:1px solid var(--b1); }
 
-  /* ─── PIPELINE TABLE ─────────────────────── */
-  .pipeline-table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 13px;
-  }
-  .pipeline-table th {
-    text-align: left;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.08em;
-    color: var(--text3);
-    padding: 0 16px 10px;
-    font-weight: 400;
-    text-transform: uppercase;
-  }
-  .pipeline-table td {
-    padding: 14px 16px;
-    border-top: 1px solid var(--border);
-    vertical-align: middle;
-  }
-  .pipeline-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .company-name {
-    font-weight: 500;
-    color: var(--text);
-    font-size: 14px;
-  }
-  .company-code {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text3);
-    margin-top: 2px;
-  }
-  .badge {
-    display: inline-flex; align-items: center; gap: 5px;
-    font-family: var(--mono);
-    font-size: 10px;
-    letter-spacing: 0.04em;
-    padding: 3px 9px;
-    border-radius: 4px;
-    font-weight: 500;
-    white-space: nowrap;
-  }
-  .badge::before {
-    content: '';
-    width: 5px; height: 5px;
-    border-radius: 50%;
-    background: currentColor;
-  }
-  .badge-興櫃   { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
-  .badge-申請上市 { background: rgba(245,158,11,0.12);  color: var(--amber);  border: 1px solid rgba(245,158,11,0.2); }
-  .badge-申請上櫃 { background: rgba(59,130,246,0.12);  color: var(--accent); border: 1px solid rgba(59,130,246,0.2); }
-  .badge-公開發行 { background: rgba(139,144,154,0.1);  color: var(--text2);  border: 1px solid var(--border2); }
-  .badge-掛牌   { background: rgba(34,197,94,0.12);   color: var(--green);  border: 1px solid rgba(34,197,94,0.2); }
-  .date-text {
-    font-family: var(--mono);
-    font-size: 12px;
-    color: var(--text2);
-  }
-  .industry-tag {
-    font-size: 11px;
-    color: var(--text3);
-    background: var(--bg3);
-    padding: 2px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-  }
-  .pipeline-progress {
-    display: flex; gap: 3px; align-items: center;
-  }
-  .pip {
-    width: 28px; height: 4px;
-    border-radius: 2px;
-    background: var(--bg3);
-    border: 1px solid var(--border);
-  }
-  .pip.done { background: var(--accent); border-color: var(--accent); }
-  .pip.active { background: var(--amber); border-color: var(--amber); }
+/* AI SUMMARY */
+.ai-box {
+  background:var(--bg2); border:1px solid rgba(157,125,250,.2);
+  border-radius:14px; padding:28px 32px; position:relative; overflow:hidden; margin-bottom:72px;
+}
+.ai-box::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at top left,rgba(157,125,250,.07),transparent 60%);
+}
+.ai-hdr { display:flex; align-items:center; gap:12px; margin-bottom:20px; flex-wrap:wrap; }
+.ai-chip-label {
+  display:flex; align-items:center; gap:6px;
+  background:rgba(157,125,250,.1); border:1px solid rgba(157,125,250,.25);
+  color:var(--purple); font-family:var(--mono); font-size:10px; letter-spacing:.08em;
+  padding:4px 12px; border-radius:20px;
+}
+.ai-chip-label::before { content:'◆'; font-size:8px; animation:sparkle 2.5s ease-in-out infinite; }
+.ai-ttl { font-size:15px; font-weight:500; color:var(--tx); }
+.ai-co  { font-family:var(--mono); font-size:11px; color:var(--tx3); margin-left:auto; }
+.ai-body { font-size:14px; color:var(--tx2); line-height:1.85; margin-bottom:20px; }
+.ai-body b { color:var(--tx); font-weight:400; }
+.hl {
+  display:inline-block; background:rgba(79,142,247,.1);
+  border:1px solid rgba(79,142,247,.2); color:var(--blue);
+  font-family:var(--mono); font-size:11px; padding:1px 8px; border-radius:4px; margin:0 2px;
+}
+.ai-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.ai-tag {
+  font-family:var(--mono); font-size:10px; letter-spacing:.05em;
+  padding:4px 12px; border-radius:20px; color:var(--tx3);
+  border:1px solid var(--b2); background:var(--bg3);
+}
+.ai-disc {
+  position:absolute; bottom:0; right:0;
+  font-family:var(--mono); font-size:10px; color:var(--tx3);
+  background:var(--bg2); padding:4px 16px 4px 12px;
+  border-top-left-radius:8px; border:1px solid var(--b1); border-right:none; border-bottom:none;
+}
 
-  /* ─── PIPELINE VISUAL ─────────────────────── */
-  .pipeline-stages {
-    display: flex; align-items: center; gap: 0;
-    margin-bottom: 40px;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-  .stage {
-    flex: 1; min-width: 120px;
-    display: flex; flex-direction: column; align-items: center;
-    gap: 6px;
-    position: relative;
-  }
-  .stage::after {
-    content: '';
-    position: absolute;
-    top: 16px; left: 60%; right: -40%;
-    height: 1px;
-    background: var(--border2);
-  }
-  .stage:last-child::after { display: none; }
-  .stage-dot {
-    width: 32px; height: 32px;
-    border-radius: 50%;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    display: flex; align-items: center; justify-content: center;
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text3);
-    font-weight: 500;
-    z-index: 1;
-    position: relative;
-  }
-  .stage-dot.active {
-    background: rgba(245,158,11,0.15);
-    border-color: var(--amber);
-    color: var(--amber);
-  }
-  .stage-dot.done {
-    background: rgba(59,130,246,0.15);
-    border-color: var(--accent);
-    color: var(--accent);
-  }
-  .stage-name {
-    font-size: 11px;
-    font-family: var(--mono);
-    color: var(--text3);
-    text-align: center;
-    letter-spacing: 0.03em;
-  }
-  .stage-count {
-    font-family: var(--mono);
-    font-size: 13px;
-    font-weight: 500;
-    color: var(--text2);
-  }
+/* RADAR */
+.radar-list { display:flex; flex-direction:column; gap:8px; }
+.ri {
+  display:flex; align-items:center; gap:14px; padding:14px 18px;
+  background:var(--bg2); border:1px solid var(--b1); border-radius:10px;
+  text-decoration:none; color:inherit; transition:border-color .15s, background .15s;
+}
+.ri:hover { border-color:var(--b2); background:var(--bg3); }
+.ri-date { font-family:var(--mono); font-size:11px; color:var(--tx3); min-width:48px; }
+.ri-co   { font-size:14px; font-weight:500; color:var(--tx); min-width:120px; }
+.ri-desc { font-size:13px; color:var(--tx2); flex:1; }
+.ri-arr  { color:var(--tx3); font-size:12px; margin-left:auto; }
 
-  /* ─── FEATURE CARDS ─────────────────────── */
-  .feature-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-  }
-  .feature-card {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 24px;
-    transition: border-color 0.15s;
-  }
-  .feature-card:hover { border-color: var(--border2); }
-  .feature-icon {
-    width: 36px; height: 36px;
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 8px;
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
-    margin-bottom: 16px;
-  }
-  .feature-card h3 {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--text);
-    margin-bottom: 8px;
-    letter-spacing: -0.01em;
-  }
-  .feature-card p {
-    font-size: 13px;
-    color: var(--text2);
-    line-height: 1.6;
-  }
-  .feature-tag {
-    display: inline-block;
-    margin-top: 14px;
-    font-family: var(--mono);
-    font-size: 10px;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-  }
+/* FEATURES */
+.fg { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.fc {
+  background:var(--bg2); border:1px solid var(--b1); border-radius:12px; padding:24px;
+  transition:border-color .2s, transform .2s; position:relative; overflow:hidden;
+}
+.fc:hover { border-color:var(--b2); transform:translateY(-2px); }
+.fc::after {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent,rgba(79,142,247,.4),transparent);
+  opacity:0; transition:opacity .3s;
+}
+.fc:hover::after { opacity:1; }
+.fi {
+  width:38px; height:38px; border-radius:9px; background:var(--bg3);
+  border:1px solid var(--b2); display:flex; align-items:center;
+  justify-content:center; font-size:17px; margin-bottom:16px;
+}
+.fc h3 { font-size:14px; font-weight:500; color:var(--tx); margin-bottom:8px; letter-spacing:-.01em; }
+.fc p  { font-size:13px; color:var(--tx2); line-height:1.65; }
+.ft { display:inline-block; margin-top:14px; font-family:var(--mono); font-size:9px; color:var(--blue); letter-spacing:.08em; }
+.ft.purple { color:var(--purple); }
 
-  /* ─── RADAR FEED ─────────────────────────── */
-  .radar-feed { display: flex; flex-direction: column; gap: 1px; }
-  .radar-item {
-    display: flex; align-items: center; gap: 16px;
-    padding: 14px 16px;
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    transition: border-color 0.15s;
-    text-decoration: none;
-    color: inherit;
-    margin-bottom: 6px;
-  }
-  .radar-item:hover { border-color: var(--border2); }
-  .radar-date {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text3);
-    min-width: 70px;
-  }
-  .radar-company { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
-  .radar-desc { font-size: 12px; color: var(--text2); flex: 2; }
+/* SUBSCRIBE */
+.sub-wrap {
+  position:relative; z-index:1;
+  background:var(--bg2); border:1px solid rgba(79,142,247,.15); border-radius:16px;
+  padding:44px 52px; display:flex; justify-content:space-between; align-items:center; gap:40px;
+  max-width:1028px; margin:0 auto 80px; overflow:hidden;
+}
+.sub-wrap::before {
+  content:''; position:absolute; inset:0; pointer-events:none;
+  background:radial-gradient(ellipse at bottom right,rgba(79,142,247,.07),transparent 60%);
+}
+.sub-wrap h2 { font-size:22px; font-weight:500; letter-spacing:-.03em; margin-bottom:8px; }
+.sub-wrap p  { font-size:14px; color:var(--tx2); }
+.sub-form { display:flex; gap:10px; flex-shrink:0; position:relative; }
+.sub-in {
+  background:var(--bg3); border:1px solid var(--b2); border-radius:8px;
+  padding:11px 16px; color:var(--tx); font-family:var(--sans);
+  font-size:14px; width:240px; outline:none; transition:border-color .15s;
+}
+.sub-in::placeholder { color:var(--tx3); }
+.sub-in:focus { border-color:var(--blue); box-shadow:0 0 0 3px rgba(79,142,247,.1); }
+.sub-btn {
+  background:linear-gradient(135deg,var(--blue2),#4f46e5); color:#fff;
+  border:none; border-radius:8px; padding:11px 22px;
+  font-family:var(--sans); font-size:14px; font-weight:500; cursor:pointer;
+  box-shadow:0 0 20px rgba(79,142,247,.25); transition:opacity .15s, transform .1s;
+}
+.sub-btn:hover { opacity:.9; transform:translateY(-1px); }
 
-  /* ─── SUBSCRIBE ──────────────────────────── */
-  .subscribe-section {
-    background: var(--bg2);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 40px 48px;
-    display: flex; justify-content: space-between; align-items: center;
-    gap: 32px;
-    margin: 0 32px 72px;
-    max-width: 1100px;
-    margin-left: auto;
-    margin-right: auto;
-    margin-bottom: 72px;
-  }
-  .subscribe-section h2 {
-    font-size: 22px;
-    font-weight: 500;
-    letter-spacing: -0.02em;
-    margin-bottom: 8px;
-  }
-  .subscribe-section p { font-size: 14px; color: var(--text2); }
-  .subscribe-form { display: flex; gap: 10px; flex-shrink: 0; }
-  .subscribe-input {
-    background: var(--bg3);
-    border: 1px solid var(--border2);
-    border-radius: 7px;
-    padding: 10px 16px;
-    color: var(--text);
-    font-family: var(--sans);
-    font-size: 14px;
-    width: 240px;
-    outline: none;
-    transition: border-color 0.15s;
-  }
-  .subscribe-input::placeholder { color: var(--text3); }
-  .subscribe-input:focus { border-color: var(--accent); }
-  .subscribe-btn {
-    background: var(--accent);
-    color: #fff;
-    border: none;
-    border-radius: 7px;
-    padding: 10px 20px;
-    font-family: var(--sans);
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.15s;
-  }
-  .subscribe-btn:hover { background: var(--accent2); }
+/* FOOTER */
+footer {
+  position:relative; z-index:1; border-top:1px solid var(--b1);
+  padding:32px 36px; display:flex; justify-content:space-between; align-items:center;
+  max-width:1100px; margin:0 auto;
+}
+.fl { font-family:var(--mono); font-size:14px; color:var(--tx3); }
+.fl em { color:var(--blue); font-style:normal; }
+.flinks { display:flex; gap:24px; }
+.flinks a { font-size:12px; color:var(--tx3); text-decoration:none; }
+.flinks a:hover { color:var(--tx2); }
+.fn { font-family:var(--mono); font-size:11px; color:var(--tx3); }
 
-  /* ─── FOOTER ─────────────────────────────── */
-  footer {
-    border-top: 1px solid var(--border);
-    padding: 32px;
-    display: flex; justify-content: space-between; align-items: center;
-    max-width: 1100px;
-    margin: 0 auto;
-  }
-  footer .logo {
-    font-family: var(--mono);
-    font-size: 14px;
-    color: var(--text3);
-  }
-  footer .logo span { color: var(--accent); }
-  .footer-links { display: flex; gap: 24px; }
-  .footer-links a {
-    font-size: 12px;
-    color: var(--text3);
-    text-decoration: none;
-  }
-  .footer-links a:hover { color: var(--text2); }
-  .footer-note {
-    font-family: var(--mono);
-    font-size: 11px;
-    color: var(--text3);
-  }
-
-  /* ─── DIVIDER ────────────────────────────── */
-  .full-divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 0 0 64px;
-  }
-
-  @media (max-width: 768px) {
-    nav { padding: 0 20px; }
-    .nav-links { display: none; }
-    .hero { padding: 100px 20px 48px; }
-    .section { padding: 0 20px 56px; }
-    .stats-bar { flex-wrap: wrap; }
-    .feature-grid { grid-template-columns: 1fr; }
-    .subscribe-section { flex-direction: column; padding: 28px; }
-    .subscribe-form { flex-direction: column; width: 100%; }
-    .subscribe-input { width: 100%; }
-    footer { flex-direction: column; gap: 20px; text-align: center; }
-    .pipeline-stages { gap: 0; }
-  }
+@media(max-width:768px){
+  nav { padding:0 20px; }
+  .nav-links { display:none; }
+  .hero { padding:104px 20px 48px; }
+  .sec { padding:0 20px 56px; }
+  .stats-grid { grid-template-columns:repeat(2,1fr); }
+  .fg { grid-template-columns:1fr; }
+  .sub-wrap { flex-direction:column; padding:28px 24px; margin:0 20px 60px; }
+  .sub-form { flex-direction:column; width:100%; }
+  .sub-in { width:100%; }
+  footer { flex-direction:column; gap:20px; text-align:center; }
+}
 </style>
 </head>
 <body>
 
+<div class="ambient">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
 <!-- NAV -->
 <nav>
-  <a class="nav-logo" href="index.html">IPO<span>Hub</span></a>
+  <a class="nav-logo" href="index.html">
+    <div class="nav-mark">I</div>
+    IPO<em>Hub</em>
+  </a>
+  <div class="ai-pill">
+    <div class="ai-pill-dot"></div>
+    Powered by AI
+  </div>
   <div class="nav-links">
     <a href="radar.html">IPO Radar</a>
     <a href="pipeline.html">Pipeline</a>
@@ -541,264 +379,214 @@
 
 <!-- HERO -->
 <section class="hero">
-  <div class="hero-tag">LIVE · 資料每日自動更新</div>
+  <div class="hero-eyebrow">
+    <div class="live-dot"></div>
+    LIVE · 資料每日 AI 自動更新
+  </div>
   <h1>
-    台灣 <em>IPO</em> 資本市場<br>
-    <strong>完整管線情報</strong>
+    台灣 <span class="grad">IPO 資本市場</span><br>
+    完整管線情報<span class="tw-cursor" id="tw"></span>
   </h1>
   <p class="hero-sub">
     整合<b>公開資訊觀測站、櫃買中心、證交所</b>，<br>
-    從公開發行到掛牌上市，一條時間軸看清每家公司的進度。
+    AI 自動追蹤每家公司從公開發行到掛牌的每個節點。
   </p>
-  <div class="hero-actions">
-    <a href="pipeline.html" class="btn-primary">查看 Pipeline →</a>
-    <a href="companies.html" class="btn-ghost">瀏覽公司名單</a>
+  <div class="hero-btns">
+    <a href="pipeline.html" class="btn-p">
+      查看 Pipeline
+      <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 7h8M7 3l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+    <a href="companies.html" class="btn-g">瀏覽公司名單</a>
   </div>
-
-  <!-- Stats bar -->
-  <div class="stats-bar">
-    <div class="stat">
-      <div class="stat-num green" id="stat-emerging">—</div>
-      <div class="stat-label">本月新登錄興櫃</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num amber" id="stat-applying">—</div>
-      <div class="stat-label">申請上市中</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num blue" id="stat-pipeline">—</div>
-      <div class="stat-label">Pipeline 追蹤中</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" id="stat-investor">—</div>
-      <div class="stat-label">法說會（本季）</div>
-    </div>
+  <div class="stats-grid">
+    <div class="sc"><div class="sc-d">+3 本月</div><div class="sc-n g" id="st1">—</div><div class="sc-l">新登錄興櫃</div></div>
+    <div class="sc"><div class="sc-n a" id="st2">—</div><div class="sc-l">申請上市中</div></div>
+    <div class="sc"><div class="sc-n b" id="st3">—</div><div class="sc-l">Pipeline 追蹤中</div></div>
+    <div class="sc"><div class="sc-n p" id="st4">—</div><div class="sc-l">本季法說會</div></div>
   </div>
 </section>
 
-<hr class="full-divider">
+<hr class="sep">
 
-<!-- PIPELINE STAGES -->
-<section class="section">
-  <div class="section-header">
-    <div>
-      <div class="section-title">IPO Pipeline</div>
-      <div class="section-heading">管線階段分佈</div>
-    </div>
-    <a href="pipeline.html" class="section-link">查看完整 Pipeline →</a>
+<!-- PIPELINE -->
+<section class="sec">
+  <div class="sh">
+    <div><div class="sk">IPO Pipeline</div><div class="sh-title">管線階段分佈</div></div>
+    <a href="pipeline.html" class="sh-link">查看完整 Pipeline →</a>
   </div>
-
-  <div class="pipeline-stages">
-    <div class="stage">
-      <div class="stage-dot done">01</div>
-      <div class="stage-name">公開發行</div>
-      <div class="stage-count" id="s1">—</div>
-    </div>
-    <div class="stage">
-      <div class="stage-dot done">02</div>
-      <div class="stage-name">公開說明書</div>
-      <div class="stage-count" id="s2">—</div>
-    </div>
-    <div class="stage">
-      <div class="stage-dot active">03</div>
-      <div class="stage-name">登錄興櫃</div>
-      <div class="stage-count" id="s3">—</div>
-    </div>
-    <div class="stage">
-      <div class="stage-dot active">04</div>
-      <div class="stage-name">申請上櫃</div>
-      <div class="stage-count" id="s4">—</div>
-    </div>
-    <div class="stage">
-      <div class="stage-dot">05</div>
-      <div class="stage-name">申請上市</div>
-      <div class="stage-count" id="s5">—</div>
-    </div>
-    <div class="stage">
-      <div class="stage-dot">06</div>
-      <div class="stage-name">審議中</div>
-      <div class="stage-count" id="s6">—</div>
-    </div>
-    <div class="stage">
-      <div class="stage-dot">07</div>
-      <div class="stage-name">掛牌上市</div>
-      <div class="stage-count" id="s7">—</div>
-    </div>
+  <div class="stage-track">
+    <div class="si"><div class="sn done">01</div><div class="sl">公開發行</div><div class="sct" id="sc1">—</div></div>
+    <div class="si"><div class="sn done">02</div><div class="sl">公開說明書</div><div class="sct" id="sc2">—</div></div>
+    <div class="si"><div class="sn act">03</div><div class="sl">登錄興櫃</div><div class="sct" id="sc3">—</div></div>
+    <div class="si"><div class="sn act">04</div><div class="sl">申請上櫃</div><div class="sct" id="sc4">—</div></div>
+    <div class="si"><div class="sn act">05</div><div class="sl">申請上市</div><div class="sct" id="sc5">—</div></div>
+    <div class="si"><div class="sn idle">06</div><div class="sl">審議中</div><div class="sct" id="sc6">—</div></div>
+    <div class="si"><div class="sn idle">07</div><div class="sl">掛牌上市</div><div class="sct" id="sc7">—</div></div>
   </div>
-
-  <!-- Pipeline table -->
-  <table class="pipeline-table">
-    <thead>
+  <table class="pt">
+    <thead><tr>
+      <th>公司</th><th>產業</th><th>階段</th><th>進度</th><th>最新異動</th>
+    </tr></thead>
+    <tbody>
       <tr>
-        <th>公司</th>
-        <th>產業</th>
-        <th>階段</th>
-        <th>進度</th>
-        <th>最新異動</th>
-      </tr>
-    </thead>
-    <tbody id="pipeline-tbody">
-      <!-- Placeholder rows shown before data loads -->
-      <tr>
-        <td><div class="company-name">達易特科技</div><div class="company-code">申請中</div></td>
-        <td><span class="industry-tag">半導體</span></td>
-        <td><span class="badge badge-申請上市">申請上市</span></td>
-        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div></div></td>
-        <td><span class="date-text">2025-03-10</span></td>
+        <td><div class="cn">達易特科技</div><div class="cc">申請中</div></td>
+        <td><span class="chip">半導體</span></td>
+        <td><span class="badge bt">申請上市</span></td>
+        <td><div class="pb"><div class="pp d"></div><div class="pp d"></div><div class="pp d"></div><div class="pp d"></div><div class="pp a"></div><div class="pp"></div><div class="pp"></div></div></td>
+        <td><span class="dm">2025-03-10</span></td>
       </tr>
       <tr>
-        <td><div class="company-name">凌華科技</div><div class="company-code">6166</div></td>
-        <td><span class="industry-tag">工業電腦</span></td>
-        <td><span class="badge badge-興櫃">登錄興櫃</span></td>
-        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></td>
-        <td><span class="date-text">2025-03-05</span></td>
+        <td><div class="cn">睿捷科技</div><div class="cc">興 8888</div></td>
+        <td><span class="chip">AI 應用</span></td>
+        <td><span class="badge be">登錄興櫃</span></td>
+        <td><div class="pb"><div class="pp d"></div><div class="pp d"></div><div class="pp a"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div></div></td>
+        <td><span class="dm">2025-03-07</span></td>
       </tr>
       <tr>
-        <td><div class="company-name">圓展科技</div><div class="company-code">5284</div></td>
-        <td><span class="industry-tag">視訊設備</span></td>
-        <td><span class="badge badge-申請上櫃">申請上櫃</span></td>
-        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></td>
-        <td><span class="date-text">2025-02-28</span></td>
+        <td><div class="cn">圓展科技</div><div class="cc">5284</div></td>
+        <td><span class="chip">視訊設備</span></td>
+        <td><span class="badge bp">申請上櫃</span></td>
+        <td><div class="pb"><div class="pp d"></div><div class="pp d"></div><div class="pp d"></div><div class="pp a"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div></div></td>
+        <td><span class="dm">2025-02-28</span></td>
       </tr>
       <tr>
-        <td><div class="company-name">皇達投資</div><div class="company-code">公發中</div></td>
-        <td><span class="industry-tag">金融</span></td>
-        <td><span class="badge badge-公開發行">公開發行</span></td>
-        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></td>
-        <td><span class="date-text">2025-02-20</span></td>
+        <td><div class="cn">皇達投資</div><div class="cc">公發中</div></td>
+        <td><span class="chip">金融</span></td>
+        <td><span class="badge bpub">公開發行</span></td>
+        <td><div class="pb"><div class="pp d"></div><div class="pp a"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div><div class="pp"></div></div></td>
+        <td><span class="dm">2025-02-20</span></td>
       </tr>
     </tbody>
   </table>
 </section>
 
-<hr class="full-divider">
+<hr class="sep">
 
-<!-- RADAR FEED -->
-<section class="section">
-  <div class="section-header">
-    <div>
-      <div class="section-title">IPO Radar</div>
-      <div class="section-heading">最新動態</div>
-    </div>
-    <a href="radar.html" class="section-link">查看全部 →</a>
+<!-- AI SUMMARY -->
+<section class="sec">
+  <div class="sh">
+    <div><div class="sk">AI Summary</div><div class="sh-title">法說會 AI 摘要示範</div></div>
+    <span style="font-family:var(--mono);font-size:10px;color:var(--tx3)">每份法說 PDF 自動產生</span>
   </div>
-  <div class="radar-feed">
-    <a class="radar-item" href="#">
-      <span class="radar-date">03/14</span>
-      <span class="badge badge-興櫃">登錄興櫃</span>
-      <span class="radar-company">台灣精銳</span>
-      <span class="radar-desc">精密機械製造，預計本季登錄興櫃，招股說明書已送件</span>
-    </a>
-    <a class="radar-item" href="#">
-      <span class="radar-date">03/12</span>
-      <span class="badge badge-申請上市">申請上市</span>
-      <span class="radar-company">廣達電腦子公司</span>
-      <span class="radar-desc">AI 伺服器零組件供應商，完成興櫃輔導期，正式遞件申請上市</span>
-    </a>
-    <a class="radar-item" href="#">
-      <span class="radar-date">03/10</span>
-      <span class="badge badge-掛牌">掛牌上市</span>
-      <span class="radar-company">某生技公司</span>
-      <span class="radar-desc">TWSE 審議通過，預計 Q2 正式掛牌，股票代號待公告</span>
-    </a>
+  <div class="ai-box">
+    <div class="ai-hdr">
+      <div class="ai-chip-label">AI GENERATED</div>
+      <div class="ai-ttl">Q4 2024 法人說明會摘要</div>
+      <div class="ai-co">睿捷科技 · 2025-03-05</div>
+    </div>
+    <div class="ai-body">
+      本次法說會由執行長主持，重點揭露 <span class="hl">Q4 營收 NT$2.3B</span>，年增 <span class="hl">+34%</span>，超越市場預期。AI 伺服器散熱模組為主要成長動能，佔營收比重已達 <span class="hl">58%</span>。管理層預計 <b>2025H1 完成興櫃輔導期</b>，目標申請上市時程為 <b>2025Q4</b>。毛利率維持 <span class="hl">32.1%</span>，資本支出計畫擴大產能至現有的 1.8 倍。主要風險：美中供應鏈限制、客戶集中度偏高（前三大客戶佔比 67%）。
+    </div>
+    <div class="ai-tags">
+      <span class="ai-tag">AI 伺服器</span>
+      <span class="ai-tag">散熱模組</span>
+      <span class="ai-tag">申請上市 2025Q4</span>
+      <span class="ai-tag">營收 YoY +34%</span>
+      <span class="ai-tag">毛利 32.1%</span>
+      <span class="ai-tag">客戶集中度風險</span>
+    </div>
+    <div class="ai-disc">AI 摘要僅供參考，不構成投資建議</div>
   </div>
 </section>
 
-<hr class="full-divider">
+<hr class="sep">
+
+<!-- RADAR -->
+<section class="sec">
+  <div class="sh">
+    <div><div class="sk">IPO Radar</div><div class="sh-title">最新動態</div></div>
+    <a href="radar.html" class="sh-link">查看全部 →</a>
+  </div>
+  <div class="radar-list">
+    <a class="ri" href="#"><span class="ri-date">03/14</span><span class="badge be">登錄興櫃</span><span class="ri-co">台灣精銳</span><span class="ri-desc">精密機械製造，預計本季登錄興櫃，招股說明書已送件</span><span class="ri-arr">→</span></a>
+    <a class="ri" href="#"><span class="ri-date">03/12</span><span class="badge bt">申請上市</span><span class="ri-co">緯穎子公司</span><span class="ri-desc">AI 伺服器零組件，完成興櫃輔導期，正式遞件申請上市</span><span class="ri-arr">→</span></a>
+    <a class="ri" href="#"><span class="ri-date">03/10</span><span class="badge bl">掛牌確認</span><span class="ri-co">聯亞生技</span><span class="ri-desc">TWSE 審議通過，預計 Q2 正式掛牌，股票代號待公告</span><span class="ri-arr">→</span></a>
+  </div>
+</section>
+
+<hr class="sep">
 
 <!-- FEATURES -->
-<section class="section">
-  <div class="section-header">
-    <div>
-      <div class="section-title">為什麼選擇 IPOHub</div>
-      <div class="section-heading">我們整合了你要找的一切</div>
-    </div>
+<section class="sec">
+  <div class="sh">
+    <div><div class="sk">Why IPOHub</div><div class="sh-title">我們整合了你要找的一切</div></div>
   </div>
-  <div class="feature-grid">
-    <div class="feature-card">
-      <div class="feature-icon">⚡</div>
-      <h3>每日自動更新</h3>
-      <p>整合 MOPS、TPEx、TWSE 三大官方資料來源，每日自動爬取更新，不需人工維護。</p>
-      <span class="feature-tag">AUTOMATED · DAILY</span>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📊</div>
-      <h3>完整 Pipeline 時間軸</h3>
-      <p>從公開發行、登錄興櫃、申請上市到正式掛牌，每個節點都有日期與文件連結。</p>
-      <span class="feature-tag">7 STAGES TRACKED</span>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">📄</div>
-      <h3>法說會 & 公開說明書</h3>
-      <p>法說會日程自動匯整，AI 協助摘要重點，不需自己下載 PDF 一頁一頁看。</p>
-      <span class="feature-tag">AI SUMMARY · COMING SOON</span>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🔔</div>
-      <h3>Pipeline 變動通知</h3>
-      <p>訂閱追蹤的公司，階段有變動時自動發送 Email，不錯過任何申請進度。</p>
-      <span class="feature-tag">EMAIL ALERTS</span>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">🏭</div>
-      <h3>產業別分析</h3>
-      <p>依半導體、生技、AI、金融等產業分類，掌握各產業 IPO 熱度與時間窗口。</p>
-      <span class="feature-tag">INDUSTRY LENS</span>
-    </div>
-    <div class="feature-card">
-      <div class="feature-icon">💬</div>
-      <h3>投資社群（即將推出）</h3>
-      <p>每家公司獨立討論區，邀請法人、IR 與創辦人入駐，實名認證標章。</p>
-      <span class="feature-tag">COMMUNITY · ROADMAP</span>
-    </div>
+  <div class="fg">
+    <div class="fc"><div class="fi">⚡</div><h3>每日自動更新</h3><p>整合 MOPS、TPEx、TWSE 三大官方資料，每日自動爬取、AI 清洗結構化。</p><span class="ft">AUTOMATED · DAILY</span></div>
+    <div class="fc"><div class="fi">📊</div><h3>完整 IPO 時間軸</h3><p>公開發行→興櫃→申請上市→掛牌，七個節點全部追蹤，附日期與原始文件。</p><span class="ft">7 STAGES · FULL PIPELINE</span></div>
+    <div class="fc"><div class="fi">🤖</div><h3>法說 AI 摘要</h3><p>法說會 PDF 自動下載、AI 解析財務指標與經營方向，不再需要自己翻閱。</p><span class="ft purple">AI POWERED · CLAUDE</span></div>
+    <div class="fc"><div class="fi">🔔</div><h3>Pipeline 異動通知</h3><p>訂閱追蹤的公司，申請進度一有變動立即 Email 通知，不錯過關鍵時間點。</p><span class="ft">EMAIL ALERTS</span></div>
+    <div class="fc"><div class="fi">🏭</div><h3>產業別情報</h3><p>依半導體、生技、AI、金融分類，掌握各產業 IPO 熱度與發行視窗。</p><span class="ft">INDUSTRY LENS</span></div>
+    <div class="fc"><div class="fi">💬</div><h3>投資社群（即將推出）</h3><p>每家公司獨立討論板，法人、券商分析師、IR 與創辦人實名認證入駐。</p><span class="ft purple">COMMUNITY · ROADMAP</span></div>
   </div>
 </section>
 
 <!-- SUBSCRIBE -->
-<div class="subscribe-section" id="subscribe">
+<div class="sub-wrap" id="subscribe">
   <div>
-    <h2>Pipeline 有異動，第一時間知道</h2>
-    <p>免費訂閱 IPOHub 週報，每週一整理台灣 IPO 管線最新進度</p>
+    <h2>Pipeline 有異動，第一時間通知你</h2>
+    <p>免費訂閱週報，每週一整理台灣 IPO 管線最新進度與 AI 摘要精選</p>
   </div>
-  <div class="subscribe-form">
-    <input type="email" class="subscribe-input" placeholder="your@email.com">
-    <button class="subscribe-btn">訂閱通知</button>
+  <div class="sub-form">
+    <input type="email" class="sub-in" placeholder="your@email.com">
+    <button class="sub-btn">免費訂閱</button>
   </div>
 </div>
 
 <!-- FOOTER -->
 <footer>
-  <div class="logo">IPO<span>Hub</span></div>
-  <div class="footer-links">
-    <a href="about/index.html">關於我們</a>
-    <a href="radar.html">IPO Radar</a>
+  <div class="fl">IPO<em>Hub</em></div>
+  <div class="flinks">
+    <a href="about/index.html">關於</a>
+    <a href="radar.html">Radar</a>
     <a href="pipeline.html">Pipeline</a>
-    <a href="mailto:hello@ipohub.net">聯絡我們</a>
+    <a href="mailto:hello@ipohub.net">聯絡</a>
   </div>
-  <div class="footer-note">資料來源：MOPS · TPEx · TWSE</div>
+  <div class="fn">資料來源：MOPS · TPEx · TWSE · Powered by Claude AI</div>
 </footer>
 
 <script>
-// Load data from JSON when available
-// Stats will be populated from data/stats.json
-async function loadStats() {
-  try {
-    const res = await fetch('data/stats.json');
-    const d = await res.json();
-    document.getElementById('stat-emerging').textContent = d.emerging ?? '—';
-    document.getElementById('stat-applying').textContent  = d.applying  ?? '—';
-    document.getElementById('stat-pipeline').textContent  = d.pipeline  ?? '—';
-    document.getElementById('stat-investor').textContent  = d.investor  ?? '—';
-    const stages = ['s1','s2','s3','s4','s5','s6','s7'];
-    stages.forEach((id,i) => {
-      const el = document.getElementById(id);
-      if (el && d.stages) el.textContent = d.stages[i] ?? '—';
-    });
-  } catch(e) {
-    // Data not yet available — show placeholder dashes
-  }
+// Typewriter
+const phrases = ['，即時掌握。','，不漏任何節點。','，AI 自動整理。'];
+let pi=0,ci=0,del=false;
+const tw=document.getElementById('tw');
+function tick(){
+  const p=phrases[pi];
+  if(!del){ tw.textContent=p.slice(0,++ci); if(ci===p.length){del=true;setTimeout(tick,2000);return;} }
+  else    { tw.textContent=p.slice(0,--ci); if(ci===0){del=false;pi=(pi+1)%phrases.length;} }
+  setTimeout(tick,del?40:80);
 }
-loadStats();
+setTimeout(tick,1400);
+
+// Stat card stagger
+const cards=document.querySelectorAll('.sc');
+const obs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      const i=[...cards].indexOf(e.target);
+      setTimeout(()=>e.target.classList.add('in'),i*100);
+      obs.unobserve(e.target);
+    }
+  });
+},{threshold:0.2});
+cards.forEach(c=>obs.observe(c));
+
+// Load stats.json
+async function loadData(){
+  try{
+    const d=await(await fetch('data/stats.json')).json();
+    ['st1','st2','st3','st4'].forEach((id,i)=>{
+      const v=[d.emerging,d.applying,d.pipeline,d.investor][i];
+      const el=document.getElementById(id);
+      if(el&&v!=null)el.textContent=v;
+    });
+    if(d.stages) d.stages.forEach((v,i)=>{
+      const el=document.getElementById('sc'+(i+1));
+      if(el)el.textContent=v;
+    });
+  }catch(e){}
+}
+loadData();
 </script>
 </body>
 </html>

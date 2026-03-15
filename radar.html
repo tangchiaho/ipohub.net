@@ -1,175 +1,544 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — IPO 雷達｜台灣 IPO Radar 與申報管線</title>
-  <meta name="description" content="IPOHub IPO 雷達為台灣投資人提供即時 IPO radar 與申報管線資訊，包含公司、產業、上市市場、狀態與申報日期。">
-  <meta name="keywords" content="IPO 雷達, IPO radar Taiwan, 台灣 IPO, IPO 申報, 新股雷達, IPO 管線, IPO 情報">
-  <meta property="og:title" content="IPOHub — IPO 雷達｜台灣 IPO Radar 與申報管線">
-  <meta property="og:description" content="使用 IPOHub 的 IPO 雷達，追蹤台灣與全球市場的 IPO 申報與上市進度。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ipohub.net/radar.html">
-  <meta property="og:site_name" content="IPOHub">
-  <meta property="og:locale" content="zh_TW">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPO Radar — IPOHub</title>
+<meta name="description" content="台灣 IPO 最新動態雷達，整合登錄興櫃、申請上市、法說會、掛牌確認等即時事件。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070910;--bg2:#0d1017;--bg3:#13171f;--bg4:#181d28;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.11);--b3:rgba(255,255,255,.18);
+  --tx:#dde1e9;--tx2:#7c8494;--tx3:#434a58;
+  --blue:#4f8ef7;--blue2:#2563eb;--purple:#9d7dfa;
+  --teal:#2dd4bf;--green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --mono:'DM Mono',monospace;--sans:'DM Sans','Noto Sans TC',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* AMBIENT */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(130px);animation:drift 20s ease-in-out infinite alternate}
+.orb1{width:600px;height:420px;top:-160px;right:-80px;background:radial-gradient(circle,#6d28d9,transparent 70%);opacity:.12}
+.orb2{width:500px;height:380px;bottom:10%;left:-60px;background:radial-gradient(circle,#2b4ef0,transparent 70%);opacity:.09;animation-delay:-10s}
+.orb3{width:350px;height:280px;top:40%;left:40%;background:radial-gradient(circle,#0d9488,transparent 70%);opacity:.07;animation-delay:-6s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,20px) scale(1.06)}100%{transform:translate(-15px,40px) scale(.96)}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);background-size:48px 48px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:56px;background:rgba(7,9,16,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1)}
+.nav-logo{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--tx);text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.nav-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#3b5ff7,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.nav-logo em{color:var(--blue);font-style:normal}
+.ai-pill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--purple);background:rgba(157,125,250,.08);border:1px solid rgba(157,125,250,.2);padding:3px 10px;border-radius:20px}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:sparkle 2.5s ease-in-out infinite}
+@keyframes sparkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--tx2);text-decoration:none;font-size:13px;transition:color .15s}
+.nav-links a:hover{color:var(--tx)}
+.nav-links a.active{color:#fff}
+.nav-cta{background:linear-gradient(135deg,var(--blue2),#4f46e5);color:#fff !important;padding:6px 18px;border-radius:7px;font-weight:500 !important;font-size:13px !important;box-shadow:0 0 20px rgba(79,142,247,.25);transition:opacity .15s,transform .1s !important}
+.nav-cta:hover{opacity:.88 !important;transform:translateY(-1px)}
+
+/* LAYOUT */
+.layout{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:88px 36px 80px;display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:start}
+
+/* LEFT COLUMN */
+.left-col{}
+
+/* PAGE HEADER */
+.page-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;margin-bottom:8px}
+.page-title{font-size:clamp(28px,4vw,42px);font-weight:300;letter-spacing:-.04em;color:#fff;margin-bottom:8px}
+.page-title em{font-style:normal;background:linear-gradient(135deg,#4f8ef7,#9d7dfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{font-size:14px;color:var(--tx2);margin-bottom:28px}
+.update-row{display:flex;align-items:center;gap:10px;margin-bottom:28px}
+.live-badge{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--green);background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.2);padding:4px 12px;border-radius:20px}
+.live-dot{width:6px;height:6px;border-radius:50%;background:var(--green);box-shadow:0 0 8px var(--green);animation:livepulse 2s ease-in-out infinite}
+@keyframes livepulse{0%,100%{box-shadow:0 0 8px var(--green)}50%{box-shadow:0 0 18px var(--green)}}
+.update-text{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+
+/* FILTER BAR */
+.filter-bar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px;align-items:center}
+.filter-label{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.07em}
+.fc{padding:5px 14px;border-radius:20px;border:1px solid var(--b1);background:var(--bg2);color:var(--tx2);font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.02em}
+.fc:hover{border-color:var(--b2);color:var(--tx)}
+.fc.on{background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.3);color:var(--blue)}
+.fc.on.purple{background:rgba(157,125,250,.12);border-color:rgba(157,125,250,.3);color:var(--purple)}
+.fc.on.amber{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.28);color:var(--amber)}
+.fc.on.green{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.28);color:var(--green)}
+.fc.on.teal{background:rgba(45,212,191,.1);border-color:rgba(45,212,191,.28);color:var(--teal)}
+.fc.on.red{background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.28);color:var(--red)}
+
+/* RADAR FEED */
+.feed{display:flex;flex-direction:column;gap:0}
+
+/* DATE GROUP */
+.date-group{margin-bottom:32px}
+.date-label{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;padding:0 0 12px;display:flex;align-items:center;gap:10px}
+.date-label::after{content:'';flex:1;height:1px;background:var(--b1)}
+.date-today{color:var(--blue);letter-spacing:.07em}
+
+/* FEED ITEM */
+.fi{display:flex;gap:16px;padding:16px 20px;background:var(--bg2);border:1px solid var(--b1);border-radius:12px;margin-bottom:8px;cursor:pointer;transition:border-color .15s,background .15s;position:relative;overflow:hidden;text-decoration:none;color:inherit}
+.fi:hover{border-color:var(--b2);background:var(--bg3)}
+.fi.new::before{content:'';position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--blue);border-radius:2px 0 0 2px}
+.fi-icon{width:36px;height:36px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;border:1px solid var(--b2)}
+.fi-icon.emerging {background:rgba(157,125,250,.12);border-color:rgba(157,125,250,.25)}
+.fi-icon.applying  {background:rgba(251,191,36,.1); border-color:rgba(251,191,36,.25)}
+.fi-icon.listed    {background:rgba(52,211,153,.1); border-color:rgba(52,211,153,.25)}
+.fi-icon.analyst   {background:rgba(79,142,247,.1); border-color:rgba(79,142,247,.25)}
+.fi-icon.doc       {background:rgba(45,212,191,.1); border-color:rgba(45,212,191,.25)}
+.fi-icon.alert     {background:rgba(248,113,113,.1);border-color:rgba(248,113,113,.25)}
+.fi-body{flex:1;min-width:0}
+.fi-top{display:flex;align-items:center;gap:8px;margin-bottom:5px;flex-wrap:wrap}
+.fi-co{font-size:14px;font-weight:500;color:var(--tx)}
+.fi-time{font-family:var(--mono);font-size:10px;color:var(--tx3);margin-left:auto;white-space:nowrap}
+.fi-desc{font-size:13px;color:var(--tx2);line-height:1.6;margin-bottom:8px}
+.fi-desc b{color:var(--tx);font-weight:400}
+.fi-footer{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.chip{font-size:11px;color:var(--tx3);background:var(--bg3);padding:2px 9px;border-radius:4px;border:1px solid var(--b1)}
+.fi-ai{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--purple);background:rgba(157,125,250,.08);border:1px solid rgba(157,125,250,.18);padding:2px 8px;border-radius:10px;cursor:pointer}
+.fi-ai:hover{background:rgba(157,125,250,.15)}
+.fi-link{font-family:var(--mono);font-size:10px;color:var(--blue);letter-spacing:.04em;display:flex;align-items:center;gap:4px}
+.fi-link:hover{text-decoration:underline}
+
+/* TYPE BADGE */
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.be   {background:rgba(157,125,250,.1);color:var(--purple);border:1px solid rgba(157,125,250,.22)}
+.bt   {background:rgba(251,191,36,.1); color:var(--amber); border:1px solid rgba(251,191,36,.22)}
+.bl   {background:rgba(52,211,153,.1); color:var(--green); border:1px solid rgba(52,211,153,.22)}
+.ban  {background:rgba(79,142,247,.1); color:var(--blue);  border:1px solid rgba(79,142,247,.22)}
+.bdoc {background:rgba(45,212,191,.1); color:var(--teal);  border:1px solid rgba(45,212,191,.22)}
+.balert{background:rgba(248,113,113,.1);color:var(--red);  border:1px solid rgba(248,113,113,.22)}
+.bpub{background:rgba(100,110,130,.1);color:var(--tx2);border:1px solid var(--b2)}
+
+/* AI EXPANDABLE SUMMARY */
+.ai-expand{display:none;margin-top:12px;background:var(--bg3);border:1px solid rgba(157,125,250,.2);border-radius:8px;padding:14px 16px;position:relative}
+.ai-expand.open{display:block}
+.ai-expand::before{content:'';position:absolute;inset:0;border-radius:8px;background:radial-gradient(ellipse at top left,rgba(157,125,250,.06),transparent 60%);pointer-events:none}
+.ai-expand-label{font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--purple);margin-bottom:8px;display:flex;align-items:center;gap:4px}
+.ai-expand-label::before{content:'◆';font-size:7px;animation:sparkle 2.5s ease-in-out infinite}
+.ai-expand-text{font-size:13px;color:var(--tx2);line-height:1.75}
+.ai-expand-text b{color:var(--tx);font-weight:400}
+.hl{display:inline-block;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);color:var(--blue);font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:4px;margin:0 2px}
+
+/* LOAD MORE */
+.load-more{text-align:center;padding:24px 0}
+.load-btn{background:var(--bg2);border:1px solid var(--b2);border-radius:8px;padding:10px 28px;color:var(--tx2);font-family:var(--mono);font-size:12px;letter-spacing:.05em;cursor:pointer;transition:all .15s}
+.load-btn:hover{border-color:var(--b3);color:var(--tx)}
+
+/* RIGHT SIDEBAR */
+.right-col{position:sticky;top:76px;display:flex;flex-direction:column;gap:16px}
+
+/* SIDEBAR CARD */
+.sb-card{background:var(--bg2);border:1px solid var(--b1);border-radius:12px;overflow:hidden}
+.sb-header{padding:14px 18px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.sb-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase}
+.sb-link{font-family:var(--mono);font-size:10px;color:var(--blue);text-decoration:none}
+.sb-link:hover{text-decoration:underline}
+.sb-body{padding:16px 18px}
+
+/* AI WEEKLY DIGEST */
+.digest-box{background:var(--bg2);border:1px solid rgba(157,125,250,.2);border-radius:12px;overflow:hidden;position:relative}
+.digest-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top,rgba(157,125,250,.07),transparent 50%);pointer-events:none}
+.digest-header{padding:14px 18px;border-bottom:1px solid rgba(157,125,250,.12);display:flex;align-items:center;gap:8px}
+.digest-ai-chip{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--purple);background:rgba(157,125,250,.1);border:1px solid rgba(157,125,250,.22);padding:3px 9px;border-radius:20px}
+.digest-ai-chip::before{content:'◆';font-size:7px;animation:sparkle 2.5s ease-in-out infinite}
+.digest-title{font-size:13px;font-weight:500;color:var(--tx)}
+.digest-body{padding:16px 18px;font-size:13px;color:var(--tx2);line-height:1.75}
+.digest-body b{color:var(--tx);font-weight:400}
+.digest-body p{margin-bottom:10px}
+.digest-body p:last-child{margin-bottom:0}
+.digest-footer{padding:12px 18px;border-top:1px solid rgba(157,125,250,.1);display:flex;align-items:center;justify-content:space-between}
+.digest-date{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+.digest-sub{font-family:var(--mono);font-size:10px;color:var(--blue);background:rgba(79,142,247,.08);border:1px solid rgba(79,142,247,.2);padding:3px 10px;border-radius:6px;cursor:pointer;transition:background .15s;border:none;cursor:pointer}
+.digest-sub:hover{background:rgba(79,142,247,.15);color:var(--blue)}
+
+/* UPCOMING */
+.upcoming-list{display:flex;flex-direction:column;gap:0}
+.up-item{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--b1)}
+.up-item:last-child{border-bottom:none}
+.up-date-box{min-width:42px;text-align:center}
+.up-day{font-family:var(--mono);font-size:18px;font-weight:500;color:#fff;line-height:1}
+.up-month{font-family:var(--mono);font-size:9px;color:var(--tx3);letter-spacing:.06em}
+.up-body{}
+.up-co{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:2px}
+.up-desc{font-size:12px;color:var(--tx2)}
+.up-type{font-family:var(--mono);font-size:9px;color:var(--tx3);margin-top:4px;letter-spacing:.04em}
+
+/* HOT SECTORS */
+.sector-list{display:flex;flex-direction:column;gap:8px}
+.sector-item{display:flex;align-items:center;gap:10px}
+.sector-name{font-size:13px;color:var(--tx2);min-width:70px}
+.sector-bar-wrap{flex:1;height:4px;background:var(--bg4);border-radius:2px;overflow:hidden}
+.sector-bar{height:100%;border-radius:2px;background:linear-gradient(90deg,var(--blue),var(--purple));transition:width .8s cubic-bezier(.4,0,.2,1)}
+.sector-count{font-family:var(--mono);font-size:11px;color:var(--tx3);min-width:28px;text-align:right}
+
+/* SUBSCRIBE MINI */
+.sub-mini{background:linear-gradient(135deg,rgba(37,99,235,.15),rgba(79,70,229,.15));border:1px solid rgba(79,142,247,.2);border-radius:12px;padding:18px}
+.sub-mini h3{font-size:14px;font-weight:500;color:var(--tx);margin-bottom:6px}
+.sub-mini p{font-size:12px;color:var(--tx2);margin-bottom:14px;line-height:1.6}
+.sub-mini-form{display:flex;flex-direction:column;gap:8px}
+.sub-mini-in{background:rgba(7,9,16,.6);border:1px solid var(--b2);border-radius:7px;padding:9px 12px;color:var(--tx);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .15s}
+.sub-mini-in::placeholder{color:var(--tx3)}
+.sub-mini-in:focus{border-color:var(--blue)}
+.sub-mini-btn{background:linear-gradient(135deg,var(--blue2),#4f46e5);color:#fff;border:none;border-radius:7px;padding:9px;font-family:var(--sans);font-size:13px;font-weight:500;cursor:pointer;transition:opacity .15s}
+.sub-mini-btn:hover{opacity:.88}
+
+/* EMPTY */
+.empty{text-align:center;padding:60px 20px;color:var(--tx3);font-family:var(--mono);font-size:13px}
+.empty div{font-size:28px;margin-bottom:10px;opacity:.4}
+
+@media(max-width:900px){
+  .layout{grid-template-columns:1fr;padding:88px 20px 60px}
+  .right-col{position:static}
+}
+@media(max-width:480px){
+  nav{padding:0 20px}.nav-links{display:none}
+}
+</style>
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <a href="index.html" class="logo">IPO<span>Hub</span></a>
-      <nav class="nav-links" style="display:flex;gap:28px;">
-        <a href="index.html">首頁</a>
-        <a href="radar.html" class="active">IPO 雷達</a>
-        <a href="pipeline.html">IPO 管線</a>
-        <a href="companies.html">公司名單</a>
-        <a href="industry.html">產業情報</a>
-      </nav>
+<div class="ambient">
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+  <div class="orb orb3"></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html"><div class="nav-mark">I</div>IPO<em>Hub</em></a>
+  <div class="ai-pill"><div class="ai-dot"></div>Powered by AI</div>
+  <div class="nav-links">
+    <a href="radar.html" class="active">IPO Radar</a>
+    <a href="pipeline.html">Pipeline</a>
+    <a href="companies.html">公司名單</a>
+    <a href="industry.html">產業情報</a>
+    <a href="index.html#subscribe" class="nav-cta">訂閱通知</a>
+  </div>
+</nav>
+
+<!-- LAYOUT -->
+<div class="layout">
+
+  <!-- LEFT: MAIN FEED -->
+  <div class="left-col">
+    <div class="page-kicker">IPO Radar</div>
+    <h1 class="page-title">台灣 <em>IPO 動態</em> 即時雷達</h1>
+    <p class="page-sub">整合三大官方來源，AI 自動彙整每日 IPO 相關事件</p>
+
+    <div class="update-row">
+      <div class="live-badge"><div class="live-dot"></div>LIVE</div>
+      <span class="update-text">最後更新：<span id="last-updated">—</span> · 每日 08:00 自動更新</span>
     </div>
-  </header>
 
-  <main>
-    <section class="hero fade-in">
-      <div class="container">
-        <h1 class="headline">IPO 雷達</h1>
-        <p class="subheadline">
-          一眼掌握最新申報、即將上市與 IPO 管線情報，串接主要市場的關鍵動態。
-        </p>
+    <!-- FILTER BAR -->
+    <div class="filter-bar">
+      <span class="filter-label">類型</span>
+      <button class="fc on" data-type="all">全部</button>
+      <button class="fc" data-type="登錄興櫃" data-color="purple">登錄興櫃</button>
+      <button class="fc" data-type="申請上市" data-color="amber">申請上市</button>
+      <button class="fc" data-type="申請上櫃" data-color="blue">申請上櫃</button>
+      <button class="fc" data-type="掛牌確認" data-color="green">掛牌確認</button>
+      <button class="fc" data-type="法說會" data-color="teal">法說會</button>
+      <button class="fc" data-type="重大公告" data-color="red">重大公告</button>
+    </div>
+
+    <!-- FEED -->
+    <div class="feed" id="radar-feed"></div>
+    <div class="empty" id="feed-empty" style="display:none"><div>📡</div>沒有符合條件的動態</div>
+    <div class="load-more" id="load-more-wrap">
+      <button class="load-btn" id="load-more-btn">載入更多 ↓</button>
+    </div>
+  </div>
+
+  <!-- RIGHT SIDEBAR -->
+  <div class="right-col">
+
+    <!-- AI WEEKLY DIGEST -->
+    <div class="digest-box">
+      <div class="digest-header">
+        <div class="digest-ai-chip">AI WEEKLY DIGEST</div>
+        <span style="font-family:var(--mono);font-size:10px;color:var(--tx3)">本週精選</span>
       </div>
-    </section>
+      <div class="digest-body">
+        <p><b>半導體 IPO 熱度持續</b>，本週有 3 家半導體相關公司進入申請程序，其中 AI 伺服器供應鏈佔 2 家。</p>
+        <p>生技醫療板塊出現 <b>審議通過</b> 里程碑，聯亞生技預計 Q2 掛牌，為本季首家。</p>
+        <p>整體 Pipeline 本週新增 <span class="hl">5 筆</span> 異動，較上週增加 <span class="hl" style="color:var(--green)">+25%</span>。</p>
+      </div>
+      <div class="digest-footer">
+        <span class="digest-date">2025 年 3 月 W2</span>
+        <button class="digest-sub" onclick="document.getElementById('sub-email').focus()">訂閱週報</button>
+      </div>
+    </div>
 
-    <section class="section fade-in">
-      <div class="container">
-        <h2 class="h2">即時 IPO 管線</h2>
-        <p class="subtitle">本頁呈現近期台灣資本市場相關動態，依申報日期由新到舊排序。</p>
-
-        <div class="table-wrapper">
-          <table id="ipo-table">
-            <thead>
-              <tr>
-                <th>公司</th>
-                <th>產業</th>
-                <th>市場</th>
-                <th>狀態</th>
-                <th>申報日期</th>
-              </tr>
-            </thead>
-            <tbody id="ipo-table-body">
-              <!-- Rows will be injected from data/ipo.json -->
-            </tbody>
-          </table>
+    <!-- UPCOMING EVENTS -->
+    <div class="sb-card">
+      <div class="sb-header">
+        <span class="sb-title">即將到來</span>
+        <a href="#" class="sb-link">查看全部 →</a>
+      </div>
+      <div class="sb-body">
+        <div class="upcoming-list">
+          <div class="up-item">
+            <div class="up-date-box"><div class="up-day">18</div><div class="up-month">MAR</div></div>
+            <div class="up-body">
+              <div class="up-co">睿捷科技</div>
+              <div class="up-desc">Q4 2024 法人說明會</div>
+              <div class="up-type">法說會 · 台北</div>
+            </div>
+          </div>
+          <div class="up-item">
+            <div class="up-date-box"><div class="up-day">21</div><div class="up-month">MAR</div></div>
+            <div class="up-body">
+              <div class="up-co">台灣精銳</div>
+              <div class="up-desc">興櫃登錄首日交易</div>
+              <div class="up-type">登錄興櫃 · TPEx</div>
+            </div>
+          </div>
+          <div class="up-item">
+            <div class="up-date-box"><div class="up-day">25</div><div class="up-month">MAR</div></div>
+            <div class="up-body">
+              <div class="up-co">緯穎子公司</div>
+              <div class="up-desc">TWSE 申請上市審查結果</div>
+              <div class="up-type">審議 · TWSE</div>
+            </div>
+          </div>
+          <div class="up-item">
+            <div class="up-date-box"><div class="up-day">02</div><div class="up-month">APR</div></div>
+            <div class="up-body">
+              <div class="up-co">聯亞生技</div>
+              <div class="up-desc">預計正式掛牌上市</div>
+              <div class="up-type">掛牌 · TWSE</div>
+            </div>
+          </div>
         </div>
       </div>
-    </section>
-  </main>
-
-  <script>
-    (function () {
-      const tbody = document.getElementById('ipo-table-body');
-      if (!tbody) return;
-
-      const SECTOR_LABELS = {
-        'Consumer Internet': '消費性網路',
-        'SaaS': 'SaaS',
-        'Semiconductors': '半導體',
-        'Consumer': '消費',
-        'Fintech': '金融科技'
-      };
-
-      const STATUS_LABELS = {
-        filed: '已申報',
-        listed: '已上市',
-        priced: '已訂價',
-        expected: '預期',
-        withdrawn: '撤回'
-      };
-
-      function formatDate(value) {
-        if (!value || value.toUpperCase() === 'TBD') return 'TBD';
-        const date = new Date(value);
-        if (Number.isNaN(date.getTime())) return value;
-        return date.toLocaleDateString('zh-TW');
-      }
-
-      function createRow(record) {
-        const tr = document.createElement('tr');
-
-        const companyTd = document.createElement('td');
-        companyTd.className = 'company-name';
-        companyTd.textContent = record.company;
-
-        const sectorTd = document.createElement('td');
-        sectorTd.textContent = SECTOR_LABELS[record.sector] || record.sector;
-
-        const marketTd = document.createElement('td');
-        marketTd.textContent = record.market === 'Expected' ? '預期' : record.market;
-
-        const statusTd = document.createElement('td');
-        const statusSpan = document.createElement('span');
-        const statusKey = String(record.status || '').toLowerCase();
-        statusSpan.className = 'pill ' + statusKey;
-        statusSpan.textContent = STATUS_LABELS[statusKey] || record.status;
-        statusTd.appendChild(statusSpan);
-
-        const filingDateTd = document.createElement('td');
-        filingDateTd.textContent = formatDate(record.filingDate);
-
-        tr.appendChild(companyTd);
-        tr.appendChild(sectorTd);
-        tr.appendChild(marketTd);
-        tr.appendChild(statusTd);
-        tr.appendChild(filingDateTd);
-
-        return tr;
-      }
-
-      function renderRows(records) {
-        tbody.innerHTML = '';
-        if (!records || !records.length) {
-          const tr = document.createElement('tr');
-          const td = document.createElement('td');
-          td.colSpan = 5;
-          td.textContent = 'No IPOs found.';
-          tr.appendChild(td);
-          tbody.appendChild(tr);
-          return;
-        }
-        records.forEach(function (record) {
-          tbody.appendChild(createRow(record));
-        });
-      }
-
-      fetch('data/ipo.json')
-        .then(function (res) {
-          if (!res.ok) throw new Error('Network response was not ok');
-          return res.json();
-        })
-        .then(function (data) {
-          var list = Array.isArray(data) ? data.slice() : [];
-          list.sort(function (a, b) {
-            var da = (a.filingDate || '').toUpperCase();
-            var db = (b.filingDate || '').toUpperCase();
-            if (da === 'TBD' || !da) return 1;
-            if (db === 'TBD' || !db) return -1;
-            return db.localeCompare(da);
-          });
-          renderRows(list);
-        })
-        .catch(function () {
-          renderRows([]);
-        });
-    })();
-  </script>
-
-  <footer>
-    <div class="container">
-      <p>IPOHub IPO 雷達 · 為投資人、券商與發行人提供 AI 驅動的 IPO 情報。</p>
     </div>
-  </footer>
 
+    <!-- HOT SECTORS -->
+    <div class="sb-card">
+      <div class="sb-header">
+        <span class="sb-title">產業熱度</span>
+        <a href="industry.html" class="sb-link">詳細分析 →</a>
+      </div>
+      <div class="sb-body">
+        <div class="sector-list">
+          <div class="sector-item">
+            <span class="sector-name">半導體</span>
+            <div class="sector-bar-wrap"><div class="sector-bar" style="width:88%"></div></div>
+            <span class="sector-count">12</span>
+          </div>
+          <div class="sector-item">
+            <span class="sector-name">AI 應用</span>
+            <div class="sector-bar-wrap"><div class="sector-bar" style="width:72%"></div></div>
+            <span class="sector-count">9</span>
+          </div>
+          <div class="sector-item">
+            <span class="sector-name">生技醫療</span>
+            <div class="sector-bar-wrap"><div class="sector-bar" style="width:55%"></div></div>
+            <span class="sector-count">7</span>
+          </div>
+          <div class="sector-item">
+            <span class="sector-name">金融</span>
+            <div class="sector-bar-wrap"><div class="sector-bar" style="width:38%"></div></div>
+            <span class="sector-count">5</span>
+          </div>
+          <div class="sector-item">
+            <span class="sector-name">其他</span>
+            <div class="sector-bar-wrap"><div class="sector-bar" style="width:24%"></div></div>
+            <span class="sector-count">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- SUBSCRIBE -->
+    <div class="sub-mini">
+      <h3>不錯過任何 IPO 動態</h3>
+      <p>每週一 AI 精選摘要直送信箱，追蹤公司有異動立即通知</p>
+      <div class="sub-mini-form">
+        <input type="email" class="sub-mini-in" id="sub-email" placeholder="your@email.com">
+        <button class="sub-mini-btn">免費訂閱週報</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────
+const TYPE_ICON  = {'登錄興櫃':'📈','申請上市':'📋','申請上櫃':'📋','掛牌確認':'🎉','法說會':'🎤','重大公告':'⚠️'};
+const TYPE_CLASS = {'登錄興櫃':'be','申請上市':'bt','申請上櫃':'ban','掛牌確認':'bl','法說會':'bdoc','重大公告':'balert'};
+const ICON_BG    = {'登錄興櫃':'emerging','申請上市':'applying','申請上櫃':'applying','掛牌確認':'listed','法說會':'doc','重大公告':'alert'};
+
+const SAMPLE = [
+  {id:1, date:'2025-03-14', time:'10:32', type:'登錄興櫃', co:'台灣精銳', industry:'半導體', isNew:true,
+   desc:'招股說明書已送件，預計 <b>2025 年 3 月 21 日</b>正式登錄興櫃交易，承銷商為元大證券。',
+   ai:'AI 摘要：半導體設備零件供應商，主要客戶涵蓋國內外設備廠，訂單能見度 <span class="hl">18 個月</span>。公開承銷價 NT$45，市值約 <span class="hl">NT$4.2B</span>。毛利率約 29%，較同業略低，需追蹤後續定價。',
+   source:'TPEx'},
+  {id:2, date:'2025-03-12', time:'14:05', type:'申請上市', co:'緯穎子公司', industry:'AI 應用', isNew:true,
+   desc:'AI 伺服器零組件廠商完成興櫃輔導期，正式向 TWSE 遞件申請上市，預計 <b>Q4 2025 掛牌</b>。',
+   ai:'AI 摘要：Q4 營收 YoY <span class="hl">+67%</span>，AI 伺服器需求為主要驅動力。本輪籌資 <span class="hl">NT$3.1B</span>，用於擴產與 R&D。財務體質健康，負債比 28%。主要風險：客戶集中（前兩大佔 79%）。',
+   source:'TWSE'},
+  {id:3, date:'2025-03-10', time:'09:15', type:'掛牌確認', co:'聯亞生技', industry:'生技醫療', isNew:true,
+   desc:'TWSE 審議委員會通過申請，預計 <b>2025 年 4 月 2 日</b>正式掛牌，股票代號待公告，承銷方式為競拍。',
+   ai:'AI 摘要：核心新藥 Phase III 完成，掛牌後資金主要用於商業化。IPO 定價區間 NT$120–145，以 P/S 比對比同業偏高，需留意上市後波動。法人持股比例 31%。',
+   source:'TWSE'},
+  {id:4, date:'2025-03-10', time:'15:20', type:'法說會', co:'睿捷科技', industry:'AI 應用', isNew:false,
+   desc:'Q4 2024 法人說明會將於 <b>3 月 18 日</b>在台北喜來登舉行，預計揭露全年財報與 2025 展望。',
+   ai:'AI 摘要：上次法說（Q3）重點：AI 散熱模組佔比 <span class="hl">58%</span>，毛利率 32.1%，YoY +34%。本次預期公布 Q4 資料，市場關注點為 2025 年訂單能見度與申請上市時程。',
+   source:'MOPS'},
+  {id:5, date:'2025-03-07', time:'11:45', type:'登錄興櫃', co:'睿捷科技', industry:'AI 應用', isNew:false,
+   desc:'正式登錄興櫃交易，首日成交量 <b>1,240 張</b>，收盤較承銷價上漲 18.3%，市場反應熱烈。',
+   ai:'AI 摘要：興櫃首日強勢，惟需觀察短線籌碼消化情況。法人持股 22%，散戶佔比高，波動度偏大。建議追蹤 3 個月後的成交量與股價穩定性再評估申請上市時程。',
+   source:'TPEx'},
+  {id:6, date:'2025-03-05', time:'16:00', type:'法說會', co:'圓展科技', industry:'其他', isNew:false,
+   desc:'FY2024 全年法說會，揭露海外業務佔比達 73%，北美市場成長顯著，申請上櫃審查進度如期。',
+   ai:'AI 摘要：海外營收 <span class="hl">NT$1.2B</span>，YoY +22%。管理層重申申請上櫃時程，TPEX 審查預計 <span class="hl">Q2 2025</span> 出結果。主要風險：匯率波動、北美客戶採購週期。',
+   source:'MOPS'},
+  {id:7, date:'2025-02-28', time:'09:00', type:'申請上櫃', co:'圓展科技', industry:'其他', isNew:false,
+   desc:'正式向 TPEx 送件申請上櫃，已完成興櫃輔導期兩年，預計 <b>Q2 審議結果出爐</b>。',
+   ai:'AI 摘要：完成兩年興櫃輔導，財務指標達標。申請上櫃籌資 NT$0.9B，本益比約 18x，定價合理。同類型硬體廠估值中位數 16–22x，定價區間合理。',
+   source:'TPEx'},
+  {id:8, date:'2025-02-20', time:'14:30', type:'重大公告', co:'皇達投資', industry:'金融', isNew:false,
+   desc:'董事會決議完成公開發行程序，公開說明書預計 <b>2025 Q3 送件</b>，目標申請興櫃。',
+   ai:'AI 摘要：金控旗下子公司切割上市，母公司信用背書強。公開說明書尚未送件，資訊揭露有限。建議持續追蹤，待公開說明書後再評估基本面。',
+   source:'MOPS'},
+  {id:9, date:'2025-01-18', time:'09:30', type:'登錄興櫃', co:'鈞洋科技', industry:'生技醫療', isNew:false,
+   desc:'正式登錄興櫃，首日成交量 820 張，東南亞醫療耗材業務佔比 62%，興櫃輔導期已完成。',
+   ai:'AI 摘要：東南亞業務為核心成長動能，疫後需求回升。首日成交量穩健，非異常炒作型態。管理層規劃 <span class="hl">2026Q4 申請上櫃</span>，追蹤窗口拉長，適合長線關注。',
+   source:'TPEx'},
+];
+
+let allData = [...SAMPLE];
+let typeFilter = 'all';
+let visibleCount = 6;
+
+async function loadData(){
+  try{
+    const d = await(await fetch('data/radar.json')).json();
+    if(d && d.length) allData = d;
+    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('zh-TW');
+  }catch(e){
+    document.getElementById('last-updated').textContent = '示範資料';
+  }
+  render();
+}
+
+function filtered(){
+  if(typeFilter==='all') return allData;
+  return allData.filter(x=>x.type===typeFilter);
+}
+
+function render(){
+  const data = filtered();
+  const visible = data.slice(0, visibleCount);
+  const feed = document.getElementById('radar-feed');
+  const empty = document.getElementById('feed-empty');
+  const loadWrap = document.getElementById('load-more-wrap');
+
+  if(!data.length){ feed.innerHTML=''; empty.style.display='block'; loadWrap.style.display='none'; return; }
+  empty.style.display='none';
+  loadWrap.style.display = data.length > visibleCount ? 'block':'none';
+
+  // Group by date
+  const groups = {};
+  visible.forEach(item=>{
+    if(!groups[item.date]) groups[item.date]=[];
+    groups[item.date].push(item);
+  });
+
+  const today = new Date().toISOString().slice(0,10);
+
+  feed.innerHTML = Object.keys(groups).sort((a,b)=>b.localeCompare(a)).map(date=>{
+    const isToday = date===today;
+    const [y,m,d2] = date.split('-');
+    const label = isToday
+      ? `<span class="date-today">今天 · ${parseInt(m)}/${parseInt(d2)}</span>`
+      : `${y}/${parseInt(m)}/${parseInt(d2)}`;
+    return `
+      <div class="date-group">
+        <div class="date-label">${label}</div>
+        ${groups[date].map(item=>`
+          <div class="fi${item.isNew?' new':''}" onclick="toggleAI(${item.id},event)">
+            <div class="fi-icon ${ICON_BG[item.type]||'doc'}">${TYPE_ICON[item.type]||'📌'}</div>
+            <div class="fi-body">
+              <div class="fi-top">
+                <span class="fi-co">${item.co}</span>
+                <span class="badge ${TYPE_CLASS[item.type]||'bpub'}">${item.type}</span>
+                <span class="fi-time">${item.time||''} · ${item.source||''}</span>
+              </div>
+              <div class="fi-desc">${item.desc}</div>
+              <div class="fi-footer">
+                <span class="chip">${item.industry}</span>
+                ${item.ai?`<span class="fi-ai" data-id="${item.id}">◆ AI摘要 ${openAI.has(item.id)?'▲':'▼'}</span>`:''}
+                <a class="fi-link" href="pipeline.html" onclick="event.stopPropagation()">查看 Pipeline →</a>
+              </div>
+              ${item.ai?`<div class="ai-expand${openAI.has(item.id)?' open':''}" id="ai-${item.id}">
+                <div class="ai-expand-label">AI SUMMARY</div>
+                <div class="ai-expand-text">${item.ai}</div>
+              </div>`:''}
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }).join('');
+}
+
+const openAI = new Set();
+function toggleAI(id, e){
+  // only toggle if clicking on AI chip or expand area
+  const target = e.target;
+  if(target.classList.contains('fi-ai') || target.closest('.ai-expand') || target.classList.contains('fi-link')) {
+    if(target.classList.contains('fi-ai') || target.closest('.fi-ai')){
+      if(openAI.has(id)) openAI.delete(id); else openAI.add(id);
+      render();
+    }
+    e.stopPropagation();
+  }
+}
+
+// Filter chips
+document.querySelectorAll('.fc').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.fc').forEach(b=>{ b.classList.remove('on','purple','amber','green','teal','red','blue'); });
+    btn.classList.add('on');
+    const color = btn.dataset.color;
+    if(color) btn.classList.add(color);
+    typeFilter = btn.dataset.type;
+    visibleCount = 6;
+    render();
+  });
+});
+
+// Load more
+document.getElementById('load-more-btn').addEventListener('click',()=>{
+  visibleCount += 6; render();
+});
+
+// Sector bar animation on scroll
+const bars = document.querySelectorAll('.sector-bar');
+const io = new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.style.width = e.target.style.width; // trigger reflow
+      io.unobserve(e.target);
+    }
+  });
+},{threshold:0.5});
+bars.forEach(b=>{
+  const w = b.style.width; b.style.width='0';
+  setTimeout(()=>{ b.style.width=w; },100);
+  io.observe(b);
+});
+
+loadData();
+</script>
 </body>
 </html>
