@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOHub — IPO Radar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header>
+    <div class="container navbar">
+      <a href="index.html" class="logo">IPO<span>Hub</span></a>
+      <nav class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="radar.html" class="active">IPO Radar</a>
+        <a href="companies.html">Companies</a>
+        <a href="industry.html">Industry</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero fade-in">
+      <div class="container">
+        <h1 class="headline">IPO Radar</h1>
+        <p class="subheadline">
+          Track recent filings, upcoming listings, and IPO pipeline intelligence across major markets in a single, AI-driven view.
+        </p>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <div class="container">
+        <h2 class="h2">Live IPO pipeline</h2>
+        <p class="subtitle">Sample data showing how IPOHub structures filings, markets, and status.</p>
+
+        <div class="table-wrapper">
+          <table id="ipo-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Sector</th>
+                <th>Market</th>
+                <th>Status</th>
+                <th>Filing Date</th>
+              </tr>
+            </thead>
+            <tbody id="ipo-table-body">
+              <!-- Rows will be injected from data/ipo.json -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const tbody = document.getElementById('ipo-table-body');
+      if (!tbody) return;
+
+      function formatDate(value) {
+        if (!value || value.toUpperCase() === 'TBD') return 'TBD';
+        const date = new Date(value);
+        if (Number.isNaN(date.getTime())) return value;
+        return date.toLocaleDateString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          year: 'numeric'
+        });
+      }
+
+      function createRow(record) {
+        const tr = document.createElement('tr');
+
+        const companyTd = document.createElement('td');
+        companyTd.className = 'company-name';
+        companyTd.textContent = record.company;
+
+        const sectorTd = document.createElement('td');
+        sectorTd.textContent = record.sector;
+
+        const marketTd = document.createElement('td');
+        marketTd.textContent = record.market;
+
+        const statusTd = document.createElement('td');
+        const statusSpan = document.createElement('span');
+        statusSpan.className = 'pill ' + String(record.status || '').toLowerCase();
+        statusSpan.textContent = record.status;
+        statusTd.appendChild(statusSpan);
+
+        const filingDateTd = document.createElement('td');
+        filingDateTd.textContent = formatDate(record.filingDate);
+
+        tr.appendChild(companyTd);
+        tr.appendChild(sectorTd);
+        tr.appendChild(marketTd);
+        tr.appendChild(statusTd);
+        tr.appendChild(filingDateTd);
+
+        return tr;
+      }
+
+      function renderRows(records) {
+        tbody.innerHTML = '';
+        if (!records || !records.length) {
+          const tr = document.createElement('tr');
+          const td = document.createElement('td');
+          td.colSpan = 5;
+          td.textContent = 'No IPOs found.';
+          tr.appendChild(td);
+          tbody.appendChild(tr);
+          return;
+        }
+        records.forEach(function (record) {
+          tbody.appendChild(createRow(record));
+        });
+      }
+
+      fetch('data/ipo.json')
+        .then(function (res) {
+          if (!res.ok) throw new Error('Network response was not ok');
+          return res.json();
+        })
+        .then(function (data) {
+          renderRows(data);
+        })
+        .catch(function () {
+          renderRows([]);
+        });
+    })();
+  </script>
+
+  <footer>
+    <div class="container">
+      <p>IPOHub IPO Radar · AI-driven IPO intelligence for investors, banks, and issuers.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
