@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOHub — 公司管線</title>
+  <meta name="description" content="查詢台灣公司基本資訊與資本市場管線階段。">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f9fc;
+      --surface: #ffffff;
+      --text: #1a1d29;
+      --text-muted: #5c6178;
+      --accent: #0f62fe;
+      --accent-hover: #0043ce;
+      --border: #e4e7ef;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    }
+    body { font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
+    .container { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .logo { font-size: 1.375rem; font-weight: 700; color: var(--text); letter-spacing: -0.02em; text-decoration: none; }
+    .logo span { color: var(--accent); }
+    nav { display: flex; align-items: center; gap: 32px; }
+    nav a { color: var(--text-muted); text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
+    nav a:hover { color: var(--text); }
+    main { padding: 48px 0 80px; }
+    .company-detail {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      margin-bottom: 32px;
+      box-shadow: var(--shadow);
+    }
+    .company-detail .ticker { font-size: 0.8125rem; font-weight: 600; color: var(--accent); margin-bottom: 4px; }
+    .company-detail h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
+    .company-detail .meta { display: flex; flex-wrap: wrap; gap: 16px 24px; font-size: 0.9375rem; color: var(--text-muted); }
+    .company-detail .meta span { display: flex; align-items: center; gap: 4px; }
+    .pipeline-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+    .pipeline-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .pipeline-table th {
+      text-align: left;
+      padding: 14px 20px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .pipeline-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .pipeline-table tr:last-child td { border-bottom: none; }
+    .pipeline-table tr:hover td { background: var(--bg); }
+    .pipeline-table a { color: var(--accent); text-decoration: none; }
+    .pipeline-table a:hover { text-decoration: underline; }
+    .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
+    .back-link:hover { color: var(--accent-hover); }
+    .msg { font-size: 1rem; color: var(--text-muted); padding: 24px 0; }
+    footer { margin-top: 48px; padding: 32px 0 48px; border-top: 1px solid var(--border); text-align: center; }
+    footer .logo { margin-bottom: 8px; }
+    footer p { font-size: 0.875rem; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <a href="index.html" class="logo">IPO<span>Hub</span></a>
+      <nav>
+        <a href="index.html">首頁</a>
+        <a href="radar.html">IPO 雷達</a>
+        <a href="pipeline.html">IPO 管線</a>
+        <a href="companies.html">公司名單</a>
+        <a href="industry.html">產業情報</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <div class="container">
+      <a href="index.html" class="back-link">← 回首頁搜尋</a>
+      <div id="company-info"></div>
+      <div id="pipeline-section" class="pipeline-section"></div>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="logo">IPO<span>Hub</span></div>
+      <p>台灣公司資本市場管線查詢工具，依股票代號或公司名稱搜尋。</p>
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      function getTicker() {
+        var p = new URLSearchParams(window.location.search);
+        return (p.get('ticker') || '').trim();
+      }
+
+      function escapeHtml(s) {
+        if (s == null) return '—';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      var ticker = getTicker();
+      var companyEl = document.getElementById('company-info');
+      var pipelineEl = document.getElementById('pipeline-section');
+
+      if (!ticker) {
+        companyEl.innerHTML = '<p class="msg">請在網址指定股票代號，例如：company.html?ticker=7899</p>';
+        pipelineEl.innerHTML = '';
+        return;
+      }
+
+      Promise.all([
+        fetch('data/companies.json').then(function (r) { return r.json(); }),
+        fetch('data/pipeline.json').then(function (r) { return r.json(); })
+      ]).then(function (arr) {
+        var companies = Array.isArray(arr[0]) ? arr[0] : [];
+        var pipeline = Array.isArray(arr[1]) ? arr[1] : [];
+        var company = companies.filter(function (c) { return (c.ticker || '').toString() === ticker; })[0];
+        var events = pipeline.filter(function (e) { return (e.ticker || '').toString() === ticker; });
+
+        events.sort(function (a, b) {
+          var da = (a.date || '').replace(/-/g, '');
+          var db = (b.date || '').replace(/-/g, '');
+          return da.localeCompare(db);
+        });
+
+        if (!company) {
+          companyEl.innerHTML = '<p class="msg">找不到股票代號「' + escapeHtml(ticker) + '」對應的公司。</p>';
+          pipelineEl.innerHTML = '';
+          return;
+        }
+
+        companyEl.innerHTML =
+          '<div class="company-detail">' +
+            '<div class="ticker">' + escapeHtml(company.ticker) + '</div>' +
+            '<h1>' + escapeHtml(company.name) + '</h1>' +
+            '<div class="meta">' +
+              '<span>產業：' + escapeHtml(company.sector || '—') + '</span>' +
+              '<span>市場：' + escapeHtml(company.market || '—') + '</span>' +
+              '<span>狀態：' + escapeHtml(company.status || '—') + '</span>' +
+            '</div>' +
+          '</div>';
+
+        if (events.length === 0) {
+          pipelineEl.innerHTML = '<h2>管線階段</h2><p class="msg">尚無管線紀錄。</p>';
+          return;
+        }
+
+        pipelineEl.innerHTML =
+          '<h2>管線階段</h2>' +
+          '<table class="pipeline-table">' +
+            '<thead><tr><th>階段</th><th>日期</th><th>來源</th><th>連結</th><th>備註</th></tr></thead>' +
+            '<tbody>' +
+              events.map(function (e) {
+                var link = (e.url) ? '<a href="' + escapeHtml(e.url) + '" target="_blank" rel="noopener">連結</a>' : '—';
+                return '<tr>' +
+                  '<td>' + escapeHtml(e.stage || '—') + '</td>' +
+                  '<td>' + escapeHtml(e.date || '—') + '</td>' +
+                  '<td>' + escapeHtml(e.source || '—') + '</td>' +
+                  '<td>' + link + '</td>' +
+                  '<td>' + escapeHtml(e.note != null ? e.note : '—') + '</td>' +
+                  '</tr>';
+              }).join('') +
+            '</tbody>' +
+          '</table>';
+      }).catch(function () {
+        companyEl.innerHTML = '<p class="msg">無法載入資料。</p>';
+        pipelineEl.innerHTML = '';
+      });
+    })();
+  </script>
+</body>
+</html>
