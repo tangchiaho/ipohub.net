@@ -1,50 +1,47 @@
 [
   {
-    "name": "Stripe, Inc.",
-    "sector": "金融科技",
-    "market": "—",
-    "description": "全球領先的線上金流平台，服務各類電商與 SaaS 業者。"
+    "ticker": "7899",
+    "name": "景美",
+    "nameEn": null,
+    "sector": "電子",
+    "market": "興櫃",
+    "status": "listed_emerging",
+    "updatedAt": "2026-03-01"
   },
   {
-    "name": "Databricks",
-    "sector": "軟體 / 數據平台",
-    "market": "—",
-    "description": "提供企業級的雲端資料與 AI 分析平台，加速資料驅動決策。"
+    "ticker": "7883",
+    "name": "饗賓",
+    "nameEn": null,
+    "sector": "觀光餐飲",
+    "market": "興櫃",
+    "status": "listed_emerging",
+    "updatedAt": "2026-03-01"
   },
   {
-    "name": "Klaviyo Inc.",
-    "sector": "軟體 / MarTech",
-    "market": "NYSE",
-    "description": "專為電商品牌設計的行銷自動化與客戶資料平台。"
+    "ticker": "7879",
+    "name": "益材科技",
+    "nameEn": null,
+    "sector": "電子",
+    "market": "興櫃",
+    "status": "listed_emerging",
+    "updatedAt": "2026-03-01"
   },
   {
-    "name": "Arm Holdings plc",
-    "sector": "半導體 IP",
-    "market": "Nasdaq",
-    "description": "授權處理器架構與 IP，驅動全球數十億台智慧裝置。"
+    "ticker": "7897",
+    "name": "禾迅綠電",
+    "nameEn": null,
+    "sector": "綠能",
+    "market": "興櫃",
+    "status": "listed_emerging",
+    "updatedAt": "2026-03-01"
   },
   {
-    "name": "Birkenstock Holding plc",
-    "sector": "消費品牌",
-    "market": "NYSE",
-    "description": "德國經典鞋履品牌，以舒適度與工藝聞名全球。"
-  },
-  {
-    "name": "SpaceX",
-    "sector": "航太",
-    "market": "—",
-    "description": "創新私人航太公司，致力於降低太空運輸成本。"
-  },
-  {
-    "name": "Shein",
-    "sector": "電商 / 快時尚",
-    "market": "—",
-    "description": "全球快時尚電商，運用數位供應鏈快速回應消費需求。"
-  },
-  {
-    "name": "Reddit, Inc.",
-    "sector": "社群平台",
-    "market": "NYSE",
-    "description": "大型線上社群與討論平台，聚合全球主題社群。"
+    "ticker": "7891",
+    "name": "博研醫藥",
+    "nameEn": null,
+    "sector": "生技",
+    "market": "興櫃",
+    "status": "listed_emerging",
+    "updatedAt": "2026-03-01"
   }
 ]

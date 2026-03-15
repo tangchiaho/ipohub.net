@@ -1,50 +1,47 @@
 [
   {
-    "company": "Reddit",
-    "sector": "Consumer Internet",
-    "market": "NYSE",
-    "status": "Listed",
-    "filingDate": "2024-03-21",
-    "note": "大型社群平台，市場關注度高。"
+    "ticker": "7899",
+    "stage": "登錄興櫃",
+    "stageKey": "listed_emerging",
+    "date": "2026-02-25",
+    "source": "tpex",
+    "url": "https://www.tpex.org.tw/zh-tw/esb/listed/ipo/detail.html?code=7899&date=2026",
+    "note": null
   },
   {
-    "company": "Klaviyo",
-    "sector": "SaaS",
-    "market": "NYSE",
-    "status": "Listed",
-    "filingDate": "2023-09-20",
-    "note": "MarTech 代表性標的，與電商品牌高度綁定。"
+    "ticker": "7883",
+    "stage": "登錄興櫃",
+    "stageKey": "listed_emerging",
+    "date": "2026-01-23",
+    "source": "tpex",
+    "url": "https://www.tpex.org.tw/zh-tw/esb/listed/ipo/detail.html?code=7883&date=2026",
+    "note": null
   },
   {
-    "company": "Arm",
-    "sector": "Semiconductors",
-    "market": "Nasdaq",
-    "status": "Listed",
-    "filingDate": "2023-09-14",
-    "note": "高關注度晶片 IP 公司，與 AI 需求高度連動。"
+    "ticker": "7879",
+    "stage": "登錄興櫃",
+    "stageKey": "listed_emerging",
+    "date": "2026-01-23",
+    "source": "tpex",
+    "url": "https://www.tpex.org.tw/zh-tw/esb/listed/ipo/detail.html?code=7879&date=2026",
+    "note": null
   },
   {
-    "company": "Birkenstock",
-    "sector": "Consumer",
-    "market": "NYSE",
-    "status": "Priced",
-    "filingDate": "2023-10-11",
-    "note": "品牌與獲利穩定，屬消費股觀察指標。"
+    "ticker": "7897",
+    "stage": "登錄興櫃",
+    "stageKey": "listed_emerging",
+    "date": "2026-01-27",
+    "source": "tpex",
+    "url": "https://www.tpex.org.tw/zh-tw/esb/listed/ipo/detail.html?code=7897&date=2026",
+    "note": null
   },
   {
-    "company": "Stripe",
-    "sector": "Fintech",
-    "market": "Expected",
-    "status": "Expected",
-    "filingDate": "TBD",
-    "note": "市場高度期待的金融科技 IPO，時程仍待觀察。"
-  },
-  {
-    "company": "Instacart",
-    "sector": "Consumer Internet",
-    "market": "Nasdaq",
-    "status": "Listed",
-    "filingDate": "2023-09-19",
-    "note": "美國生鮮外送龍頭，反映線上消費與物流整合趨勢。"
+    "ticker": "7891",
+    "stage": "登錄興櫃",
+    "stageKey": "listed_emerging",
+    "date": "2026-01-14",
+    "source": "tpex",
+    "url": "https://www.tpex.org.tw/zh-tw/esb/listed/ipo/detail.html?code=7891&date=2026",
+    "note": null
   }
 ]

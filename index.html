@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — AI 驅動 IPO 情報平台｜台灣 IPO 平台與市場洞見</title>
-  <meta name="description" content="IPOHub 是為台灣投資人打造的 AI 驅動 IPO 情報平台，提供 IPO 雷達、公司資料庫與產業情報，一站式掌握台灣與全球 IPO 機會。">
-  <meta name="keywords" content="IPO 平台, IPOHub, 台灣 IPO, 新股資訊, IPO 情報, IPO 情報平台, 台股 IPO, 全球 IPO, IPO radar, IPO intelligence">
-  <meta property="og:title" content="IPOHub — 台灣投資人的 AI 驅動 IPO 平台">
-  <meta property="og:description" content="透過 IPOHub 的 IPO 雷達、公司名單與產業情報，台灣投資人能快速掌握 IPO 管線與市場機會。">
+  <title>IPOHub — 台灣公司資本市場管線查詢｜股票代號、公司名稱搜尋</title>
+  <meta name="description" content="IPOHub 是台灣公司資本市場管線查詢工具，依股票代號或公司名稱搜尋，掌握公開發行、公開說明書、興櫃、上櫃、上市等階段。">
+  <meta name="keywords" content="IPOHub, 台灣資本市場, 管線查詢, 股票代號, 公司名稱, 公開發行, 興櫃, 上櫃, 上市, 公開說明書">
+  <meta property="og:title" content="IPOHub — 台灣公司資本市場管線查詢">
+  <meta property="og:description" content="依股票代號或公司名稱搜尋，查詢台灣公司從公開發行到上市櫃的管線階段。">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://ipohub.net/">
   <meta property="og:site_name" content="IPOHub">
@@ -313,6 +313,50 @@
 
     .company-card .meta span { display: flex; align-items: center; gap: 4px; }
 
+    .company-search-wrap {
+      margin-bottom: 24px;
+      max-width: 400px;
+    }
+
+    .company-search-wrap input {
+      width: 100%;
+      padding: 12px 16px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-sm);
+      background: var(--surface);
+      color: var(--text);
+      transition: border-color 0.2s;
+    }
+
+    .company-search-wrap input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .company-search-wrap input:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .company-search-results {
+      min-height: 80px;
+    }
+
+    .company-search-results .company-card .ticker {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .company-search-results .no-query,
+    .company-search-results .no-matches {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      padding: 16px 0;
+    }
+
     /* Industry Intelligence */
     .intel-grid {
       display: grid;
@@ -398,12 +442,12 @@
   <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">AI 驅動的 IPO 情報平台</div>
-        <h1>一站式掌握 IPO 探勘、盡職調查與動態追蹤</h1>
-        <p>IPOHub 匯整全球 IPO 管線、申報文件、定價與產業訊號，運用 AI 將原始資料轉成可立即決策的洞見，服務法人投資人、承銷商與企業財務團隊。</p>
+        <div class="hero-badge">台灣公司資本市場管線查詢</div>
+        <h1>依股票代號或公司名稱，查詢台灣公司公開發行到上市櫃管線</h1>
+        <p>IPOHub 專注台灣資本市場，提供公開發行、公開說明書、登錄興櫃、申請上櫃、上櫃、申請上市、上市等階段查詢，協助投資人與從業人員掌握公司進度。</p>
         <div class="hero-cta">
-          <a href="radar.html" class="btn btn-primary">查看 IPO 雷達</a>
-          <a href="#" class="btn btn-ghost">預約產品 Demo</a>
+          <a href="radar.html" class="btn btn-primary">查詢管線</a>
+          <a href="companies.html" class="btn btn-ghost">瀏覽公司</a>
         </div>
       </div>
     </section>
@@ -411,13 +455,13 @@
     <section id="ipo-radar">
       <div class="container">
         <div class="section-header">
-          <div class="section-label">IPO 雷達</div>
-          <h2 class="section-title">即時追蹤最新 IPO 申報</h2>
-          <p class="section-desc">即時掌握 S-1 / F-1 申報、預計上市時間與募資規模，不再錯過任何一檔關鍵 IPO。</p>
+          <div class="section-label">管線雷達</div>
+          <h2 class="section-title">台灣公司管線階段一覽</h2>
+          <p class="section-desc">從公開發行、公開說明書、登錄興櫃、申請上櫃／上市到上櫃／上市，掌握台灣公司資本市場進度。</p>
         </div>
         <div class="ipo-radar">
           <div class="ipo-radar-header">
-            <h3>近期與即將上市</h3>
+            <h3>管線一覽（示意）</h3>
             <a href="#" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.875rem;">檢視全部</a>
           </div>
           <table class="ipo-table">
@@ -469,42 +513,14 @@
       <div class="container">
         <div class="section-header">
           <div class="section-label">公司名單</div>
-          <h2 class="section-title">瀏覽重點上市櫃公司</h2>
-          <p class="section-desc">提供關鍵公司的基本面、估值區間與可比公司視角，協助建立自己的觀察清單。</p>
+          <h2 class="section-title">依股票代號或公司名稱搜尋</h2>
+          <p class="section-desc">查詢台灣公司基本資訊與管線階段，建立觀察清單。</p>
         </div>
-        <div class="companies-grid">
-          <div class="company-card">
-            <h4>Reddit Inc.</h4>
-            <div class="sector">科技 · 社群平台</div>
-            <div class="meta">
-              <span>預計 2025 年 3 月 IPO</span>
-              <span>估值約 64 億美元</span>
-            </div>
-          </div>
-          <div class="company-card">
-            <h4>Klaviyo</h4>
-            <div class="sector">科技 · SaaS</div>
-            <div class="meta">
-              <span>2024 年 9 月 IPO</span>
-              <span>估值約 92 億美元</span>
-            </div>
-          </div>
-          <div class="company-card">
-            <h4>Arm Holdings</h4>
-            <div class="sector">科技 · 半導體 IP</div>
-            <div class="meta">
-              <span>2023 年 9 月 IPO</span>
-              <span>估值約 545 億美元</span>
-            </div>
-          </div>
-          <div class="company-card">
-            <h4>Birkenstock</h4>
-            <div class="sector">消費 · 鞋履品牌</div>
-            <div class="meta">
-              <span>2023 年 10 月 IPO</span>
-              <span>估值約 86 億美元</span>
-            </div>
-          </div>
+        <div class="company-search-wrap">
+          <input type="text" id="company-search" placeholder="輸入股票代號或公司名稱" autocomplete="off">
+        </div>
+        <div id="company-search-results" class="company-search-results">
+          <div class="no-query">輸入股票代號或公司名稱即可搜尋。</div>
         </div>
       </div>
     </section>
@@ -513,24 +529,24 @@
       <div class="container">
         <div class="section-header">
           <div class="section-label">產業情報</div>
-          <h2 class="section-title">看懂驅動估值的關鍵脈絡</h2>
-          <p class="section-desc">結合產業趨勢、估值區間與 AI 摘要重點，協助你在台灣與全球資本市場中掌握超前訊號。</p>
+          <h2 class="section-title">台灣資本市場脈絡</h2>
+          <p class="section-desc">結合產業趨勢與台灣公開發行、興櫃、上櫃、上市管線，協助掌握市場動向。</p>
         </div>
         <div class="intel-grid">
           <div class="intel-card">
             <div class="icon">📊</div>
-            <h4>估值基準</h4>
-            <p>跨產業、跨年度比較本益比與募資條件，快速看出每檔 IPO 在同儕中的相對位置。</p>
+            <h4>管線階段</h4>
+            <p>公開發行、公開說明書、登錄興櫃、申請上櫃、上櫃、申請上市、上市等階段一目了然。</p>
           </div>
           <div class="intel-card">
             <div class="icon">📈</div>
-            <h4>產業趨勢</h4>
-            <p>追蹤各產業 IPO 件數、平均規模與後市表現，提早掌握發行窗口與市場風向。</p>
+            <h4>產業與市場</h4>
+            <p>依產業與市場別追蹤台灣公司管線件數與進度，掌握發行窗口。</p>
           </div>
           <div class="intel-card">
-            <div class="icon">🤖</div>
-            <h4>AI 重點摘要</h4>
-            <p>從公開說明書與法說資料中擷取成長故事、風險揭露與競爭優勢，整理成一目了然的重點摘要。</p>
+            <div class="icon">🔍</div>
+            <h4>股票代號／公司名稱</h4>
+            <p>以股票代號或公司名稱搜尋，快速查詢公司基本資訊與管線進度。</p>
           </div>
         </div>
       </div>
@@ -540,9 +556,71 @@
   <footer>
     <div class="container">
       <div class="logo">IPO<span>Hub</span></div>
-      <p>AI 驅動的 IPO 情報平台，專為專業投資人與市場參與者打造。</p>
+      <p>台灣公司資本市場管線查詢工具，依股票代號或公司名稱搜尋。</p>
     </div>
   </footer>
 
+  <script>
+    (function () {
+      var input = document.getElementById('company-search');
+      var resultsEl = document.getElementById('company-search-results');
+      var companies = [];
+
+      function render(matches) {
+        if (matches === null) {
+          resultsEl.innerHTML = '<div class="no-query">輸入股票代號或公司名稱即可搜尋。</div>';
+          return;
+        }
+        if (matches.length === 0) {
+          resultsEl.innerHTML = '<div class="no-matches">找不到符合的公司。</div>';
+          return;
+        }
+        resultsEl.innerHTML = '<div class="companies-grid">' + matches.map(function (c) {
+          return '<div class="company-card">' +
+            '<div class="ticker">' + escapeHtml(c.ticker) + '</div>' +
+            '<h4>' + escapeHtml(c.name) + '</h4>' +
+            '<div class="sector">' + escapeHtml(c.sector || '—') + '</div>' +
+            '<div class="meta"><span>市場：' + escapeHtml(c.market || '—') + '</span></div>' +
+            '</div>';
+        }).join('') + '</div>';
+      }
+
+      function escapeHtml(s) {
+        if (s == null) return '—';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+
+      function runSearch() {
+        var q = (input.value || '').trim();
+        if (!q) {
+          render(null);
+          return;
+        }
+        var lower = q.toLowerCase();
+        var match = companies.filter(function (c) {
+          var ticker = (c.ticker || '').toString();
+          var name = (c.name || '') + (c.nameEn || '');
+          return ticker.indexOf(q) !== -1 || ticker.toLowerCase().indexOf(lower) !== -1 ||
+            name.indexOf(q) !== -1 || name.toLowerCase().indexOf(lower) !== -1;
+        });
+        render(match);
+      }
+
+      input.addEventListener('input', runSearch);
+      input.addEventListener('change', runSearch);
+
+      fetch('data/companies.json')
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          companies = Array.isArray(data) ? data : [];
+          runSearch();
+        })
+        .catch(function () {
+          resultsEl.innerHTML = '<div class="no-matches">無法載入公司資料。</div>';
+        });
+    })();
+  </script>
 </body>
 </html>
