@@ -51,7 +51,8 @@
     .company-detail h1 { font-size: 1.5rem; font-weight: 700; margin-bottom: 12px; color: var(--text); }
     .company-detail .meta { display: flex; flex-wrap: wrap; gap: 16px 24px; font-size: 0.9375rem; color: var(--text-muted); }
     .company-detail .meta span { display: flex; align-items: center; gap: 4px; }
-    .pipeline-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 16px; color: var(--text); }
+    .pipeline-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .pipeline-section .pipeline-desc { font-size: 0.9375rem; color: var(--text-muted); margin-bottom: 16px; }
     .pipeline-table {
       width: 100%;
       border-collapse: collapse;
@@ -76,11 +77,72 @@
     .pipeline-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); color: var(--text); }
     .pipeline-table tr:last-child td { border-bottom: none; }
     .pipeline-table tr:hover td { background: var(--bg); }
-    .pipeline-table a { color: var(--accent); text-decoration: none; }
-    .pipeline-table a:hover { text-decoration: underline; }
+    .pipeline-stage-pill {
+      display: inline-block;
+      padding: 4px 12px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 100px;
+      background: rgba(15, 98, 254, 0.12);
+      color: var(--accent);
+    }
+    .pipeline-stage-pill.listed_emerging,
+    .pipeline-stage-pill.listed_otc,
+    .pipeline-stage-pill.listed_twse { background: #e8f4ea; color: #0d6b2c; }
+    .pipeline-stage-pill.apply_otc,
+    .pipeline-stage-pill.apply_twse,
+    .pipeline-stage-pill.prospectus,
+    .pipeline-stage-pill.public_disclosure { background: #e8f0fe; color: #1557b0; }
+    .pipeline-ext-link {
+      display: inline-block;
+      padding: 6px 14px;
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: rgba(15, 98, 254, 0.1);
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+    }
+    .pipeline-ext-link:hover {
+      background: rgba(15, 98, 254, 0.18);
+      color: var(--accent-hover);
+    }
+    .pipeline-table a.pipeline-ext-link { text-decoration: none; }
+    .pipeline-table .source-cell { font-size: 0.8125rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.03em; }
     .back-link { display: inline-block; margin-bottom: 20px; color: var(--accent); text-decoration: none; font-size: 0.9375rem; font-weight: 500; }
     .back-link:hover { color: var(--accent-hover); }
     .msg { font-size: 1rem; color: var(--text-muted); padding: 24px 0; }
+    .media-section { margin-top: 40px; }
+    .media-section h2 { font-size: 1.25rem; font-weight: 600; margin-bottom: 6px; color: var(--text); }
+    .media-section .media-summary { font-size: 0.9375rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.55; }
+    .media-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .media-table th {
+      text-align: left;
+      padding: 14px 20px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+    .media-table td { padding: 16px 20px; border-bottom: 1px solid var(--border); color: var(--text); }
+    .media-table tr:last-child td { border-bottom: none; }
+    .media-table tr:hover td { background: var(--bg); }
+    .media-table .media-source { font-size: 0.8125rem; color: var(--text-muted); }
+    .media-table a { color: var(--accent); text-decoration: none; }
+    .media-table a:hover { text-decoration: underline; }
     footer { margin-top: 48px; padding: 32px 0 48px; border-top: 1px solid var(--border); text-align: center; }
     footer .logo { margin-bottom: 8px; }
     footer p { font-size: 0.875rem; color: var(--text-muted); }
@@ -105,6 +167,7 @@
       <a href="index.html" class="back-link">← 回首頁搜尋</a>
       <div id="company-info"></div>
       <div id="pipeline-section" class="pipeline-section"></div>
+      <div id="media-section" class="media-section"></div>
     </div>
   </main>
 
@@ -132,21 +195,26 @@
       var ticker = getTicker();
       var companyEl = document.getElementById('company-info');
       var pipelineEl = document.getElementById('pipeline-section');
+      var mediaEl = document.getElementById('media-section');
 
       if (!ticker) {
         companyEl.innerHTML = '<p class="msg">請在網址指定股票代號，例如：company.html?ticker=7899</p>';
         pipelineEl.innerHTML = '';
+        mediaEl.innerHTML = '';
         return;
       }
 
       Promise.all([
         fetch('data/companies.json').then(function (r) { return r.json(); }),
-        fetch('data/pipeline.json').then(function (r) { return r.json(); })
+        fetch('data/pipeline.json').then(function (r) { return r.json(); }),
+        fetch('data/media.json').then(function (r) { return r.json(); }).catch(function () { return []; })
       ]).then(function (arr) {
         var companies = Array.isArray(arr[0]) ? arr[0] : [];
         var pipeline = Array.isArray(arr[1]) ? arr[1] : [];
+        var mediaList = Array.isArray(arr[2]) ? arr[2] : [];
         var company = companies.filter(function (c) { return (c.ticker || '').toString() === ticker; })[0];
         var events = pipeline.filter(function (e) { return (e.ticker || '').toString() === ticker; });
+        var mediaItems = mediaList.filter(function (m) { return (m.ticker || '').toString() === ticker; });
 
         events.sort(function (a, b) {
           var da = (a.date || '').replace(/-/g, '');
@@ -157,8 +225,11 @@
         if (!company) {
           companyEl.innerHTML = '<p class="msg">找不到股票代號「' + escapeHtml(ticker) + '」對應的公司。</p>';
           pipelineEl.innerHTML = '';
+          mediaEl.innerHTML = '';
           return;
         }
+
+        var mediaSummary = '根據近期媒體與公開訊號，可作為評估該公司資本市場能見度與預期時程的參考；以下依時間由新到舊列出。';
 
         companyEl.innerHTML =
           '<div class="company-detail">' +
@@ -173,29 +244,73 @@
 
         if (events.length === 0) {
           pipelineEl.innerHTML = '<h2>管線階段</h2><p class="msg">尚無管線紀錄。</p>';
-          return;
+        } else {
+          renderPipeline();
+        }
+
+        mediaItems.sort(function (a, b) {
+          var da = (a.date || '').replace(/-/g, '');
+          var db = (b.date || '').replace(/-/g, '');
+          return db.localeCompare(da);
+        });
+        mediaEl.innerHTML =
+          '<h2>媒體動態</h2>' +
+          '<p class="media-summary">' + escapeHtml(mediaSummary) + '</p>' +
+          (mediaItems.length === 0
+            ? '<p class="msg">尚無媒體動態。</p>'
+            : '<table class="media-table">' +
+                '<thead><tr><th>日期</th><th>標題</th><th>來源</th><th>連結</th></tr></thead>' +
+                '<tbody>' +
+                  mediaItems.map(function (m) {
+                    var link = (m.url)
+                      ? '<a href="' + escapeHtml(m.url) + '" target="_blank" rel="noopener">閱讀 ↗</a>'
+                      : '—';
+                    return '<tr>' +
+                      '<td>' + escapeHtml(m.date || '—') + '</td>' +
+                      '<td>' + escapeHtml(m.title || '—') + '</td>' +
+                      '<td class="media-source">' + escapeHtml(m.source || '—') + '</td>' +
+                      '<td>' + link + '</td>' +
+                      '</tr>';
+                  }).join('') +
+                '</tbody></table>');
+
+        if (events.length === 0) return;
+
+        function renderPipeline() {
+
+        function stagePill(stage, stageKey) {
+          var key = (stageKey || '').replace(/[^a-z0-9_]/gi, '') || 'default';
+          var label = escapeHtml(stage || '—');
+          return '<span class="pipeline-stage-pill ' + escapeHtml(key) + '">' + label + '</span>';
         }
 
         pipelineEl.innerHTML =
           '<h2>管線階段</h2>' +
+          '<p class="pipeline-desc">依時間排序的資本市場階段紀錄。</p>' +
           '<table class="pipeline-table">' +
-            '<thead><tr><th>階段</th><th>日期</th><th>來源</th><th>連結</th><th>備註</th></tr></thead>' +
+            '<thead><tr><th>階段</th><th>日期</th><th>來源</th><th>官方連結</th><th>備註</th></tr></thead>' +
             '<tbody>' +
               events.map(function (e) {
-                var link = (e.url) ? '<a href="' + escapeHtml(e.url) + '" target="_blank" rel="noopener">連結</a>' : '—';
+                var link = (e.url)
+                  ? '<a href="' + escapeHtml(e.url) + '" class="pipeline-ext-link" target="_blank" rel="noopener">前往來源 ↗</a>'
+                  : '<span class="pipeline-no-link">—</span>';
+                var source = escapeHtml(e.source || '—');
                 return '<tr>' +
-                  '<td>' + escapeHtml(e.stage || '—') + '</td>' +
+                  '<td>' + stagePill(e.stage, e.stageKey) + '</td>' +
                   '<td>' + escapeHtml(e.date || '—') + '</td>' +
-                  '<td>' + escapeHtml(e.source || '—') + '</td>' +
+                  '<td class="source-cell">' + source + '</td>' +
                   '<td>' + link + '</td>' +
                   '<td>' + escapeHtml(e.note != null ? e.note : '—') + '</td>' +
                   '</tr>';
               }).join('') +
             '</tbody>' +
           '</table>';
+        }
+
       }).catch(function () {
         companyEl.innerHTML = '<p class="msg">無法載入資料。</p>';
         pipelineEl.innerHTML = '';
+        mediaEl.innerHTML = '';
       });
     })();
   </script>

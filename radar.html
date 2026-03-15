@@ -45,7 +45,7 @@
     <section class="section fade-in">
       <div class="container">
         <h2 class="h2">即時 IPO 管線</h2>
-        <p class="subtitle">以下為示意資料，展示 IPOHub 如何結構化申報資訊、市場與狀態。</p>
+        <p class="subtitle">本頁呈現近期台灣資本市場相關動態，依申報日期由新到舊排序。</p>
 
         <div class="table-wrapper">
           <table id="ipo-table">
@@ -149,7 +149,15 @@
           return res.json();
         })
         .then(function (data) {
-          renderRows(data);
+          var list = Array.isArray(data) ? data.slice() : [];
+          list.sort(function (a, b) {
+            var da = (a.filingDate || '').toUpperCase();
+            var db = (b.filingDate || '').toUpperCase();
+            if (da === 'TBD' || !da) return 1;
+            if (db === 'TBD' || !db) return -1;
+            return db.localeCompare(da);
+          });
+          renderRows(list);
         })
         .catch(function () {
           renderRows([]);
