@@ -357,6 +357,16 @@
       padding: 16px 0;
     }
 
+    .company-search-results a.company-card-link {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+    }
+
+    .company-search-results a.company-card-link:hover {
+      color: inherit;
+    }
+
     /* Industry Intelligence */
     .intel-grid {
       display: grid;
@@ -576,12 +586,13 @@
           return;
         }
         resultsEl.innerHTML = '<div class="companies-grid">' + matches.map(function (c) {
-          return '<div class="company-card">' +
+          var href = 'company.html?ticker=' + encodeURIComponent(c.ticker);
+          return '<a href="' + href + '" class="company-card company-card-link">' +
             '<div class="ticker">' + escapeHtml(c.ticker) + '</div>' +
             '<h4>' + escapeHtml(c.name) + '</h4>' +
             '<div class="sector">' + escapeHtml(c.sector || '—') + '</div>' +
             '<div class="meta"><span>市場：' + escapeHtml(c.market || '—') + '</span></div>' +
-            '</div>';
+            '</a>';
         }).join('') + '</div>';
       }
 
