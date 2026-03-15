@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOHub — IPO 管線｜追蹤募資進度與發行窗口</title>
+  <meta name="description" content="IPOHub IPO 管線彙整 IPO 申報、預估上市時間與狀態，協助台灣投資人掌握募資進度、發行窗口與市場熱度。">
+  <meta name="keywords" content="IPO 管線, IPO pipeline, 募資進度, 發行窗口, 台灣 IPO, 新股申報">
+  <meta property="og:title" content="IPOHub — IPO 管線｜追蹤募資進度與發行窗口">
+  <meta property="og:description" content="透過 IPOHub IPO 管線掌握全球與台灣 IPO 申報狀態與募資進度。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ipohub.net/pipeline.html">
+  <meta property="og:site_name" content="IPOHub">
+  <meta property="og:locale" content="zh_TW">
+  <link rel="stylesheet" href="style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+  <header class="navbar">
+    <div class="container">
+      <a href="index.html" class="logo">IPO<span>Hub</span></a>
+      <nav class="nav-links">
+        <a href="index.html">首頁</a>
+        <a href="radar.html">IPO 雷達</a>
+        <a href="pipeline.html" class="active">IPO 管線</a>
+        <a href="companies.html">公司名單</a>
+        <a href="industry.html">產業情報</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero fade-in">
+      <div class="container">
+        <h1 class="headline">IPO 管線</h1>
+        <p class="subheadline">從申報到上市，檢視每一檔 IPO 的進度與狀態，掌握募資進度與發行窗口。</p>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <div class="container">
+        <h2 class="h2">管線總覽</h2>
+        <p class="subtitle">以下資料由 data/pipeline.json 動態載入，可擴充更多筆 IPO 管線紀錄。</p>
+
+        <div class="table-wrapper">
+          <table id="pipeline-table">
+            <thead>
+              <tr>
+                <th>公司</th>
+                <th>產業</th>
+                <th>市場</th>
+                <th>狀態</th>
+                <th>申報日期</th>
+                <th>備註</th>
+              </tr>
+            </thead>
+            <tbody id="pipeline-table-body">
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script>
+  (function () {
+    var tbody = document.getElementById('pipeline-table-body');
+    if (!tbody) return;
+
+    var SECTOR_LABELS = {
+      'Consumer Internet': '消費性網路',
+      'SaaS': 'SaaS',
+      'Semiconductors': '半導體',
+      'Consumer': '消費',
+      'Fintech': '金融科技'
+    };
+    var STATUS_LABELS = {
+      filed: '已申報',
+      listed: '已上市',
+      priced: '已訂價',
+      expected: '預期',
+      withdrawn: '撤回'
+    };
+
+    function formatDate(value) {
+      if (!value || String(value).toUpperCase() === 'TBD') return 'TBD';
+      var date = new Date(value);
+      if (Number.isNaN(date.getTime())) return value;
+      return date.toLocaleDateString('zh-TW');
+    }
+
+    function escapeHtml(s) {
+      if (s == null) return '';
+      var div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+
+    function createRow(r) {
+      var statusKey = String(r.status || '').toLowerCase();
+      var tr = document.createElement('tr');
+      tr.innerHTML =
+        '<td class="company-name">' + escapeHtml(r.company) + '</td>' +
+        '<td>' + escapeHtml(SECTOR_LABELS[r.sector] || r.sector) + '</td>' +
+        '<td>' + escapeHtml(r.market === 'Expected' ? '預期' : r.market) + '</td>' +
+        '<td><span class="pill ' + statusKey + '">' + escapeHtml(STATUS_LABELS[statusKey] || r.status) + '</span></td>' +
+        '<td>' + formatDate(r.filingDate) + '</td>' +
+        '<td>' + escapeHtml(r.note || '—') + '</td>';
+      return tr;
+    }
+
+    function render(records) {
+      tbody.innerHTML = '';
+      if (!records || !records.length) {
+        var tr = document.createElement('tr');
+        tr.innerHTML = '<td colspan="6">目前沒有可顯示的管線資料。</td>';
+        tbody.appendChild(tr);
+        return;
+      }
+      records.forEach(function (r) { tbody.appendChild(createRow(r)); });
+    }
+
+    fetch('data/pipeline.json')
+      .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+      .then(render)
+      .catch(function () { render([]); });
+  })();
+  </script>
+
+  <footer class="footer">
+    <div class="container">
+      <p>IPOHub IPO 管線 · 協助台灣投資人掌握全球與台灣的發行節奏與市場熱度。</p>
+    </div>
+  </footer>
+
+</body>
+</html>

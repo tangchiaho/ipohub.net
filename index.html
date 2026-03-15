@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — AI-Driven IPO Intelligence Platform</title>
+  <title>IPOHub — AI 驅動 IPO 情報平台｜台灣 IPO 平台與市場洞見</title>
+  <meta name="description" content="IPOHub 是為台灣投資人打造的 AI 驅動 IPO 情報平台，提供 IPO 雷達、公司資料庫與產業情報，一站式掌握台灣與全球 IPO 機會。">
+  <meta name="keywords" content="IPO 平台, IPOHub, 台灣 IPO, 新股資訊, IPO 情報, IPO 情報平台, 台股 IPO, 全球 IPO, IPO radar, IPO intelligence">
+  <meta property="og:title" content="IPOHub — 台灣投資人的 AI 驅動 IPO 平台">
+  <meta property="og:description" content="透過 IPOHub 的 IPO 雷達、公司名單與產業情報，台灣投資人能快速掌握 IPO 管線與市場機會。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ipohub.net/">
+  <meta property="og:site_name" content="IPOHub">
+  <meta property="og:locale" content="zh_TW">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
@@ -374,16 +382,15 @@
 </head>
 <body>
 
-  <header>
-    <div class="container header-inner">
+  <header class="navbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
       <a href="index.html" class="logo">IPO<span>Hub</span></a>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="radar.html">IPO Radar</a>
-        <a href="companies.html">Companies</a>
-        <a href="industry.html">Industry</a>
-        <a href="#" class="btn btn-ghost">Log in</a>
-        <a href="#" class="btn btn-primary">Get started</a>
+      <nav class="nav-links" style="display:flex;gap:28px;">
+        <a href="index.html">首頁</a>
+        <a href="radar.html">IPO 雷達</a>
+        <a href="pipeline.html">IPO 管線</a>
+        <a href="companies.html">公司名單</a>
+        <a href="industry.html">產業情報</a>
       </nav>
     </div>
   </header>
@@ -391,12 +398,12 @@
   <main>
     <section class="hero">
       <div class="container">
-        <div class="hero-badge">AI-driven IPO intelligence platform</div>
-        <h1>One workspace for IPO discovery, diligence, and monitoring</h1>
-        <p>IPOHub centralizes global IPO pipelines, filings, pricing, and sector signals—using AI to turn raw documents into decision-ready insights for investors, bankers, and corporate teams.</p>
+        <div class="hero-badge">AI 驅動的 IPO 情報平台</div>
+        <h1>一站式掌握 IPO 探勘、盡職調查與動態追蹤</h1>
+        <p>IPOHub 匯整全球 IPO 管線、申報文件、定價與產業訊號，運用 AI 將原始資料轉成可立即決策的洞見，服務法人投資人、承銷商與企業財務團隊。</p>
         <div class="hero-cta">
-          <a href="radar.html" class="btn btn-primary">Explore IPO Radar</a>
-          <a href="#" class="btn btn-ghost">Book a demo</a>
+          <a href="radar.html" class="btn btn-primary">查看 IPO 雷達</a>
+          <a href="#" class="btn btn-ghost">預約產品 Demo</a>
         </div>
       </div>
     </section>
@@ -404,53 +411,53 @@
     <section id="ipo-radar">
       <div class="container">
         <div class="section-header">
-          <div class="section-label">IPO Radar</div>
-          <h2 class="section-title">Track new IPO filings</h2>
-          <p class="section-desc">Real-time visibility into S-1 filings, expected pricing dates, and deal size. Never miss an IPO again.</p>
+          <div class="section-label">IPO 雷達</div>
+          <h2 class="section-title">即時追蹤最新 IPO 申報</h2>
+          <p class="section-desc">即時掌握 S-1 / F-1 申報、預計上市時間與募資規模，不再錯過任何一檔關鍵 IPO。</p>
         </div>
         <div class="ipo-radar">
           <div class="ipo-radar-header">
-            <h3>Recent & upcoming</h3>
-            <a href="#" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.875rem;">View all</a>
+            <h3>近期與即將上市</h3>
+            <a href="#" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.875rem;">檢視全部</a>
           </div>
           <table class="ipo-table">
             <thead>
               <tr>
-                <th>Company</th>
-                <th>Sector</th>
-                <th>Status</th>
-                <th>Est. deal size</th>
-                <th>Filing date</th>
+                <th>公司</th>
+                <th>產業</th>
+                <th>狀態</th>
+                <th>預估募資金額</th>
+                <th>申報日期</th>
               </tr>
             </thead>
             <tbody>
               <tr>
                 <td class="company-name">Reddit Inc.</td>
-                <td>Technology</td>
-                <td><span class="pill filed">Filed</span></td>
+                <td>科技</td>
+                <td><span class="pill filed">已申報</span></td>
                 <td>$6.4B</td>
-                <td>Feb 22, 2025</td>
+                <td>2025-02-22</td>
               </tr>
               <tr>
                 <td class="company-name">Shein</td>
-                <td>Consumer</td>
-                <td><span class="pill expected">Expected</span></td>
+                <td>消費</td>
+                <td><span class="pill expected">預期</span></td>
                 <td>—</td>
                 <td>—</td>
               </tr>
               <tr>
                 <td class="company-name">Stripe</td>
-                <td>Technology</td>
-                <td><span class="pill expected">Expected</span></td>
+                <td>科技 / 金融科技</td>
+                <td><span class="pill expected">預期</span></td>
                 <td>—</td>
                 <td>—</td>
               </tr>
               <tr>
                 <td class="company-name">Klaviyo</td>
-                <td>Technology</td>
-                <td><span class="pill">Listed</span></td>
+                <td>科技 / SaaS</td>
+                <td><span class="pill">已上市</span></td>
                 <td>$9.2B</td>
-                <td>Sep 20, 2024</td>
+                <td>2024-09-20</td>
               </tr>
             </tbody>
           </table>
@@ -461,41 +468,41 @@
     <section id="companies">
       <div class="container">
         <div class="section-header">
-          <div class="section-label">Companies</div>
-          <h2 class="section-title">Explore listed companies</h2>
-          <p class="section-desc">Deep profiles, financials, and comparable analysis for every public company that matters.</p>
+          <div class="section-label">公司名單</div>
+          <h2 class="section-title">瀏覽重點上市櫃公司</h2>
+          <p class="section-desc">提供關鍵公司的基本面、估值區間與可比公司視角，協助建立自己的觀察清單。</p>
         </div>
         <div class="companies-grid">
           <div class="company-card">
             <h4>Reddit Inc.</h4>
-            <div class="sector">Technology · Social</div>
+            <div class="sector">科技 · 社群平台</div>
             <div class="meta">
-              <span>IPO Mar 2025</span>
-              <span>$6.4B val.</span>
+              <span>預計 2025 年 3 月 IPO</span>
+              <span>估值約 64 億美元</span>
             </div>
           </div>
           <div class="company-card">
             <h4>Klaviyo</h4>
-            <div class="sector">Technology · SaaS</div>
+            <div class="sector">科技 · SaaS</div>
             <div class="meta">
-              <span>IPO Sep 2024</span>
-              <span>$9.2B val.</span>
+              <span>2024 年 9 月 IPO</span>
+              <span>估值約 92 億美元</span>
             </div>
           </div>
           <div class="company-card">
             <h4>Arm Holdings</h4>
-            <div class="sector">Technology · Semiconductors</div>
+            <div class="sector">科技 · 半導體 IP</div>
             <div class="meta">
-              <span>IPO Sep 2023</span>
-              <span>$54.5B val.</span>
+              <span>2023 年 9 月 IPO</span>
+              <span>估值約 545 億美元</span>
             </div>
           </div>
           <div class="company-card">
             <h4>Birkenstock</h4>
-            <div class="sector">Consumer · Footwear</div>
+            <div class="sector">消費 · 鞋履品牌</div>
             <div class="meta">
-              <span>IPO Oct 2023</span>
-              <span>$8.6B val.</span>
+              <span>2023 年 10 月 IPO</span>
+              <span>估值約 86 億美元</span>
             </div>
           </div>
         </div>
@@ -505,25 +512,25 @@
     <section id="intelligence">
       <div class="container">
         <div class="section-header">
-          <div class="section-label">Industry Intelligence</div>
-          <h2 class="section-title">Context that drives decisions</h2>
-          <p class="section-desc">Sector trends, valuation benchmarks, and AI-summarized insights so you stay ahead of the market.</p>
+          <div class="section-label">產業情報</div>
+          <h2 class="section-title">看懂驅動估值的關鍵脈絡</h2>
+          <p class="section-desc">結合產業趨勢、估值區間與 AI 摘要重點，協助你在台灣與全球資本市場中掌握超前訊號。</p>
         </div>
         <div class="intel-grid">
           <div class="intel-card">
             <div class="icon">📊</div>
-            <h4>Valuation benchmarks</h4>
-            <p>Compare multiples and deal terms across sectors and vintages. See how each IPO stacks up.</p>
+            <h4>估值基準</h4>
+            <p>跨產業、跨年度比較本益比與募資條件，快速看出每檔 IPO 在同儕中的相對位置。</p>
           </div>
           <div class="intel-card">
             <div class="icon">📈</div>
-            <h4>Sector trends</h4>
-            <p>Track IPO volume, average size, and performance by industry. Spot windows and shifts early.</p>
+            <h4>產業趨勢</h4>
+            <p>追蹤各產業 IPO 件數、平均規模與後市表現，提早掌握發行窗口與市場風向。</p>
           </div>
           <div class="intel-card">
             <div class="icon">🤖</div>
-            <h4>AI summaries</h4>
-            <p>Key risks, growth narrative, and competitive positioning—distilled from filings and earnings.</p>
+            <h4>AI 重點摘要</h4>
+            <p>從公開說明書與法說資料中擷取成長故事、風險揭露與競爭優勢，整理成一目了然的重點摘要。</p>
           </div>
         </div>
       </div>
@@ -533,7 +540,7 @@
   <footer>
     <div class="container">
       <div class="logo">IPO<span>Hub</span></div>
-      <p>AI-driven IPO intelligence. Built for investors and advisors.</p>
+      <p>AI 驅動的 IPO 情報平台，專為專業投資人與市場參與者打造。</p>
     </div>
   </footer>
 

@@ -1,0 +1,17 @@
+{
+  "name": "ipohub-taiwan-ipo-scripts",
+  "version": "1.0.0",
+  "description": "Fetch and parse Taiwan IPO pipeline data for IPOHub",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "fetch-ipo": "node fetch-taiwan-ipo.js",
+    "fetch-ipo:merge": "node fetch-taiwan-ipo.js --merge"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

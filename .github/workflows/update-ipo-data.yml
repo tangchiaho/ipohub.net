@@ -1,0 +1,34 @@
+# Update data/ipo.json from Taiwan sources (TPEx, TWSE, MOPS).
+# Runs on schedule and manual dispatch. Pushes updated data/ipo.json so GitHub Pages serves fresh data.
+name: Update IPO data
+
+on:
+  schedule:
+    - cron: '0 2 * * 1'   # 02:00 UTC every Monday
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install --prefix scripts
+
+      - name: Fetch Taiwan IPO data (merge with existing)
+        run: node scripts/fetch-taiwan-ipo.js --merge
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add data/ipo.json
+          git diff --staged --quiet || (git commit -m "chore: update data/ipo.json from Taiwan sources" && git push)

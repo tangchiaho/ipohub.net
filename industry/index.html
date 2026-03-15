@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>產業情報｜IPOHub｜產業趨勢與估值訊號</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="IPOHub 產業情報整理 AI、半導體、生技、金融科技、消費性網路與綠能等關鍵產業趨勢與估值訊號，協助台灣投資人掌握長期投資主題。">
+  <link rel="stylesheet" href="../style.css">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">IPOHub</a>
+      <ul class="nav-links">
+        <li><a href="/">首頁</a></li>
+        <li><a href="/ipo-radar/">IPO 雷達</a></li>
+        <li><a href="/ipo-companies/">公司名單</a></li>
+        <li><a href="/ipo-pipeline/">IPO 管線</a></li>
+        <li><a href="/industry/" class="active">產業情報</a></li>
+        <li><a href="/insights/">洞見</a></li>
+        <li><a href="/about/">關於 IPOHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main class="main-content container">
+    <header class="page-header">
+      <h1>產業情報</h1>
+      <p class="subtitle">掌握產業趨勢、估值訊號與市場主題</p>
+    </header>
+
+    <section class="sector-cards-grid" id="industries-grid">
+      <!-- Cards injected from data/industries.json -->
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <p>&copy; 2024 IPOHub. 版權所有。</p>
+    </div>
+  </footer>
+
+  <script>
+  (function () {
+    var grid = document.getElementById('industries-grid');
+    if (!grid) return;
+    function escapeHtml(s) {
+      if (s == null) return '';
+      var div = document.createElement('div');
+      div.textContent = s;
+      return div.innerHTML;
+    }
+    function render(records) {
+      grid.innerHTML = '';
+      if (!records || !records.length) {
+        grid.innerHTML = '<p class="subtitle">目前沒有可顯示的產業資料。</p>';
+        return;
+      }
+      records.forEach(function (r) {
+        var card = document.createElement('div');
+        card.className = 'sector-card';
+        card.innerHTML =
+          '<h2>' + escapeHtml(r.name) + '</h2>' +
+          '<p class="card-desc">' + escapeHtml(r.description || '') + '</p>' +
+          '<div class="market-observation"><strong>市場觀察：</strong>' + escapeHtml(r.marketObservation || '') + '</div>';
+        grid.appendChild(card);
+      });
+    }
+    fetch('../data/industries.json')
+      .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+      .then(render)
+      .catch(function () { render([]); });
+  })();
+  </script>
+</body>
+</html>
+

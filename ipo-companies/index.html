@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOHub — 公司名單｜重點上市公司與潛在 IPO 標的</title>
+  <meta name="description" content="IPOHub 公司名單彙整全球與台灣重點上市公司及潛在 IPO 標的，提供產業別、交易市場與簡要描述，協助台灣投資人建立觀察名單。">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <nav class="navbar">
+    <div class="container">
+      <a class="logo" href="/">IPOHub</a>
+      <ul class="nav-links">
+        <li><a href="/">首頁</a></li>
+        <li><a href="/ipo-radar/">IPO 雷達</a></li>
+        <li><a class="active" href="/ipo-companies/">公司名單</a></li>
+        <li><a href="/ipo-pipeline/">IPO 管線</a></li>
+        <li><a href="/industry/">產業情報</a></li>
+        <li><a href="/insights/">洞見</a></li>
+        <li><a href="/about/">關於 IPOHub</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <main>
+    <section class="hero fade-in">
+      <div class="container">
+        <h1 class="headline">公司名單</h1>
+        <p class="subheadline">瀏覽重點上市公司與潛在 IPO 標的，快速了解產業定位與市場。</p>
+      </div>
+    </section>
+
+    <section class="section fade-in">
+      <div class="container">
+        <h2 class="h2">精選公司</h2>
+        <p class="subtitle">以下為範例公司資料，用以示範 IPOHub 公司檔案的呈現方式。</p>
+
+        <div class="sector-cards-grid" id="companies-grid">
+          <!-- Cards injected from data/companies.json -->
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      IPOHub · 為投資人、券商與發行人提供 AI 驅動的 IPO 與公開市場情報。
+    </div>
+  </footer>
+
+  <script>
+    (function () {
+      var grid = document.getElementById('companies-grid');
+      if (!grid) return;
+      function escapeHtml(s) {
+        if (s == null) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+      function render(records) {
+        grid.innerHTML = '';
+        if (!records || !records.length) {
+          grid.innerHTML = '<p class="subtitle">目前沒有可顯示的公司資料。</p>';
+          return;
+        }
+        records.forEach(function (r) {
+          var card = document.createElement('div');
+          card.className = 'company-card';
+          card.innerHTML =
+            '<div class="company-name">' + escapeHtml(r.name) + '</div>' +
+            '<div class="company-meta"><span>' + escapeHtml(r.sector) + '</span><span>' + escapeHtml(r.market || '—') + '</span></div>' +
+            '<p class="company-desc">' + escapeHtml(r.description || '') + '</p>';
+          grid.appendChild(card);
+        });
+      }
+      fetch('../data/companies.json')
+        .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+        .then(render)
+        .catch(function () { render([]); });
+    })();
+  </script>
+</body>
+</html>
+

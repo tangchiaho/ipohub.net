@@ -1,0 +1,50 @@
+[
+  {
+    "name": "Stripe, Inc.",
+    "sector": "金融科技",
+    "market": "—",
+    "description": "全球領先的線上金流平台，服務各類電商與 SaaS 業者。"
+  },
+  {
+    "name": "Databricks",
+    "sector": "軟體 / 數據平台",
+    "market": "—",
+    "description": "提供企業級的雲端資料與 AI 分析平台，加速資料驅動決策。"
+  },
+  {
+    "name": "Klaviyo Inc.",
+    "sector": "軟體 / MarTech",
+    "market": "NYSE",
+    "description": "專為電商品牌設計的行銷自動化與客戶資料平台。"
+  },
+  {
+    "name": "Arm Holdings plc",
+    "sector": "半導體 IP",
+    "market": "Nasdaq",
+    "description": "授權處理器架構與 IP，驅動全球數十億台智慧裝置。"
+  },
+  {
+    "name": "Birkenstock Holding plc",
+    "sector": "消費品牌",
+    "market": "NYSE",
+    "description": "德國經典鞋履品牌，以舒適度與工藝聞名全球。"
+  },
+  {
+    "name": "SpaceX",
+    "sector": "航太",
+    "market": "—",
+    "description": "創新私人航太公司，致力於降低太空運輸成本。"
+  },
+  {
+    "name": "Shein",
+    "sector": "電商 / 快時尚",
+    "market": "—",
+    "description": "全球快時尚電商，運用數位供應鏈快速回應消費需求。"
+  },
+  {
+    "name": "Reddit, Inc.",
+    "sector": "社群平台",
+    "market": "NYSE",
+    "description": "大型線上社群與討論平台，聚合全球主題社群。"
+  }
+]
