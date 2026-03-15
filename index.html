@@ -1,637 +1,804 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — 台灣公司資本市場管線查詢｜股票代號、公司名稱搜尋</title>
-  <meta name="description" content="IPOHub 是台灣公司資本市場管線查詢工具，依股票代號或公司名稱搜尋，掌握公開發行、公開說明書、興櫃、上櫃、上市等階段。">
-  <meta name="keywords" content="IPOHub, 台灣資本市場, 管線查詢, 股票代號, 公司名稱, 公開發行, 興櫃, 上櫃, 上市, 公開說明書">
-  <meta property="og:title" content="IPOHub — 台灣公司資本市場管線查詢">
-  <meta property="og:description" content="依股票代號或公司名稱搜尋，查詢台灣公司從公開發行到上市櫃的管線階段。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ipohub.net/">
-  <meta property="og:site_name" content="IPOHub">
-  <meta property="og:locale" content="zh_TW">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8f9fc;
-      --surface: #ffffff;
-      --text: #1a1d29;
-      --text-muted: #5c6178;
-      --accent: #0f62fe;
-      --accent-hover: #0043ce;
-      --border: #e4e7ef;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPOHub — 台灣 IPO 資本市場情報</title>
+<meta name="description" content="整合公開資訊觀測站、櫃買中心、證交所，追蹤台灣公司從公開發行到上市掛牌的完整 IPO 管線進度。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+  :root {
+    --bg:       #0a0c0f;
+    --bg2:      #111318;
+    --bg3:      #181c23;
+    --border:   rgba(255,255,255,0.07);
+    --border2:  rgba(255,255,255,0.12);
+    --text:     #e8eaed;
+    --text2:    #8b909a;
+    --text3:    #555b66;
+    --accent:   #3b82f6;
+    --accent2:  #1d4ed8;
+    --green:    #22c55e;
+    --amber:    #f59e0b;
+    --red:      #ef4444;
+    --purple:   #a78bfa;
+    --mono:     'DM Mono', monospace;
+    --sans:     'DM Sans', 'Noto Sans TC', sans-serif;
+  }
 
-    body {
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
+  html { scroll-behavior: smooth; }
 
-    .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
 
-    /* Header */
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
+  /* ─── NAV ─────────────────────────────────── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 32px;
+    height: 56px;
+    background: rgba(10,12,15,0.85);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav-logo {
+    font-family: var(--mono);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    text-decoration: none;
+    letter-spacing: -0.02em;
+  }
+  .nav-logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 28px; align-items: center; }
+  .nav-links a {
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    transition: color 0.15s;
+  }
+  .nav-links a:hover { color: var(--text); }
+  .nav-cta {
+    background: var(--accent);
+    color: #fff !important;
+    padding: 6px 16px;
+    border-radius: 6px;
+    font-weight: 500 !important;
+    transition: background 0.15s !important;
+  }
+  .nav-cta:hover { background: var(--accent2) !important; }
 
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+  /* ─── HERO ────────────────────────────────── */
+  .hero {
+    padding: 120px 32px 64px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .hero-tag {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 1px solid rgba(59,130,246,0.25);
+    color: var(--accent);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    padding: 4px 12px;
+    border-radius: 4px;
+    margin-bottom: 24px;
+  }
+  .hero-tag::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+  .hero h1 {
+    font-size: clamp(32px, 5vw, 52px);
+    font-weight: 300;
+    line-height: 1.15;
+    letter-spacing: -0.03em;
+    color: var(--text);
+    margin-bottom: 20px;
+  }
+  .hero h1 strong {
+    font-weight: 500;
+    color: #fff;
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: 16px;
+    color: var(--text2);
+    max-width: 580px;
+    line-height: 1.7;
+    margin-bottom: 36px;
+  }
+  .hero-sub b { color: var(--text); font-weight: 400; }
+  .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 56px; }
+  .btn-primary {
+    background: var(--accent);
+    color: #fff;
+    padding: 10px 24px;
+    border-radius: 7px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.15s, transform 0.1s;
+  }
+  .btn-primary:hover { background: var(--accent2); transform: translateY(-1px); }
+  .btn-ghost {
+    background: transparent;
+    color: var(--text2);
+    padding: 10px 24px;
+    border-radius: 7px;
+    border: 1px solid var(--border2);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    transition: border-color 0.15s, color 0.15s;
+  }
+  .btn-ghost:hover { border-color: rgba(255,255,255,0.25); color: var(--text); }
 
-    .logo {
-      font-size: 1.375rem;
-      font-weight: 700;
-      color: var(--text);
-      letter-spacing: -0.02em;
-    }
+  /* ─── STATS BAR ───────────────────────────── */
+  .stats-bar {
+    display: flex; gap: 0;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    background: var(--bg2);
+    margin-bottom: 64px;
+  }
+  .stat {
+    flex: 1; padding: 20px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-family: var(--mono);
+    font-size: 26px;
+    font-weight: 500;
+    color: #fff;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-num.green { color: var(--green); }
+  .stat-num.amber { color: var(--amber); }
+  .stat-num.blue  { color: var(--accent); }
+  .stat-label {
+    font-size: 12px;
+    color: var(--text3);
+    font-family: var(--mono);
+    letter-spacing: 0.04em;
+  }
 
-    .logo span { color: var(--accent); }
+  /* ─── SECTION HEADER ─────────────────────── */
+  .section { padding: 0 32px 72px; max-width: 1100px; margin: 0 auto; }
+  .section-header {
+    display: flex; justify-content: space-between; align-items: flex-end;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-title {
+    font-size: 11px;
+    font-family: var(--mono);
+    letter-spacing: 0.1em;
+    color: var(--text3);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .section-heading {
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--text);
+    letter-spacing: -0.02em;
+  }
+  .section-link {
+    font-size: 12px;
+    font-family: var(--mono);
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.02em;
+  }
+  .section-link:hover { text-decoration: underline; }
 
-    nav {
-      display: flex;
-      align-items: center;
-      gap: 32px;
-    }
+  /* ─── PIPELINE TABLE ─────────────────────── */
+  .pipeline-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .pipeline-table th {
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    color: var(--text3);
+    padding: 0 16px 10px;
+    font-weight: 400;
+    text-transform: uppercase;
+  }
+  .pipeline-table td {
+    padding: 14px 16px;
+    border-top: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .pipeline-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .company-name {
+    font-weight: 500;
+    color: var(--text);
+    font-size: 14px;
+  }
+  .company-code {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    margin-top: 2px;
+  }
+  .badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    padding: 3px 9px;
+    border-radius: 4px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .badge::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .badge-興櫃   { background: rgba(167,139,250,0.12); color: var(--purple); border: 1px solid rgba(167,139,250,0.2); }
+  .badge-申請上市 { background: rgba(245,158,11,0.12);  color: var(--amber);  border: 1px solid rgba(245,158,11,0.2); }
+  .badge-申請上櫃 { background: rgba(59,130,246,0.12);  color: var(--accent); border: 1px solid rgba(59,130,246,0.2); }
+  .badge-公開發行 { background: rgba(139,144,154,0.1);  color: var(--text2);  border: 1px solid var(--border2); }
+  .badge-掛牌   { background: rgba(34,197,94,0.12);   color: var(--green);  border: 1px solid rgba(34,197,94,0.2); }
+  .date-text {
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text2);
+  }
+  .industry-tag {
+    font-size: 11px;
+    color: var(--text3);
+    background: var(--bg3);
+    padding: 2px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--border);
+  }
+  .pipeline-progress {
+    display: flex; gap: 3px; align-items: center;
+  }
+  .pip {
+    width: 28px; height: 4px;
+    border-radius: 2px;
+    background: var(--bg3);
+    border: 1px solid var(--border);
+  }
+  .pip.done { background: var(--accent); border-color: var(--accent); }
+  .pip.active { background: var(--amber); border-color: var(--amber); }
 
-    nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.9375rem;
-      font-weight: 500;
-      transition: color 0.2s;
-    }
+  /* ─── PIPELINE VISUAL ─────────────────────── */
+  .pipeline-stages {
+    display: flex; align-items: center; gap: 0;
+    margin-bottom: 40px;
+    overflow-x: auto;
+    padding-bottom: 4px;
+  }
+  .stage {
+    flex: 1; min-width: 120px;
+    display: flex; flex-direction: column; align-items: center;
+    gap: 6px;
+    position: relative;
+  }
+  .stage::after {
+    content: '';
+    position: absolute;
+    top: 16px; left: 60%; right: -40%;
+    height: 1px;
+    background: var(--border2);
+  }
+  .stage:last-child::after { display: none; }
+  .stage-dot {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    font-weight: 500;
+    z-index: 1;
+    position: relative;
+  }
+  .stage-dot.active {
+    background: rgba(245,158,11,0.15);
+    border-color: var(--amber);
+    color: var(--amber);
+  }
+  .stage-dot.done {
+    background: rgba(59,130,246,0.15);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .stage-name {
+    font-size: 11px;
+    font-family: var(--mono);
+    color: var(--text3);
+    text-align: center;
+    letter-spacing: 0.03em;
+  }
+  .stage-count {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text2);
+  }
 
-    nav a:hover { color: var(--text); }
+  /* ─── FEATURE CARDS ─────────────────────── */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+  }
+  .feature-card {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 24px;
+    transition: border-color 0.15s;
+  }
+  .feature-card:hover { border-color: var(--border2); }
+  .feature-icon {
+    width: 36px; height: 36px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    margin-bottom: 16px;
+  }
+  .feature-card h3 {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+  .feature-card p {
+    font-size: 13px;
+    color: var(--text2);
+    line-height: 1.6;
+  }
+  .feature-tag {
+    display: inline-block;
+    margin-top: 14px;
+    font-family: var(--mono);
+    font-size: 10px;
+    color: var(--accent);
+    letter-spacing: 0.06em;
+  }
 
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      padding: 10px 20px;
-      font-size: 0.9375rem;
-      font-weight: 600;
-      border-radius: var(--radius-sm);
-      text-decoration: none;
-      transition: background 0.2s, color 0.2s;
-      cursor: pointer;
-      border: none;
-      font-family: inherit;
-    }
+  /* ─── RADAR FEED ─────────────────────────── */
+  .radar-feed { display: flex; flex-direction: column; gap: 1px; }
+  .radar-item {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 16px;
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    transition: border-color 0.15s;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: 6px;
+  }
+  .radar-item:hover { border-color: var(--border2); }
+  .radar-date {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+    min-width: 70px;
+  }
+  .radar-company { font-size: 14px; font-weight: 500; color: var(--text); flex: 1; }
+  .radar-desc { font-size: 12px; color: var(--text2); flex: 2; }
 
-    .btn-primary {
-      background: var(--accent);
-      color: white;
-    }
+  /* ─── SUBSCRIBE ──────────────────────────── */
+  .subscribe-section {
+    background: var(--bg2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px 48px;
+    display: flex; justify-content: space-between; align-items: center;
+    gap: 32px;
+    margin: 0 32px 72px;
+    max-width: 1100px;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 72px;
+  }
+  .subscribe-section h2 {
+    font-size: 22px;
+    font-weight: 500;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .subscribe-section p { font-size: 14px; color: var(--text2); }
+  .subscribe-form { display: flex; gap: 10px; flex-shrink: 0; }
+  .subscribe-input {
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: 7px;
+    padding: 10px 16px;
+    color: var(--text);
+    font-family: var(--sans);
+    font-size: 14px;
+    width: 240px;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .subscribe-input::placeholder { color: var(--text3); }
+  .subscribe-input:focus { border-color: var(--accent); }
+  .subscribe-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 7px;
+    padding: 10px 20px;
+    font-family: var(--sans);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  .subscribe-btn:hover { background: var(--accent2); }
 
-    .btn-primary:hover {
-      background: var(--accent-hover);
-    }
+  /* ─── FOOTER ─────────────────────────────── */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 32px;
+    display: flex; justify-content: space-between; align-items: center;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  footer .logo {
+    font-family: var(--mono);
+    font-size: 14px;
+    color: var(--text3);
+  }
+  footer .logo span { color: var(--accent); }
+  .footer-links { display: flex; gap: 24px; }
+  .footer-links a {
+    font-size: 12px;
+    color: var(--text3);
+    text-decoration: none;
+  }
+  .footer-links a:hover { color: var(--text2); }
+  .footer-note {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--text3);
+  }
 
-    .btn-ghost {
-      background: transparent;
-      color: var(--text-muted);
-    }
+  /* ─── DIVIDER ────────────────────────────── */
+  .full-divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 0 0 64px;
+  }
 
-    .btn-ghost:hover {
-      color: var(--text);
-      background: var(--bg);
-    }
-
-    /* Hero */
-    .hero {
-      padding: 80px 0 100px;
-      text-align: center;
-    }
-
-    .hero-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 6px 14px;
-      background: rgba(15, 98, 254, 0.08);
-      color: var(--accent);
-      font-size: 0.8125rem;
-      font-weight: 600;
-      border-radius: 100px;
-      margin-bottom: 24px;
-      letter-spacing: 0.02em;
-    }
-
-    .hero h1 {
-      font-size: clamp(2.5rem, 5vw, 3.5rem);
-      font-weight: 700;
-      letter-spacing: -0.03em;
-      line-height: 1.15;
-      max-width: 640px;
-      margin: 0 auto 20px;
-      color: var(--text);
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      max-width: 520px;
-      margin: 0 auto 36px;
-      font-weight: 400;
-    }
-
-    .hero-cta {
-      display: flex;
-      gap: 12px;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    /* Section common */
-    section {
-      padding: 64px 0;
-    }
-
-    .section-header {
-      margin-bottom: 40px;
-    }
-
-    .section-label {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--accent);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .section-title {
-      font-size: 1.75rem;
-      font-weight: 700;
-      letter-spacing: -0.02em;
-      color: var(--text);
-    }
-
-    .section-desc {
-      color: var(--text-muted);
-      margin-top: 8px;
-      max-width: 560px;
-    }
-
-    /* IPO Radar */
-    .ipo-radar {
-      background: var(--surface);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      overflow: hidden;
-      box-shadow: var(--shadow);
-    }
-
-    .ipo-radar-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 20px 24px;
-      border-bottom: 1px solid var(--border);
-      background: var(--bg);
-    }
-
-    .ipo-radar-header h3 {
-      font-size: 1rem;
-      font-weight: 600;
-      color: var(--text);
-    }
-
-    .ipo-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 0.9375rem;
-    }
-
-    .ipo-table th {
-      text-align: left;
-      padding: 14px 24px;
-      font-weight: 600;
-      color: var(--text-muted);
-      font-size: 0.8125rem;
-      text-transform: uppercase;
-      letter-spacing: 0.04em;
-      border-bottom: 1px solid var(--border);
-      background: var(--surface);
-    }
-
-    .ipo-table td {
-      padding: 16px 24px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text);
-    }
-
-    .ipo-table tr:last-child td { border-bottom: none; }
-
-    .ipo-table tr:hover td { background: var(--bg); }
-
-    .company-name { font-weight: 600; color: var(--text); }
-    .pill {
-      display: inline-block;
-      padding: 4px 10px;
-      font-size: 0.75rem;
-      font-weight: 600;
-      border-radius: 100px;
-      background: #e8f4ea;
-      color: #0d6b2c;
-    }
-
-    .pill.filed { background: #e8f0fe; color: #1557b0; }
-    .pill.expected { background: #fef3e8; color: #b45309; }
-
-    /* Companies grid */
-    .companies {
-      padding-top: 32px;
-    }
-
-    .companies-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-      gap: 20px;
-    }
-
-    .company-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 24px;
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-
-    .company-card:hover {
-      box-shadow: var(--shadow-lg);
-      border-color: #c5cad8;
-    }
-
-    .company-card h4 {
-      font-size: 1.0625rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 4px;
-    }
-
-    .company-card .sector {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      margin-bottom: 12px;
-    }
-
-    .company-card .meta {
-      font-size: 0.8125rem;
-      color: var(--text-muted);
-      display: flex;
-      gap: 16px;
-    }
-
-    .company-card .meta span { display: flex; align-items: center; gap: 4px; }
-
-    .company-search-wrap {
-      margin-bottom: 24px;
-      max-width: 400px;
-    }
-
-    .company-search-wrap input {
-      width: 100%;
-      padding: 12px 16px;
-      font-size: 1rem;
-      font-family: inherit;
-      border: 1px solid var(--border);
-      border-radius: var(--radius-sm);
-      background: var(--surface);
-      color: var(--text);
-      transition: border-color 0.2s;
-    }
-
-    .company-search-wrap input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .company-search-wrap input:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
-
-    .company-search-results {
-      min-height: 80px;
-    }
-
-    .company-search-results .company-card .ticker {
-      font-size: 0.8125rem;
-      font-weight: 600;
-      color: var(--accent);
-      margin-bottom: 4px;
-    }
-
-    .company-search-results .no-query,
-    .company-search-results .no-matches {
-      font-size: 0.9375rem;
-      color: var(--text-muted);
-      padding: 16px 0;
-    }
-
-    .company-search-results a.company-card-link {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-    }
-
-    .company-search-results a.company-card-link:hover {
-      color: inherit;
-    }
-
-    /* Industry Intelligence */
-    .intel-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 24px;
-    }
-
-    @media (max-width: 900px) {
-      .intel-grid { grid-template-columns: 1fr; }
-    }
-
-    .intel-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 28px;
-      transition: box-shadow 0.2s, border-color 0.2s;
-    }
-
-    .intel-card:hover {
-      box-shadow: var(--shadow-lg);
-      border-color: #c5cad8;
-    }
-
-    .intel-card .icon {
-      width: 40px;
-      height: 40px;
-      background: rgba(15, 98, 254, 0.1);
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.25rem;
-      margin-bottom: 16px;
-    }
-
-    .intel-card h4 {
-      font-size: 1.0625rem;
-      font-weight: 600;
-      color: var(--text);
-      margin-bottom: 8px;
-    }
-
-    .intel-card p {
-      font-size: 0.9375rem;
-      color: var(--text-muted);
-      line-height: 1.55;
-    }
-
-    /* Footer */
-    footer {
-      margin-top: 80px;
-      padding: 32px 0 48px;
-      border-top: 1px solid var(--border);
-      text-align: center;
-    }
-
-    footer .logo {
-      margin-bottom: 8px;
-    }
-
-    footer p {
-      font-size: 0.875rem;
-      color: var(--text-muted);
-    }
-  </style>
+  @media (max-width: 768px) {
+    nav { padding: 0 20px; }
+    .nav-links { display: none; }
+    .hero { padding: 100px 20px 48px; }
+    .section { padding: 0 20px 56px; }
+    .stats-bar { flex-wrap: wrap; }
+    .feature-grid { grid-template-columns: 1fr; }
+    .subscribe-section { flex-direction: column; padding: 28px; }
+    .subscribe-form { flex-direction: column; width: 100%; }
+    .subscribe-input { width: 100%; }
+    footer { flex-direction: column; gap: 20px; text-align: center; }
+    .pipeline-stages { gap: 0; }
+  }
+</style>
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <a href="index.html" class="logo">IPO<span>Hub</span></a>
-      <nav class="nav-links" style="display:flex;gap:28px;">
-        <a href="index.html">首頁</a>
-        <a href="radar.html">IPO 雷達</a>
-        <a href="pipeline.html">IPO 管線</a>
-        <a href="companies.html">公司名單</a>
-        <a href="industry.html">產業情報</a>
-      </nav>
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html">IPO<span>Hub</span></a>
+  <div class="nav-links">
+    <a href="radar.html">IPO Radar</a>
+    <a href="pipeline.html">Pipeline</a>
+    <a href="companies.html">公司名單</a>
+    <a href="industry.html">產業情報</a>
+    <a href="#subscribe" class="nav-cta">訂閱通知</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">LIVE · 資料每日自動更新</div>
+  <h1>
+    台灣 <em>IPO</em> 資本市場<br>
+    <strong>完整管線情報</strong>
+  </h1>
+  <p class="hero-sub">
+    整合<b>公開資訊觀測站、櫃買中心、證交所</b>，<br>
+    從公開發行到掛牌上市，一條時間軸看清每家公司的進度。
+  </p>
+  <div class="hero-actions">
+    <a href="pipeline.html" class="btn-primary">查看 Pipeline →</a>
+    <a href="companies.html" class="btn-ghost">瀏覽公司名單</a>
+  </div>
+
+  <!-- Stats bar -->
+  <div class="stats-bar">
+    <div class="stat">
+      <div class="stat-num green" id="stat-emerging">—</div>
+      <div class="stat-label">本月新登錄興櫃</div>
     </div>
-  </header>
-
-  <main>
-    <section class="hero">
-      <div class="container">
-        <div class="hero-badge">台灣公司資本市場管線查詢</div>
-        <h1>依股票代號或公司名稱，查詢台灣公司公開發行到上市櫃管線</h1>
-        <p>IPOHub 專注台灣資本市場，提供公開發行、公開說明書、登錄興櫃、申請上櫃、上櫃、申請上市、上市等階段查詢，協助投資人與從業人員掌握公司進度。</p>
-        <div class="hero-cta">
-          <a href="radar.html" class="btn btn-primary">查詢管線</a>
-          <a href="companies.html" class="btn btn-ghost">瀏覽公司</a>
-        </div>
-      </div>
-    </section>
-
-    <section id="ipo-radar">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">管線雷達</div>
-          <h2 class="section-title">台灣公司管線階段一覽</h2>
-          <p class="section-desc">從公開發行、公開說明書、登錄興櫃、申請上櫃／上市到上櫃／上市，掌握台灣公司資本市場進度。</p>
-        </div>
-        <div class="ipo-radar">
-          <div class="ipo-radar-header">
-            <h3>管線一覽（示意）</h3>
-            <a href="#" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.875rem;">檢視全部</a>
-          </div>
-          <table class="ipo-table">
-            <thead>
-              <tr>
-                <th>公司</th>
-                <th>產業</th>
-                <th>狀態</th>
-                <th>預估募資金額</th>
-                <th>申報日期</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td class="company-name">Reddit Inc.</td>
-                <td>科技</td>
-                <td><span class="pill filed">已申報</span></td>
-                <td>$6.4B</td>
-                <td>2025-02-22</td>
-              </tr>
-              <tr>
-                <td class="company-name">Shein</td>
-                <td>消費</td>
-                <td><span class="pill expected">預期</span></td>
-                <td>—</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td class="company-name">Stripe</td>
-                <td>科技 / 金融科技</td>
-                <td><span class="pill expected">預期</span></td>
-                <td>—</td>
-                <td>—</td>
-              </tr>
-              <tr>
-                <td class="company-name">Klaviyo</td>
-                <td>科技 / SaaS</td>
-                <td><span class="pill">已上市</span></td>
-                <td>$9.2B</td>
-                <td>2024-09-20</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <section id="companies">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">公司名單</div>
-          <h2 class="section-title">依股票代號或公司名稱搜尋</h2>
-          <p class="section-desc">查詢台灣公司基本資訊與管線階段，建立觀察清單。</p>
-        </div>
-        <div class="company-search-wrap">
-          <input type="text" id="company-search" placeholder="輸入股票代號或公司名稱" autocomplete="off">
-        </div>
-        <div id="company-search-results" class="company-search-results">
-          <div class="no-query">輸入股票代號或公司名稱即可搜尋。</div>
-        </div>
-      </div>
-    </section>
-
-    <section id="intelligence">
-      <div class="container">
-        <div class="section-header">
-          <div class="section-label">產業情報</div>
-          <h2 class="section-title">台灣資本市場脈絡</h2>
-          <p class="section-desc">結合產業趨勢與台灣公開發行、興櫃、上櫃、上市管線，協助掌握市場動向。</p>
-        </div>
-        <div class="intel-grid">
-          <div class="intel-card">
-            <div class="icon">📊</div>
-            <h4>管線階段</h4>
-            <p>公開發行、公開說明書、登錄興櫃、申請上櫃、上櫃、申請上市、上市等階段一目了然。</p>
-          </div>
-          <div class="intel-card">
-            <div class="icon">📈</div>
-            <h4>產業與市場</h4>
-            <p>依產業與市場別追蹤台灣公司管線件數與進度，掌握發行窗口。</p>
-          </div>
-          <div class="intel-card">
-            <div class="icon">🔍</div>
-            <h4>股票代號／公司名稱</h4>
-            <p>以股票代號或公司名稱搜尋，快速查詢公司基本資訊與管線進度。</p>
-          </div>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer>
-    <div class="container">
-      <div class="logo">IPO<span>Hub</span></div>
-      <p>台灣公司資本市場管線查詢工具，依股票代號或公司名稱搜尋。</p>
+    <div class="stat">
+      <div class="stat-num amber" id="stat-applying">—</div>
+      <div class="stat-label">申請上市中</div>
     </div>
-  </footer>
+    <div class="stat">
+      <div class="stat-num blue" id="stat-pipeline">—</div>
+      <div class="stat-label">Pipeline 追蹤中</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" id="stat-investor">—</div>
+      <div class="stat-label">法說會（本季）</div>
+    </div>
+  </div>
+</section>
 
-  <script>
-    (function () {
-      var input = document.getElementById('company-search');
-      var resultsEl = document.getElementById('company-search-results');
-      var companies = [];
+<hr class="full-divider">
 
-      function render(matches) {
-        if (matches === null) {
-          resultsEl.innerHTML = '<div class="no-query">輸入股票代號或公司名稱即可搜尋。</div>';
-          return;
-        }
-        if (matches.length === 0) {
-          resultsEl.innerHTML = '<div class="no-matches">找不到符合的公司。</div>';
-          return;
-        }
-        resultsEl.innerHTML = '<div class="companies-grid">' + matches.map(function (c) {
-          var href = 'company.html?ticker=' + encodeURIComponent(c.ticker);
-          return '<a href="' + href + '" class="company-card company-card-link">' +
-            '<div class="ticker">' + escapeHtml(c.ticker) + '</div>' +
-            '<h4>' + escapeHtml(c.name) + '</h4>' +
-            '<div class="sector">' + escapeHtml(c.sector || '—') + '</div>' +
-            '<div class="meta"><span>市場：' + escapeHtml(c.market || '—') + '</span></div>' +
-            '</a>';
-        }).join('') + '</div>';
-      }
+<!-- PIPELINE STAGES -->
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">IPO Pipeline</div>
+      <div class="section-heading">管線階段分佈</div>
+    </div>
+    <a href="pipeline.html" class="section-link">查看完整 Pipeline →</a>
+  </div>
 
-      function escapeHtml(s) {
-        if (s == null) return '—';
-        var div = document.createElement('div');
-        div.textContent = s;
-        return div.innerHTML;
-      }
+  <div class="pipeline-stages">
+    <div class="stage">
+      <div class="stage-dot done">01</div>
+      <div class="stage-name">公開發行</div>
+      <div class="stage-count" id="s1">—</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot done">02</div>
+      <div class="stage-name">公開說明書</div>
+      <div class="stage-count" id="s2">—</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot active">03</div>
+      <div class="stage-name">登錄興櫃</div>
+      <div class="stage-count" id="s3">—</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot active">04</div>
+      <div class="stage-name">申請上櫃</div>
+      <div class="stage-count" id="s4">—</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot">05</div>
+      <div class="stage-name">申請上市</div>
+      <div class="stage-count" id="s5">—</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot">06</div>
+      <div class="stage-name">審議中</div>
+      <div class="stage-count" id="s6">—</div>
+    </div>
+    <div class="stage">
+      <div class="stage-dot">07</div>
+      <div class="stage-name">掛牌上市</div>
+      <div class="stage-count" id="s7">—</div>
+    </div>
+  </div>
 
-      function runSearch() {
-        var q = (input.value || '').trim();
-        if (!q) {
-          render(null);
-          return;
-        }
-        var lower = q.toLowerCase();
-        var match = companies.filter(function (c) {
-          var ticker = (c.ticker || '').toString();
-          var name = (c.name || '') + (c.nameEn || '');
-          return ticker.indexOf(q) !== -1 || ticker.toLowerCase().indexOf(lower) !== -1 ||
-            name.indexOf(q) !== -1 || name.toLowerCase().indexOf(lower) !== -1;
-        });
-        render(match);
-      }
+  <!-- Pipeline table -->
+  <table class="pipeline-table">
+    <thead>
+      <tr>
+        <th>公司</th>
+        <th>產業</th>
+        <th>階段</th>
+        <th>進度</th>
+        <th>最新異動</th>
+      </tr>
+    </thead>
+    <tbody id="pipeline-tbody">
+      <!-- Placeholder rows shown before data loads -->
+      <tr>
+        <td><div class="company-name">達易特科技</div><div class="company-code">申請中</div></td>
+        <td><span class="industry-tag">半導體</span></td>
+        <td><span class="badge badge-申請上市">申請上市</span></td>
+        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div></div></td>
+        <td><span class="date-text">2025-03-10</span></td>
+      </tr>
+      <tr>
+        <td><div class="company-name">凌華科技</div><div class="company-code">6166</div></td>
+        <td><span class="industry-tag">工業電腦</span></td>
+        <td><span class="badge badge-興櫃">登錄興櫃</span></td>
+        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></td>
+        <td><span class="date-text">2025-03-05</span></td>
+      </tr>
+      <tr>
+        <td><div class="company-name">圓展科技</div><div class="company-code">5284</div></td>
+        <td><span class="industry-tag">視訊設備</span></td>
+        <td><span class="badge badge-申請上櫃">申請上櫃</span></td>
+        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip done"></div><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></td>
+        <td><span class="date-text">2025-02-28</span></td>
+      </tr>
+      <tr>
+        <td><div class="company-name">皇達投資</div><div class="company-code">公發中</div></td>
+        <td><span class="industry-tag">金融</span></td>
+        <td><span class="badge badge-公開發行">公開發行</span></td>
+        <td><div class="pipeline-progress"><div class="pip done"></div><div class="pip active"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div><div class="pip"></div></div></td>
+        <td><span class="date-text">2025-02-20</span></td>
+      </tr>
+    </tbody>
+  </table>
+</section>
 
-      input.addEventListener('input', runSearch);
-      input.addEventListener('change', runSearch);
+<hr class="full-divider">
 
-      fetch('data/companies.json')
-        .then(function (r) { return r.json(); })
-        .then(function (data) {
-          companies = Array.isArray(data) ? data : [];
-          runSearch();
-        })
-        .catch(function () {
-          resultsEl.innerHTML = '<div class="no-matches">無法載入公司資料。</div>';
-        });
-    })();
-  </script>
+<!-- RADAR FEED -->
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">IPO Radar</div>
+      <div class="section-heading">最新動態</div>
+    </div>
+    <a href="radar.html" class="section-link">查看全部 →</a>
+  </div>
+  <div class="radar-feed">
+    <a class="radar-item" href="#">
+      <span class="radar-date">03/14</span>
+      <span class="badge badge-興櫃">登錄興櫃</span>
+      <span class="radar-company">台灣精銳</span>
+      <span class="radar-desc">精密機械製造，預計本季登錄興櫃，招股說明書已送件</span>
+    </a>
+    <a class="radar-item" href="#">
+      <span class="radar-date">03/12</span>
+      <span class="badge badge-申請上市">申請上市</span>
+      <span class="radar-company">廣達電腦子公司</span>
+      <span class="radar-desc">AI 伺服器零組件供應商，完成興櫃輔導期，正式遞件申請上市</span>
+    </a>
+    <a class="radar-item" href="#">
+      <span class="radar-date">03/10</span>
+      <span class="badge badge-掛牌">掛牌上市</span>
+      <span class="radar-company">某生技公司</span>
+      <span class="radar-desc">TWSE 審議通過，預計 Q2 正式掛牌，股票代號待公告</span>
+    </a>
+  </div>
+</section>
+
+<hr class="full-divider">
+
+<!-- FEATURES -->
+<section class="section">
+  <div class="section-header">
+    <div>
+      <div class="section-title">為什麼選擇 IPOHub</div>
+      <div class="section-heading">我們整合了你要找的一切</div>
+    </div>
+  </div>
+  <div class="feature-grid">
+    <div class="feature-card">
+      <div class="feature-icon">⚡</div>
+      <h3>每日自動更新</h3>
+      <p>整合 MOPS、TPEx、TWSE 三大官方資料來源，每日自動爬取更新，不需人工維護。</p>
+      <span class="feature-tag">AUTOMATED · DAILY</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <h3>完整 Pipeline 時間軸</h3>
+      <p>從公開發行、登錄興櫃、申請上市到正式掛牌，每個節點都有日期與文件連結。</p>
+      <span class="feature-tag">7 STAGES TRACKED</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📄</div>
+      <h3>法說會 & 公開說明書</h3>
+      <p>法說會日程自動匯整，AI 協助摘要重點，不需自己下載 PDF 一頁一頁看。</p>
+      <span class="feature-tag">AI SUMMARY · COMING SOON</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <h3>Pipeline 變動通知</h3>
+      <p>訂閱追蹤的公司，階段有變動時自動發送 Email，不錯過任何申請進度。</p>
+      <span class="feature-tag">EMAIL ALERTS</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🏭</div>
+      <h3>產業別分析</h3>
+      <p>依半導體、生技、AI、金融等產業分類，掌握各產業 IPO 熱度與時間窗口。</p>
+      <span class="feature-tag">INDUSTRY LENS</span>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">💬</div>
+      <h3>投資社群（即將推出）</h3>
+      <p>每家公司獨立討論區，邀請法人、IR 與創辦人入駐，實名認證標章。</p>
+      <span class="feature-tag">COMMUNITY · ROADMAP</span>
+    </div>
+  </div>
+</section>
+
+<!-- SUBSCRIBE -->
+<div class="subscribe-section" id="subscribe">
+  <div>
+    <h2>Pipeline 有異動，第一時間知道</h2>
+    <p>免費訂閱 IPOHub 週報，每週一整理台灣 IPO 管線最新進度</p>
+  </div>
+  <div class="subscribe-form">
+    <input type="email" class="subscribe-input" placeholder="your@email.com">
+    <button class="subscribe-btn">訂閱通知</button>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="logo">IPO<span>Hub</span></div>
+  <div class="footer-links">
+    <a href="about/index.html">關於我們</a>
+    <a href="radar.html">IPO Radar</a>
+    <a href="pipeline.html">Pipeline</a>
+    <a href="mailto:hello@ipohub.net">聯絡我們</a>
+  </div>
+  <div class="footer-note">資料來源：MOPS · TPEx · TWSE</div>
+</footer>
+
+<script>
+// Load data from JSON when available
+// Stats will be populated from data/stats.json
+async function loadStats() {
+  try {
+    const res = await fetch('data/stats.json');
+    const d = await res.json();
+    document.getElementById('stat-emerging').textContent = d.emerging ?? '—';
+    document.getElementById('stat-applying').textContent  = d.applying  ?? '—';
+    document.getElementById('stat-pipeline').textContent  = d.pipeline  ?? '—';
+    document.getElementById('stat-investor').textContent  = d.investor  ?? '—';
+    const stages = ['s1','s2','s3','s4','s5','s6','s7'];
+    stages.forEach((id,i) => {
+      const el = document.getElementById(id);
+      if (el && d.stages) el.textContent = d.stages[i] ?? '—';
+    });
+  } catch(e) {
+    // Data not yet available — show placeholder dashes
+  }
+}
+loadStats();
+</script>
 </body>
 </html>
