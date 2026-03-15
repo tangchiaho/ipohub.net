@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOHub — IPO Radar</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    :root {
+      --bg: #f8f9fc;
+      --surface: #ffffff;
+      --text: #1a1d29;
+      --text-muted: #5c6178;
+      --accent: #0f62fe;
+      --accent-hover: #0043ce;
+      --border: #e4e7ef;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--accent); }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* Hero / Page header */
+    .hero {
+      padding: 72px 0 40px;
+    }
+
+    .hero-header {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(15, 98, 254, 0.08);
+      color: var(--accent);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 100px;
+      letter-spacing: 0.02em;
+      width: fit-content;
+    }
+
+    .hero h1 {
+      font-size: 2.1rem;
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      color: var(--text);
+    }
+
+    .hero-subtitle {
+      font-size: 1.0625rem;
+      color: var(--text-muted);
+      max-width: 560px;
+    }
+
+    .hero-metadata {
+      margin-top: 12px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 16px;
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    .hero-metadata span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* IPO Radar table */
+    .section-header {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .section-title {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
+    .section-actions {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .filter-pill {
+      font-size: 0.8125rem;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .filter-pill.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: rgba(15, 98, 254, 0.04);
+    }
+
+    .ipo-radar {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .ipo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+
+    .ipo-table thead {
+      background: #f3f4fa;
+    }
+
+    .ipo-table th {
+      text-align: left;
+      padding: 14px 24px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .ipo-table td {
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .ipo-table tr:last-child td { border-bottom: none; }
+
+    .ipo-table tbody tr:hover td {
+      background: var(--bg);
+    }
+
+    .company-name { font-weight: 600; color: var(--text); }
+
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 100px;
+      background: #e8f4ea;
+      color: #0d6b2c;
+    }
+
+    .pill.filed { background: #e8f0fe; color: #1557b0; }
+    .pill.priced { background: #e8f4ea; color: #0d6b2c; }
+    .pill.listed { background: #eef2ff; color: #4338ca; }
+    .pill.withdrawn { background: #fef2f2; color: #b91c1c; }
+    .pill.expected { background: #fef3e8; color: #b45309; }
+
+    /* Footer */
+    footer {
+      margin-top: 64px;
+      padding: 24px 0 40px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+
+    @media (max-width: 768px) {
+      .section-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <div class="container header-inner">
+      <a href="index.html" class="logo">IPO<span>Hub</span></a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="radar.html">IPO Radar</a>
+        <a href="companies.html">Companies</a>
+        <a href="industry.html">Industry</a>
+        <a href="#" class="btn btn-ghost">Log in</a>
+        <a href="#" class="btn btn-primary">Get started</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="container hero-header">
+        <div class="hero-badge">IPO Radar</div>
+        <h1>Track recent filings, upcoming listings, and IPO pipeline intelligence</h1>
+        <p class="hero-subtitle">
+          A single view of global IPO activity—filed, priced, listed, and withdrawn—powered by real-time filings, market data, and AI summarization.
+        </p>
+        <div class="hero-metadata">
+          <span>● Coverage: US, Europe, Asia</span>
+          <span>● Sources: Exchanges, regulators, and company filings</span>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="container">
+        <div class="section-header">
+          <div class="section-title">Live pipeline</div>
+          <div class="section-actions">
+            <button class="filter-pill active">All</button>
+            <button class="filter-pill">Filed</button>
+            <button class="filter-pill">Priced</button>
+            <button class="filter-pill">Listed</button>
+          </div>
+        </div>
+
+        <div class="ipo-radar">
+          <table class="ipo-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Sector</th>
+                <th>Market</th>
+                <th>Status</th>
+                <th>Filing Date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="company-name">Reddit Inc.</td>
+                <td>Technology</td>
+                <td>NYSE</td>
+                <td><span class="pill priced">Priced</span></td>
+                <td>Feb 22, 2024</td>
+              </tr>
+              <tr>
+                <td class="company-name">Klaviyo Inc.</td>
+                <td>Software</td>
+                <td>NYSE</td>
+                <td><span class="pill.listed">Listed</span></td>
+                <td>Aug 25, 2023</td>
+              </tr>
+              <tr>
+                <td class="company-name">Arm Holdings plc</td>
+                <td>Semiconductors</td>
+                <td>Nasdaq</td>
+                <td><span class="pill listed">Listed</span></td>
+                <td>Aug 21, 2023</td>
+              </tr>
+              <tr>
+                <td class="company-name">Birkenstock Holding plc</td>
+                <td>Consumer</td>
+                <td>NYSE</td>
+                <td><span class="pill priced">Priced</span></td>
+                <td>Sep 12, 2023</td>
+              </tr>
+              <tr>
+                <td class="company-name">Stripe, Inc.</td>
+                <td>Fintech</td>
+                <td>—</td>
+                <td><span class="pill expected">Expected</span></td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td class="company-name">WeWork Inc.</td>
+                <td>Real Estate / Flex Space</td>
+                <td>NYSE</td>
+                <td><span class="pill withdrawn">Withdrawn</span></td>
+                <td>Aug 14, 2019</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>IPOHub IPO Radar · AI-driven IPO intelligence for investors, banks, and issuers.</p>
+    </div>
+  </footer>
+
+</body>
+</html>
