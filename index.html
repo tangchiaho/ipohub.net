@@ -1,49 +1,540 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>IPOHub</title>
-<style>
-body{
-font-family:Arial;
-background:#f6f7f9;
-text-align:center;
-padding:80px;
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOHub — AI-Driven IPO Intelligence Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #f8f9fc;
+      --surface: #ffffff;
+      --text: #1a1d29;
+      --text-muted: #5c6178;
+      --accent: #0f62fe;
+      --accent-hover: #0043ce;
+      --border: #e4e7ef;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 1px 3px rgba(0,0,0,0.06);
+      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
+    }
 
-h1{
-font-size:48px;
-}
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
-.card{
-background:white;
-padding:30px;
-margin:20px;
-display:inline-block;
-border-radius:10px;
-box-shadow:0 5px 20px rgba(0,0,0,0.1);
-}
-</style>
+    body {
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .container {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .logo {
+      font-size: 1.375rem;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .logo span { color: var(--accent); }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.9375rem;
+      font-weight: 500;
+      transition: color 0.2s;
+    }
+
+    nav a:hover { color: var(--text); }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 10px 20px;
+      font-size: 0.9375rem;
+      font-weight: 600;
+      border-radius: var(--radius-sm);
+      text-decoration: none;
+      transition: background 0.2s, color 0.2s;
+      cursor: pointer;
+      border: none;
+      font-family: inherit;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+    }
+
+    .btn-ghost {
+      background: transparent;
+      color: var(--text-muted);
+    }
+
+    .btn-ghost:hover {
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    /* Hero */
+    .hero {
+      padding: 80px 0 100px;
+      text-align: center;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 14px;
+      background: rgba(15, 98, 254, 0.08);
+      color: var(--accent);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      border-radius: 100px;
+      margin-bottom: 24px;
+      letter-spacing: 0.02em;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.5rem, 5vw, 3.5rem);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      max-width: 640px;
+      margin: 0 auto 20px;
+      color: var(--text);
+    }
+
+    .hero p {
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 520px;
+      margin: 0 auto 36px;
+      font-weight: 400;
+    }
+
+    .hero-cta {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    /* Section common */
+    section {
+      padding: 64px 0;
+    }
+
+    .section-header {
+      margin-bottom: 40px;
+    }
+
+    .section-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--accent);
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: var(--text);
+    }
+
+    .section-desc {
+      color: var(--text-muted);
+      margin-top: 8px;
+      max-width: 560px;
+    }
+
+    /* IPO Radar */
+    .ipo-radar {
+      background: var(--surface);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .ipo-radar-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .ipo-radar-header h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .ipo-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.9375rem;
+    }
+
+    .ipo-table th {
+      text-align: left;
+      padding: 14px 24px;
+      font-weight: 600;
+      color: var(--text-muted);
+      font-size: 0.8125rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      border-bottom: 1px solid var(--border);
+      background: var(--surface);
+    }
+
+    .ipo-table td {
+      padding: 16px 24px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .ipo-table tr:last-child td { border-bottom: none; }
+
+    .ipo-table tr:hover td { background: var(--bg); }
+
+    .company-name { font-weight: 600; color: var(--text); }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      border-radius: 100px;
+      background: #e8f4ea;
+      color: #0d6b2c;
+    }
+
+    .pill.filed { background: #e8f0fe; color: #1557b0; }
+    .pill.expected { background: #fef3e8; color: #b45309; }
+
+    /* Companies grid */
+    .companies {
+      padding-top: 32px;
+    }
+
+    .companies-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 20px;
+    }
+
+    .company-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .company-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: #c5cad8;
+    }
+
+    .company-card h4 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .company-card .sector {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      margin-bottom: 12px;
+    }
+
+    .company-card .meta {
+      font-size: 0.8125rem;
+      color: var(--text-muted);
+      display: flex;
+      gap: 16px;
+    }
+
+    .company-card .meta span { display: flex; align-items: center; gap: 4px; }
+
+    /* Industry Intelligence */
+    .intel-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    @media (max-width: 900px) {
+      .intel-grid { grid-template-columns: 1fr; }
+    }
+
+    .intel-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      transition: box-shadow 0.2s, border-color 0.2s;
+    }
+
+    .intel-card:hover {
+      box-shadow: var(--shadow-lg);
+      border-color: #c5cad8;
+    }
+
+    .intel-card .icon {
+      width: 40px;
+      height: 40px;
+      background: rgba(15, 98, 254, 0.1);
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+    }
+
+    .intel-card h4 {
+      font-size: 1.0625rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .intel-card p {
+      font-size: 0.9375rem;
+      color: var(--text-muted);
+      line-height: 1.55;
+    }
+
+    /* Footer */
+    footer {
+      margin-top: 80px;
+      padding: 32px 0 48px;
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    footer .logo {
+      margin-bottom: 8px;
+    }
+
+    footer p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+    }
+  </style>
 </head>
-
 <body>
 
-<h1>IPOHub</h1>
-<p>AI-driven IPO & Industry Intelligence</p>
+  <header>
+    <div class="container header-inner">
+      <a href="#" class="logo">IPO<span>Hub</span></a>
+      <nav>
+        <a href="#ipo-radar">IPO Radar</a>
+        <a href="#companies">Companies</a>
+        <a href="#intelligence">Intelligence</a>
+        <a href="#" class="btn btn-ghost">Log in</a>
+        <a href="#" class="btn btn-primary">Get started</a>
+      </nav>
+    </div>
+  </header>
 
-<div class="card">
-<h2>IPO Radar</h2>
-<p>Track new IPO filings</p>
-</div>
+  <main>
+    <section class="hero">
+      <div class="container">
+        <div class="hero-badge">AI-Powered IPO Intelligence</div>
+        <h1>Make smarter IPO decisions with data that moves first</h1>
+        <p>IPOHub surfaces filings, valuations, and industry signals so you can track, compare, and act on upcoming and recent IPOs.</p>
+        <div class="hero-cta">
+          <a href="#" class="btn btn-primary">Start free trial</a>
+          <a href="#" class="btn btn-ghost">Watch demo</a>
+        </div>
+      </div>
+    </section>
 
-<div class="card">
-<h2>Companies</h2>
-<p>Explore listed companies</p>
-</div>
+    <section id="ipo-radar">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">IPO Radar</div>
+          <h2 class="section-title">Track new IPO filings</h2>
+          <p class="section-desc">Real-time visibility into S-1 filings, expected pricing dates, and deal size. Never miss an IPO again.</p>
+        </div>
+        <div class="ipo-radar">
+          <div class="ipo-radar-header">
+            <h3>Recent & upcoming</h3>
+            <a href="#" class="btn btn-ghost" style="padding: 6px 12px; font-size: 0.875rem;">View all</a>
+          </div>
+          <table class="ipo-table">
+            <thead>
+              <tr>
+                <th>Company</th>
+                <th>Sector</th>
+                <th>Status</th>
+                <th>Est. deal size</th>
+                <th>Filing date</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td class="company-name">Reddit Inc.</td>
+                <td>Technology</td>
+                <td><span class="pill filed">Filed</span></td>
+                <td>$6.4B</td>
+                <td>Feb 22, 2025</td>
+              </tr>
+              <tr>
+                <td class="company-name">Shein</td>
+                <td>Consumer</td>
+                <td><span class="pill expected">Expected</span></td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td class="company-name">Stripe</td>
+                <td>Technology</td>
+                <td><span class="pill expected">Expected</span></td>
+                <td>—</td>
+                <td>—</td>
+              </tr>
+              <tr>
+                <td class="company-name">Klaviyo</td>
+                <td>Technology</td>
+                <td><span class="pill">Listed</span></td>
+                <td>$9.2B</td>
+                <td>Sep 20, 2024</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
 
-<div class="card">
-<h2>Industry</h2>
-<p>Industry intelligence</p>
-</div>
+    <section id="companies">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Companies</div>
+          <h2 class="section-title">Explore listed companies</h2>
+          <p class="section-desc">Deep profiles, financials, and comparable analysis for every public company that matters.</p>
+        </div>
+        <div class="companies-grid">
+          <div class="company-card">
+            <h4>Reddit Inc.</h4>
+            <div class="sector">Technology · Social</div>
+            <div class="meta">
+              <span>IPO Mar 2025</span>
+              <span>$6.4B val.</span>
+            </div>
+          </div>
+          <div class="company-card">
+            <h4>Klaviyo</h4>
+            <div class="sector">Technology · SaaS</div>
+            <div class="meta">
+              <span>IPO Sep 2024</span>
+              <span>$9.2B val.</span>
+            </div>
+          </div>
+          <div class="company-card">
+            <h4>Arm Holdings</h4>
+            <div class="sector">Technology · Semiconductors</div>
+            <div class="meta">
+              <span>IPO Sep 2023</span>
+              <span>$54.5B val.</span>
+            </div>
+          </div>
+          <div class="company-card">
+            <h4>Birkenstock</h4>
+            <div class="sector">Consumer · Footwear</div>
+            <div class="meta">
+              <span>IPO Oct 2023</span>
+              <span>$8.6B val.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="intelligence">
+      <div class="container">
+        <div class="section-header">
+          <div class="section-label">Industry Intelligence</div>
+          <h2 class="section-title">Context that drives decisions</h2>
+          <p class="section-desc">Sector trends, valuation benchmarks, and AI-summarized insights so you stay ahead of the market.</p>
+        </div>
+        <div class="intel-grid">
+          <div class="intel-card">
+            <div class="icon">📊</div>
+            <h4>Valuation benchmarks</h4>
+            <p>Compare multiples and deal terms across sectors and vintages. See how each IPO stacks up.</p>
+          </div>
+          <div class="intel-card">
+            <div class="icon">📈</div>
+            <h4>Sector trends</h4>
+            <p>Track IPO volume, average size, and performance by industry. Spot windows and shifts early.</p>
+          </div>
+          <div class="intel-card">
+            <div class="icon">🤖</div>
+            <h4>AI summaries</h4>
+            <p>Key risks, growth narrative, and competitive positioning—distilled from filings and earnings.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="logo">IPO<span>Hub</span></div>
+      <p>AI-driven IPO intelligence. Built for investors and advisors.</p>
+    </div>
+  </footer>
 
 </body>
 </html>
