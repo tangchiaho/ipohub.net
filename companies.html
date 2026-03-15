@@ -1,226 +1,670 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — 公司名單｜IPO 公司資料庫與觀察名單</title>
-  <meta name="description" content="IPOHub 公司名單作為 IPO companies database，整理重點上市公司與潛在 IPO 標的，提供產業別、交易市場與簡要描述，協助台灣投資人建立觀察名單。">
-  <meta name="keywords" content="IPO 公司, IPO companies database, 公司名單, 新股公司, 上市公司資料, IPO 觀察名單, IPOHub">
-  <meta property="og:title" content="IPOHub — 公司名單｜IPO 公司資料庫">
-  <meta property="og:description" content="瀏覽 IPOHub 精選的上市公司與潛在 IPO 標的，掌握產業與市場分布。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ipohub.net/companies.html">
-  <meta property="og:site_name" content="IPOHub">
-  <meta property="og:locale" content="zh_TW">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
-  <style>
-    :root {
-      --bg: #f8f9fc;
-      --surface: #fff;
-      --text: #1a1d29;
-      --text-muted: #5c6178;
-      --accent: #0f62fe;
-      --accent-hover: #0043ce;
-      --border: #e4e7ef;
-      --radius: 12px;
-      --radius-sm: 8px;
-      --shadow: 0 1px 3px rgba(0,0,0,0.06);
-      --shadow-lg: 0 8px 32px rgba(0,0,0,0.08);
-    }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      -webkit-font-smoothing: antialiased;
-    }
-    .container {
-      max-width: 1120px;
-      margin: 0 auto;
-      padding: 0 24px;
-    }
-    header {
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-      padding: 16px 0;
-      position: sticky;
-      top: 0;
-      z-index: 100;
-    }
-    .navbar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .nav-logo {
-      font-weight: 700;
-      font-size: 1.5rem;
-      color: var(--accent);
-      text-decoration: none;
-      letter-spacing: -1px;
-    }
-    nav ul {
-      display: flex;
-      list-style: none;
-      gap: 24px;
-    }
-    nav ul li a {
-      text-decoration: none;
-      color: var(--text-muted);
-      font-weight: 500;
-      border-radius: var(--radius-sm);
-      padding: 6px 14px;
-      transition: background .15s, color .15s;
-    }
-    nav ul li a.active,
-    nav ul li a:hover {
-      color: var(--accent);
-      background: #ecf4ff;
-    }
-    main {
-      padding: 48px 0 0 0;
-    }
-    .page-title {
-      font-size: 2.3rem;
-      font-weight: 700;
-      margin-bottom: 6px;
-      letter-spacing: -1px;
-    }
-    .subtitle {
-      color: var(--text-muted);
-      font-size: 1.15rem;
-      margin-bottom: 36px;
-    }
-    .company-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 28px;
-      margin-bottom: 60px;
-    }
-    .company-card {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 24px 20px 20px 20px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      transition: box-shadow .17s, border .17s;
-    }
-    .company-card:hover {
-      border: 1.5px solid var(--accent);
-      box-shadow: var(--shadow-lg);
-    }
-    .company-name {
-      font-size: 1.15rem;
-      font-weight: 600;
-      margin-bottom: 2px;
-      color: var(--accent);
-      letter-spacing: -0.5px;
-    }
-    .company-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 12px 16px;
-      font-size: 0.97rem;
-      color: var(--text-muted);
-      margin-bottom: 6px;
-    }
-    .company-meta span {
-      display: inline-block;
-      background: #f3f7fd;
-      border-radius: var(--radius-sm);
-      padding: 2px 10px;
-    }
-    .company-desc {
-      color: var(--text);
-      font-size: 1rem;
-      margin-top: 2px;
-    }
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 22px 0 18px 0;
-      margin-top: 48px;
-      color: var(--text-muted);
-      font-size: 1rem;
-      text-align: center;
-    }
-    @media (max-width: 700px) {
-      .page-title { font-size: 1.5rem; }
-      .company-card { padding: 18px 12px; }
-      .container { padding: 0 10px; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>公司名單 — IPOHub</title>
+<meta name="description" content="台灣 IPO 公司完整名單，依產業、階段、市場篩選，搜尋股票代號或公司名稱。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070910;--bg2:#0d1017;--bg3:#13171f;--bg4:#181d28;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.11);--b3:rgba(255,255,255,.18);
+  --tx:#dde1e9;--tx2:#7c8494;--tx3:#434a58;
+  --blue:#4f8ef7;--blue2:#2563eb;--purple:#9d7dfa;
+  --teal:#2dd4bf;--green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --mono:'DM Mono',monospace;--sans:'DM Sans','Noto Sans TC',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* AMBIENT */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(130px);animation:drift 20s ease-in-out infinite alternate}
+.orb1{width:500px;height:400px;top:-100px;left:-60px;background:radial-gradient(circle,#2b4ef0,transparent 70%);opacity:.10}
+.orb2{width:450px;height:350px;bottom:10%;right:-60px;background:radial-gradient(circle,#6d28d9,transparent 70%);opacity:.08;animation-delay:-10s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,20px) scale(1.06)}100%{transform:translate(-15px,40px) scale(.96)}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);background-size:48px 48px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:56px;background:rgba(7,9,16,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1)}
+.nav-logo{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--tx);text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.nav-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#3b5ff7,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.nav-logo em{color:var(--blue);font-style:normal}
+.ai-pill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--purple);background:rgba(157,125,250,.08);border:1px solid rgba(157,125,250,.2);padding:3px 10px;border-radius:20px}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:sparkle 2.5s ease-in-out infinite}
+@keyframes sparkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--tx2);text-decoration:none;font-size:13px;transition:color .15s}
+.nav-links a:hover{color:var(--tx)}
+.nav-links a.active{color:#fff}
+.nav-cta{background:linear-gradient(135deg,var(--blue2),#4f46e5);color:#fff !important;padding:6px 18px;border-radius:7px;font-weight:500 !important;font-size:13px !important;box-shadow:0 0 20px rgba(79,142,247,.25);transition:opacity .15s,transform .1s !important}
+.nav-cta:hover{opacity:.88 !important;transform:translateY(-1px)}
+
+/* PAGE */
+.page{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:88px 36px 80px}
+
+/* HEADER */
+.page-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;margin-bottom:8px}
+.page-title{font-size:clamp(28px,4vw,42px);font-weight:300;letter-spacing:-.04em;color:#fff;margin-bottom:8px}
+.page-title em{font-style:normal;background:linear-gradient(135deg,#4f8ef7,#9d7dfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{font-size:14px;color:var(--tx2);margin-bottom:32px}
+
+/* SEARCH + TOOLBAR */
+.toolbar{display:flex;flex-direction:column;gap:14px;margin-bottom:28px}
+.toolbar-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;max-width:400px}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--tx3);fill:none;pointer-events:none}
+.search-in{width:100%;background:var(--bg2);border:1px solid var(--b2);border-radius:8px;padding:10px 12px 10px 36px;color:var(--tx);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .15s}
+.search-in::placeholder{color:var(--tx3)}
+.search-in:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,142,247,.1)}
+.result-info{font-family:var(--mono);font-size:11px;color:var(--tx3);letter-spacing:.05em}
+.view-toggle{display:flex;background:var(--bg2);border:1px solid var(--b1);border-radius:8px;overflow:hidden;margin-left:auto}
+.vt{padding:8px 14px;background:transparent;border:none;cursor:pointer;color:var(--tx3);font-size:13px;font-family:var(--sans);display:flex;align-items:center;gap:6px;transition:color .15s,background .15s}
+.vt:hover{color:var(--tx);background:rgba(255,255,255,.04)}
+.vt.on{color:#fff;background:rgba(79,142,247,.15)}
+.vt svg{width:14px;height:14px;stroke:currentColor;fill:none;flex-shrink:0}
+
+/* FILTERS */
+.filter-row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.fl{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.07em;margin-right:2px}
+.fc{padding:5px 14px;border-radius:20px;border:1px solid var(--b1);background:var(--bg2);color:var(--tx2);font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.02em}
+.fc:hover{border-color:var(--b2);color:var(--tx)}
+.fc.on{background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.3);color:var(--blue)}
+.fc.on.purple{background:rgba(157,125,250,.12);border-color:rgba(157,125,250,.3);color:var(--purple)}
+.fc.on.amber{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.28);color:var(--amber)}
+.fc.on.green{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.28);color:var(--green)}
+.fdiv{width:1px;height:20px;background:var(--b1);margin:0 4px}
+.sort-sel{background:var(--bg2);border:1px solid var(--b1);border-radius:8px;padding:5px 12px;color:var(--tx2);font-family:var(--mono);font-size:11px;outline:none;cursor:pointer;letter-spacing:.04em;transition:border-color .15s}
+.sort-sel:focus{border-color:var(--blue)}
+option{background:var(--bg2)}
+
+/* ── CARD GRID ── */
+#view-cards{display:block}
+#view-table-wrap{display:none}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.co-card{background:var(--bg2);border:1px solid var(--b1);border-radius:14px;padding:22px;cursor:pointer;transition:border-color .2s,transform .2s;position:relative;overflow:hidden}
+.co-card:hover{border-color:var(--b2);transform:translateY(-2px)}
+.co-card::after{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,rgba(79,142,247,.35),transparent);opacity:0;transition:opacity .3s}
+.co-card:hover::after{opacity:1}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px}
+.card-avatar{width:44px;height:44px;border-radius:10px;background:var(--bg3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.card-watch{background:transparent;border:1px solid var(--b1);border-radius:6px;padding:4px 10px;color:var(--tx3);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s}
+.card-watch:hover{border-color:var(--blue);color:var(--blue)}
+.card-watch.on{border-color:rgba(52,211,153,.4);color:var(--green);background:rgba(52,211,153,.08)}
+.card-name{font-size:16px;font-weight:500;color:var(--tx);letter-spacing:-.01em;margin-bottom:3px}
+.card-code{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+.card-meta{display:flex;gap:8px;align-items:center;margin:10px 0 14px;flex-wrap:wrap}
+.chip{font-size:11px;color:var(--tx3);background:var(--bg3);padding:2px 9px;border-radius:4px;border:1px solid var(--b1)}
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.be{background:rgba(157,125,250,.1);color:var(--purple);border:1px solid rgba(157,125,250,.22)}
+.bt{background:rgba(251,191,36,.1);color:var(--amber);border:1px solid rgba(251,191,36,.22)}
+.bp{background:rgba(79,142,247,.1);color:var(--blue);border:1px solid rgba(79,142,247,.22)}
+.bpub{background:rgba(100,110,130,.1);color:var(--tx2);border:1px solid var(--b2)}
+.bl{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.22)}
+.card-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:12px 0;border-top:1px solid var(--b1);border-bottom:1px solid var(--b1);margin-bottom:12px}
+.cs-item{}
+.cs-label{font-family:var(--mono);font-size:9px;color:var(--tx3);letter-spacing:.07em;margin-bottom:2px}
+.cs-val{font-family:var(--mono);font-size:13px;font-weight:500;color:var(--tx)}
+.cs-val.g{color:var(--green)}.cs-val.a{color:var(--amber)}.cs-val.b{color:var(--blue)}
+.card-progress{display:flex;gap:3px;margin-bottom:4px}
+.pp{width:100%;height:3px;border-radius:2px;background:var(--bg4)}
+.pp.d{background:var(--blue)}.pp.a{background:var(--amber)}
+.card-prog-label{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+.card-ai-hint{display:flex;align-items:center;gap:5px;margin-top:10px;font-family:var(--mono);font-size:10px;color:var(--purple);letter-spacing:.04em;opacity:.7}
+.card-ai-hint::before{content:'◆';font-size:7px;animation:sparkle 2.5s ease-in-out infinite}
+
+/* ── TABLE VIEW ── */
+.pt{width:100%;border-collapse:collapse;font-size:13px}
+.pt thead tr{border-bottom:1px solid var(--b2)}
+.pt th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--tx3);padding:0 16px 12px;font-weight:400;text-transform:uppercase;cursor:pointer;user-select:none;white-space:nowrap}
+.pt th:hover{color:var(--tx2)}
+.pt th.sorted{color:var(--blue)}
+.pt td{padding:14px 16px;border-top:1px solid var(--b1);vertical-align:middle}
+.pt tr{transition:background .12s;cursor:pointer}
+.pt tbody tr:hover td{background:rgba(255,255,255,.02)}
+.cn{font-weight:500;color:var(--tx);font-size:14px}
+.cc{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-top:2px}
+.dm{font-family:var(--mono);font-size:12px;color:var(--tx2)}
+.raise{font-family:var(--mono);font-size:12px;color:var(--tx2)}
+.pb{display:flex;gap:3px}
+.tbl-watch{background:transparent;border:1px solid var(--b1);border-radius:6px;padding:4px 10px;color:var(--tx3);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s}
+.tbl-watch:hover{border-color:var(--blue);color:var(--blue)}
+.tbl-watch.on{border-color:rgba(52,211,153,.4);color:var(--green);background:rgba(52,211,153,.08)}
+
+/* EMPTY */
+.empty{text-align:center;padding:80px 20px;color:var(--tx3);font-family:var(--mono);font-size:13px}
+.empty div{font-size:32px;margin-bottom:12px;opacity:.4}
+
+/* PAGINATION */
+.pagination{display:flex;align-items:center;justify-content:center;gap:8px;margin-top:32px}
+.pg-btn{background:var(--bg2);border:1px solid var(--b1);border-radius:8px;padding:8px 14px;color:var(--tx2);font-family:var(--mono);font-size:12px;cursor:pointer;transition:all .15s}
+.pg-btn:hover{border-color:var(--b2);color:var(--tx)}
+.pg-btn.on{background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.3);color:var(--blue)}
+.pg-btn:disabled{opacity:.3;cursor:not-allowed}
+.pg-info{font-family:var(--mono);font-size:11px;color:var(--tx3);padding:0 8px}
+
+/* ── DETAIL DRAWER ── */
+.drawer-overlay{position:fixed;inset:0;z-index:500;background:rgba(7,9,16,.8);backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.drawer-overlay.open{opacity:1;pointer-events:all}
+.drawer{width:560px;height:100vh;background:var(--bg2);border-left:1px solid var(--b2);overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.drawer-overlay.open .drawer{transform:translateX(0)}
+
+/* drawer header */
+.dh{padding:24px 28px;border-bottom:1px solid var(--b1);position:sticky;top:0;background:var(--bg2);z-index:10}
+.dh-top{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px}
+.dh-avatar{width:52px;height:52px;border-radius:12px;background:var(--bg3);border:1px solid var(--b2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.dh-info{flex:1}
+.dh-name{font-size:22px;font-weight:500;color:#fff;letter-spacing:-.03em;margin-bottom:4px}
+.dh-sub{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+.dh-close{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;transition:color .15s;flex-shrink:0}
+.dh-close:hover{color:var(--tx)}
+.dh-meta{display:flex;gap:8px;flex-wrap:wrap}
+.dh-actions{display:flex;gap:10px;margin-top:16px}
+.da-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:6px}
+.da-primary{background:linear-gradient(135deg,var(--blue2),#4f46e5);color:#fff;box-shadow:0 0 16px rgba(79,142,247,.2)}
+.da-primary:hover{opacity:.9}
+.da-ghost{background:var(--bg3);color:var(--tx2);border:1px solid var(--b2)}
+.da-ghost:hover{border-color:var(--b3);color:var(--tx)}
+
+/* drawer body */
+.db{padding:24px 28px}
+.ds{margin-bottom:28px}
+.ds-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.ii{}
+.ii-label{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.06em;margin-bottom:3px}
+.ii-val{font-size:14px;color:var(--tx);font-weight:500}
+.ii-val.mono{font-family:var(--mono);font-size:13px}
+
+/* stage timeline in drawer */
+.stage-tl{display:flex;flex-direction:column;gap:0;position:relative}
+.stage-tl::before{content:'';position:absolute;left:10px;top:10px;bottom:10px;width:1px;background:var(--b2)}
+.stage-tl-item{display:flex;gap:16px;align-items:flex-start;padding:8px 0;position:relative}
+.stl-dot{width:20px;height:20px;border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;z-index:1;position:relative}
+.stl-dot.done{background:rgba(79,142,247,.15);border:1px solid rgba(79,142,247,.4)}
+.stl-dot.done::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--blue)}
+.stl-dot.active{background:rgba(251,191,36,.15);border:1px solid rgba(251,191,36,.4);box-shadow:0 0 10px rgba(251,191,36,.2)}
+.stl-dot.active::after{content:'';width:7px;height:7px;border-radius:50%;background:var(--amber);animation:livepulse2 1.5s ease-in-out infinite}
+@keyframes livepulse2{0%,100%{opacity:1}50%{opacity:.4}}
+.stl-dot.idle{background:var(--bg3);border:1px solid var(--b1)}
+.stl-body{flex:1;padding-top:1px}
+.stl-name{font-size:13px;color:var(--tx);font-weight:500;margin-bottom:2px}
+.stl-date{font-family:var(--mono);font-size:11px;color:var(--tx3)}
+
+/* AI box in drawer */
+.d-ai-box{background:var(--bg3);border:1px solid rgba(157,125,250,.2);border-radius:10px;padding:16px;position:relative;overflow:hidden;margin-bottom:16px}
+.d-ai-box::before{content:'';position:absolute;inset:0;border-radius:10px;background:radial-gradient(ellipse at top left,rgba(157,125,250,.06),transparent 60%);pointer-events:none}
+.d-ai-label{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--purple);background:rgba(157,125,250,.1);border:1px solid rgba(157,125,250,.22);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.d-ai-label::before{content:'◆';font-size:7px;animation:sparkle 2.5s ease-in-out infinite}
+.d-ai-text{font-size:13px;color:var(--tx2);line-height:1.75}
+.d-ai-text b{color:var(--tx);font-weight:400}
+.hl{display:inline-block;background:rgba(79,142,247,.1);border:1px solid rgba(79,142,247,.2);color:var(--blue);font-family:var(--mono);font-size:11px;padding:1px 7px;border-radius:4px;margin:0 2px}
+
+/* event log */
+.ev-list{display:flex;flex-direction:column;gap:0}
+.ev-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b1)}
+.ev-item:last-child{border-bottom:none}
+.ev-date{font-family:var(--mono);font-size:11px;color:var(--tx3);min-width:80px}
+.ev-dot{width:6px;height:6px;border-radius:50%;background:var(--b2);flex-shrink:0}
+.ev-dot.blue{background:var(--blue)}.ev-dot.amber{background:var(--amber)}.ev-dot.green{background:var(--green)}
+.ev-desc{font-size:13px;color:var(--tx2)}
+.ev-desc b{color:var(--tx);font-weight:400}
+
+/* docs */
+.doc-list{display:flex;flex-direction:column;gap:8px}
+.doc-item{display:flex;align-items:center;gap:12px;padding:10px 14px;background:var(--bg3);border:1px solid var(--b1);border-radius:8px;cursor:pointer;transition:border-color .15s;text-decoration:none;color:inherit}
+.doc-item:hover{border-color:var(--b2)}
+.doc-icon{font-size:18px;flex-shrink:0}
+.doc-name{font-size:13px;color:var(--tx);flex:1}
+.doc-meta{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+.doc-dl{font-family:var(--mono);font-size:10px;color:var(--blue)}
+
+@media(max-width:768px){
+  nav{padding:0 20px}.nav-links{display:none}
+  .page{padding:88px 20px 60px}
+  .card-grid{grid-template-columns:1fr}
+  .drawer{width:100vw}
+  .info-grid{grid-template-columns:1fr}
+}
+</style>
 </head>
 <body>
-  <header class="navbar">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <a href="index.html" class="logo">IPO<span>Hub</span></a>
-      <nav class="nav-links" style="display:flex;gap:28px;">
-        <a href="index.html">首頁</a>
-        <a href="radar.html">IPO 雷達</a>
-        <a href="pipeline.html">IPO 管線</a>
-        <a href="companies.html" class="active">公司名單</a>
-        <a href="industry.html">產業情報</a>
-      </nav>
-    </div>
-  </header>
-  <main>
-    <div class="container">
-      <h1 class="page-title">公司名單</h1>
-      <p class="subtitle">瀏覽重點上市公司與潛在 IPO 標的，建立個人觀察名單。</p>
-      <h2 class="h2">IPO 公司資料庫</h2>
-      <p class="subtitle" style="margin-bottom:24px;">
-        此頁示範 IPOHub 未來公司資料庫的呈現方式，可依產業、上市市場與 IPO 狀態進行篩選，協助台灣投資人快速縮小研究範圍。
-      </p>
-      <div class="company-grid" id="companies-grid">
-        <!-- Cards injected from data/companies.json -->
+
+<div class="ambient"><div class="orb orb1"></div><div class="orb orb2"></div></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html"><div class="nav-mark">I</div>IPO<em>Hub</em></a>
+  <div class="ai-pill"><div class="ai-dot"></div>Powered by AI</div>
+  <div class="nav-links">
+    <a href="radar.html">IPO Radar</a>
+    <a href="pipeline.html">Pipeline</a>
+    <a href="companies.html" class="active">公司名單</a>
+    <a href="industry.html">產業情報</a>
+    <a href="index.html#subscribe" class="nav-cta">訂閱通知</a>
+  </div>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <div class="page-kicker">Companies</div>
+  <h1 class="page-title"><em>公司名單</em> 完整索引</h1>
+  <p class="page-sub">搜尋股票代號或公司名稱，查詢 IPO 管線進度、法說摘要與關鍵財務指標</p>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <div class="toolbar-top">
+      <div class="search-wrap">
+        <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l3 3" stroke-linecap="round"/></svg>
+        <input type="text" class="search-in" id="search-in" placeholder="搜尋公司名稱、股票代號、產業…">
+      </div>
+      <span class="result-info" id="result-info">— 家公司</span>
+      <div class="view-toggle">
+        <button class="vt on" data-view="cards">
+          <svg viewBox="0 0 14 14"><rect x="1" y="1" width="5.5" height="5.5" rx="1"/><rect x="7.5" y="1" width="5.5" height="5.5" rx="1"/><rect x="1" y="7.5" width="5.5" height="5.5" rx="1"/><rect x="7.5" y="7.5" width="5.5" height="5.5" rx="1"/></svg>
+          卡片
+        </button>
+        <button class="vt" data-view="table">
+          <svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="3" rx="1"/><rect x="1" y="5.5" width="12" height="3" rx="1"/><rect x="1" y="10" width="12" height="3" rx="1"/></svg>
+          表格
+        </button>
       </div>
     </div>
-  </main>
-  <footer>
-    <div class="container">
-      IPOHub · 為投資人、券商與發行人提供 AI 驅動的 IPO 與公開市場情報。
+    <div class="filter-row">
+      <span class="fl">階段</span>
+      <button class="fc on" data-f="stage" data-v="all">全部</button>
+      <button class="fc" data-f="stage" data-v="公開發行">公開發行</button>
+      <button class="fc" data-f="stage" data-v="登錄興櫃" data-c="purple">登錄興櫃</button>
+      <button class="fc" data-f="stage" data-v="申請上櫃">申請上櫃</button>
+      <button class="fc" data-f="stage" data-v="申請上市" data-c="amber">申請上市</button>
+      <button class="fc" data-f="stage" data-v="掛牌上市" data-c="green">掛牌上市</button>
+      <div class="fdiv"></div>
+      <span class="fl">產業</span>
+      <button class="fc on" data-f="industry" data-v="all">全部</button>
+      <button class="fc" data-f="industry" data-v="半導體">半導體</button>
+      <button class="fc" data-f="industry" data-v="生技醫療">生技醫療</button>
+      <button class="fc" data-f="industry" data-v="AI 應用">AI 應用</button>
+      <button class="fc" data-f="industry" data-v="金融">金融</button>
+      <button class="fc" data-f="industry" data-v="其他">其他</button>
+      <div class="fdiv"></div>
+      <span class="fl">市場</span>
+      <button class="fc on" data-f="market" data-v="all">全部</button>
+      <button class="fc" data-f="market" data-v="TWSE">TWSE 上市</button>
+      <button class="fc" data-f="market" data-v="TPEx">TPEx 上櫃</button>
+      <div class="fdiv"></div>
+      <select class="sort-sel" id="sort-sel">
+        <option value="date-desc">最新異動 ↓</option>
+        <option value="date-asc">最新異動 ↑</option>
+        <option value="name">公司名稱</option>
+        <option value="stage">依階段</option>
+        <option value="raise-desc">募資規模 ↓</option>
+      </select>
     </div>
-  </footer>
+  </div>
 
-  <script>
-    (function () {
-      var grid = document.getElementById('companies-grid');
-      if (!grid) return;
-      function render(records) {
-        grid.innerHTML = '';
-        if (!records || !records.length) {
-          grid.innerHTML = '<p class="subtitle">目前沒有可顯示的公司資料。</p>';
-          return;
-        }
-        records.forEach(function (r) {
-          var card = document.createElement('div');
-          card.className = 'company-card';
-          card.innerHTML =
-            '<div class="company-name">' + escapeHtml(r.name) + '</div>' +
-            '<div class="company-meta"><span>' + escapeHtml(r.sector) + '</span> <span>' + escapeHtml(r.market || '—') + '</span></div>' +
-            '<div class="company-desc">' + escapeHtml(r.description || '') + '</div>';
-          grid.appendChild(card);
-        });
-      }
-      function escapeHtml(s) {
-        if (s == null) return '';
-        var div = document.createElement('div');
-        div.textContent = s;
-        return div.innerHTML;
-      }
-      fetch('data/companies.json')
-        .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-        .then(render)
-        .catch(function () { render([]); });
-    })();
-  </script>
+  <!-- CARD VIEW -->
+  <div id="view-cards">
+    <div class="card-grid" id="card-grid"></div>
+    <div class="empty" id="card-empty" style="display:none"><div>🔍</div>沒有符合條件的公司</div>
+  </div>
+
+  <!-- TABLE VIEW -->
+  <div id="view-table-wrap" style="display:none">
+    <table class="pt">
+      <thead><tr>
+        <th data-col="name">公司</th>
+        <th data-col="industry">產業</th>
+        <th data-col="stage">階段</th>
+        <th>進度</th>
+        <th data-col="market">市場</th>
+        <th data-col="raise">募資規模</th>
+        <th data-col="date">異動日期</th>
+        <th></th>
+      </tr></thead>
+      <tbody id="table-body"></tbody>
+    </table>
+    <div class="empty" id="table-empty" style="display:none"><div>🔍</div>沒有符合條件的公司</div>
+  </div>
+
+  <div class="pagination" id="pagination"></div>
+</div>
+
+<!-- DETAIL DRAWER -->
+<div class="drawer-overlay" id="drawer-overlay" onclick="if(event.target===this)closeDrawer()">
+  <div class="drawer" id="drawer-panel">
+    <div class="dh">
+      <div class="dh-top">
+        <div class="dh-avatar" id="d-avatar">🏢</div>
+        <div class="dh-info">
+          <div class="dh-name" id="d-name">—</div>
+          <div class="dh-sub" id="d-sub">—</div>
+        </div>
+        <button class="dh-close" onclick="closeDrawer()">✕</button>
+      </div>
+      <div class="dh-meta" id="d-meta"></div>
+      <div class="dh-actions">
+        <button class="da-btn da-primary" id="d-watch" onclick="toggleDrawerWatch()">🔔 訂閱通知</button>
+        <a class="da-btn da-ghost" href="pipeline.html">查看 Pipeline →</a>
+      </div>
+    </div>
+    <div class="db">
+      <!-- AI Summary -->
+      <div class="ds">
+        <div class="ds-title">AI Summary</div>
+        <div class="d-ai-box">
+          <div class="d-ai-label">AI GENERATED</div>
+          <div class="d-ai-text" id="d-ai">—</div>
+        </div>
+      </div>
+      <!-- Key Info -->
+      <div class="ds">
+        <div class="ds-title">基本資訊</div>
+        <div class="info-grid" id="d-info"></div>
+      </div>
+      <!-- Stage Timeline -->
+      <div class="ds">
+        <div class="ds-title">IPO 進度</div>
+        <div class="stage-tl" id="d-stages"></div>
+      </div>
+      <!-- Event Log -->
+      <div class="ds">
+        <div class="ds-title">事件紀錄</div>
+        <div class="ev-list" id="d-events"></div>
+      </div>
+      <!-- Documents -->
+      <div class="ds">
+        <div class="ds-title">相關文件</div>
+        <div class="doc-list" id="d-docs"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const STAGE_ORDER = ['公開發行','公開說明書','登錄興櫃','申請上櫃','申請上市','審議中','掛牌上市'];
+const BADGE_CLASS = {'公開發行':'bpub','公開說明書':'bpub','登錄興櫃':'be','申請上櫃':'bp','申請上市':'bt','審議中':'bt','掛牌上市':'bl'};
+const INDUSTRY_EMOJI = {'半導體':'💾','生技醫療':'🧬','AI 應用':'🤖','金融':'🏦','其他':'🏭'};
+const PAGE_SIZE = 12;
+
+const DATA = [
+  {id:1,name:'達易特科技',code:'申請中',industry:'半導體',stage:'申請上市',market:'TWSE',raise:'NT$1.8B',raiseNum:1.8,date:'2025-03-10',founded:'2018',employees:'320',
+   ai:'Q3 法說披露毛利率 <b>38.2%</b>，YoY <b>+28%</b>，超越市場預期。申請上市文件已送件，目標 <b>2025Q3 掛牌</b>。主要客戶為台積電供應鏈，前三大佔比 51%，客戶集中度風險需關注。',
+   events:[{date:'2025-03-10',desc:'申請上市文件送件',color:'amber'},{date:'2024-11-15',desc:'完成興櫃輔導期',color:'blue'},{date:'2024-03-20',desc:'登錄興櫃',color:'blue'},{date:'2023-06-10',desc:'完成公開發行',color:''}],
+   stageProgress:[{s:'公開發行',date:'2023-06-10'},{s:'公開說明書',date:'2023-09-01'},{s:'登錄興櫃',date:'2024-03-20'},{s:'申請上市',date:'2025-03-10',active:true}],
+   docs:[{name:'申請上市說明書',type:'PDF',date:'2025-03-10',url:'#'},{name:'Q3 2024 法說簡報',type:'PDF',date:'2024-11-10',url:'#'},{name:'公開說明書',type:'PDF',date:'2023-09-01',url:'#'}]},
+  {id:2,name:'睿捷科技',code:'興 8888',industry:'AI 應用',stage:'登錄興櫃',market:'TPEx',raise:'NT$0.6B',raiseNum:0.6,date:'2025-03-07',founded:'2020',employees:'180',
+   ai:'Q4 營收 <b>NT$2.3B</b>，YoY <b>+34%</b>，超越預期。AI 伺服器散熱模組佔營收 <span class="hl">58%</span>。預計 <b>2025H1 完成輔導期</b>，申請上市目標 2025Q4。毛利率 32.1%，資本支出計畫擴產 1.8 倍。',
+   events:[{date:'2025-03-07',desc:'正式登錄興櫃交易，首日成交 1,240 張',color:'green'},{date:'2025-01-10',desc:'興櫃輔導啟動',color:'blue'},{date:'2024-08-15',desc:'公開說明書完成送件',color:''}],
+   stageProgress:[{s:'公開發行',date:'2024-05-01'},{s:'公開說明書',date:'2024-08-15'},{s:'登錄興櫃',date:'2025-03-07',active:true}],
+   docs:[{name:'Q4 2024 法說簡報',type:'PDF',date:'2025-03-05',url:'#'},{name:'公開說明書',type:'PDF',date:'2024-08-15',url:'#'}]},
+  {id:3,name:'圓展科技',code:'5284',industry:'其他',stage:'申請上櫃',market:'TPEx',raise:'NT$0.9B',raiseNum:0.9,date:'2025-02-28',founded:'2012',employees:'540',
+   ai:'海外營收佔比 <b>73%</b>，主要市場北美與歐洲。申請上櫃審查預計 <span class="hl">Q2 2025 結果出爐</span>。財務穩健，流動比率 2.1，負債比 31%。匯率波動為主要風險因子。',
+   events:[{date:'2025-02-28',desc:'申請上櫃審查文件送件',color:'amber'},{date:'2024-09-01',desc:'登錄興櫃滿兩年',color:'blue'},{date:'2022-08-20',desc:'正式登錄興櫃',color:'blue'}],
+   stageProgress:[{s:'公開發行',date:'2021-03-01'},{s:'公開說明書',date:'2021-06-15'},{s:'登錄興櫃',date:'2022-08-20'},{s:'申請上櫃',date:'2025-02-28',active:true}],
+   docs:[{name:'申請上櫃說明書',type:'PDF',date:'2025-02-28',url:'#'},{name:'FY2024 法說簡報',type:'PDF',date:'2025-03-05',url:'#'}]},
+  {id:4,name:'皇達投資',code:'公發中',industry:'金融',stage:'公開發行',market:'TWSE',raise:'—',raiseNum:0,date:'2025-02-20',founded:'2010',employees:'95',
+   ai:'金控旗下子公司切割上市，母公司信用背書強。<b>公開說明書尚未送件</b>，預計 2025Q3 申請興櫃。資訊揭露有限，建議待公開說明書後再評估基本面。',
+   events:[{date:'2025-02-20',desc:'完成公開發行程序',color:'blue'},{date:'2024-12-05',desc:'董事會決議申請公開發行',color:''}],
+   stageProgress:[{s:'公開發行',date:'2025-02-20',active:true}],
+   docs:[{name:'公開發行公告',type:'PDF',date:'2025-02-20',url:'#'}]},
+  {id:5,name:'台灣精銳',code:'申請中',industry:'半導體',stage:'登錄興櫃',market:'TPEx',raise:'NT$0.4B',raiseNum:0.4,date:'2025-03-14',founded:'2016',employees:'210',
+   ai:'主要客戶涵蓋國內外半導體設備廠，訂單能見度 <span class="hl">18 個月</span>。招股說明書已送件，預計 <b>2025Q2 登錄興櫃</b>。毛利率約 29%，較同業略低。公開承銷價 NT$45，市值約 NT$4.2B。',
+   events:[{date:'2025-03-14',desc:'招股說明書送件',color:'amber'},{date:'2025-01-08',desc:'公開說明書完成',color:'blue'}],
+   stageProgress:[{s:'公開發行',date:'2024-10-01'},{s:'公開說明書',date:'2025-01-08'},{s:'登錄興櫃',date:null,active:true}],
+   docs:[{name:'招股說明書（草稿）',type:'PDF',date:'2025-03-14',url:'#'},{name:'公開說明書',type:'PDF',date:'2025-01-08',url:'#'}]},
+  {id:6,name:'聯亞生技',code:'審議中',industry:'生技醫療',stage:'審議中',market:'TWSE',raise:'NT$2.2B',raiseNum:2.2,date:'2025-03-10',founded:'2014',employees:'680',
+   ai:'核心新藥 <b>Phase III 臨床試驗</b>已完成，TWSE 審議通過。預計 <span class="hl">2025Q2 正式掛牌</span>。IPO 籌資 22 億用於新藥商業化。上市後定價合理性與機構持股比例值得追蹤。',
+   events:[{date:'2025-03-10',desc:'TWSE 審議通過',color:'green'},{date:'2024-11-20',desc:'申請上市文件送件',color:'amber'},{date:'2023-05-10',desc:'登錄興櫃',color:'blue'},{date:'2022-01-15',desc:'公開發行',color:''}],
+   stageProgress:[{s:'公開發行',date:'2022-01-15'},{s:'公開說明書',date:'2022-05-01'},{s:'登錄興櫃',date:'2023-05-10'},{s:'申請上市',date:'2024-11-20'},{s:'審議中',date:'2025-03-10',active:true}],
+   docs:[{name:'申請上市說明書',type:'PDF',date:'2024-11-20',url:'#'},{name:'Phase III 臨床結果摘要',type:'PDF',date:'2024-09-01',url:'#'},{name:'FY2024 法說簡報',type:'PDF',date:'2025-02-10',url:'#'}]},
+  {id:7,name:'緯穎子公司',code:'申請中',industry:'AI 應用',stage:'申請上市',market:'TWSE',raise:'NT$3.1B',raiseNum:3.1,date:'2025-03-12',founded:'2019',employees:'890',
+   ai:'AI 伺服器需求強勁，<b>Q4 YoY +67%</b>。完成興櫃輔導期，申請上市 3/12 送件。預計 <span class="hl">2025Q4 掛牌</span>，籌資 31 億。母公司為上市公司，信用背書強。主要風險：AI 資本支出週期。',
+   events:[{date:'2025-03-12',desc:'申請上市送件',color:'amber'},{date:'2025-01-15',desc:'完成興櫃輔導期',color:'blue'},{date:'2023-10-01',desc:'由母公司切割獨立',color:''}],
+   stageProgress:[{s:'公開發行',date:'2023-10-01'},{s:'公開說明書',date:'2024-01-15'},{s:'登錄興櫃',date:'2024-02-01'},{s:'申請上市',date:'2025-03-12',active:true}],
+   docs:[{name:'申請上市說明書',type:'PDF',date:'2025-03-12',url:'#'},{name:'Q4 2024 法說簡報',type:'PDF',date:'2025-02-20',url:'#'}]},
+  {id:8,name:'鈞洋科技',code:'興 9012',industry:'生技醫療',stage:'登錄興櫃',market:'TPEx',raise:'NT$0.5B',raiseNum:0.5,date:'2025-01-18',founded:'2017',employees:'260',
+   ai:'東南亞業務佔比 <b>62%</b>，疫後醫療需求持續成長。首日成交量 820 張，市場反應穩健。管理層規劃 <span class="hl">2026Q4 申請上櫃</span>。追蹤窗口較長，適合長線關注。',
+   events:[{date:'2025-01-18',desc:'正式登錄興櫃，首日成交 820 張',color:'green'},{date:'2024-10-20',desc:'公開說明書完成送件',color:'blue'}],
+   stageProgress:[{s:'公開發行',date:'2024-07-01'},{s:'公開說明書',date:'2024-10-20'},{s:'登錄興櫃',date:'2025-01-18',active:true}],
+   docs:[{name:'公開說明書',type:'PDF',date:'2024-10-20',url:'#'},{name:'興櫃交易須知',type:'PDF',date:'2025-01-18',url:'#'}]},
+];
+
+let allData = [...DATA];
+let filtered = [...DATA];
+let stageF = 'all', industryF = 'all', marketF = 'all';
+let sortBy = 'date-desc';
+let searchQ = '';
+let currentView = 'cards';
+let currentPage = 1;
+let watchedIds = new Set();
+let openCo = null;
+
+async function loadData(){
+  try{
+    const d = await(await fetch('data/companies.json')).json();
+    if(d && d.length) allData = d;
+  }catch(e){}
+  applyFilters();
+}
+
+function applyFilters(){
+  filtered = allData.filter(c=>{
+    const ms = stageF==='all' || c.stage===stageF;
+    const mi = industryF==='all' || c.industry===industryF;
+    const mm = marketF==='all' || c.market===marketF;
+    const q = searchQ.toLowerCase();
+    const mq = !q || c.name.toLowerCase().includes(q)||(c.code||'').toLowerCase().includes(q)||c.industry.toLowerCase().includes(q);
+    return ms && mi && mm && mq;
+  });
+  filtered.sort((a,b)=>{
+    if(sortBy==='date-desc') return b.date.localeCompare(a.date);
+    if(sortBy==='date-asc')  return a.date.localeCompare(b.date);
+    if(sortBy==='name')      return a.name.localeCompare(b.name,'zh-TW');
+    if(sortBy==='stage')     return STAGE_ORDER.indexOf(a.stage)-STAGE_ORDER.indexOf(b.stage);
+    if(sortBy==='raise-desc')return (b.raiseNum||0)-(a.raiseNum||0);
+    return 0;
+  });
+  currentPage = 1;
+  document.getElementById('result-info').textContent = filtered.length+' 家公司';
+  render();
+}
+
+function paginate(){
+  const start = (currentPage-1)*PAGE_SIZE;
+  return filtered.slice(start, start+PAGE_SIZE);
+}
+
+function progressHtml(stage){
+  const idx = STAGE_ORDER.indexOf(stage);
+  return STAGE_ORDER.map((_,i)=>`<div class="pp${i<idx?' d':i===idx?' a':''}"></div>`).join('');
+}
+function badgeHtml(stage){ return `<span class="badge ${BADGE_CLASS[stage]||'bpub'}">${stage}</span>`; }
+
+// ── CARDS ──
+function renderCards(){
+  const data = paginate();
+  const grid = document.getElementById('card-grid');
+  const empty = document.getElementById('card-empty');
+  if(!filtered.length){ grid.innerHTML=''; empty.style.display='block'; renderPagination(); return; }
+  empty.style.display='none';
+  grid.innerHTML = data.map(c=>`
+    <div class="co-card" onclick="openDrawer(${c.id})">
+      <div class="card-top">
+        <div class="card-avatar">${INDUSTRY_EMOJI[c.industry]||'🏢'}</div>
+        <button class="card-watch${watchedIds.has(c.id)?' on':''}" onclick="event.stopPropagation();toggleWatch(${c.id},this)">${watchedIds.has(c.id)?'✓ 追蹤':'+ 追蹤'}</button>
+      </div>
+      <div class="card-name">${c.name}</div>
+      <div class="card-code">${c.code||'—'}</div>
+      <div class="card-meta">
+        <span class="chip">${c.industry}</span>
+        ${badgeHtml(c.stage)}
+      </div>
+      <div class="card-stats">
+        <div class="cs-item"><div class="cs-label">募資規模</div><div class="cs-val b">${c.raise||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">目標市場</div><div class="cs-val">${c.market||'—'}</div></div>
+        <div class="cs-item"><div class="cs-label">最新異動</div><div class="cs-val mono" style="font-size:12px">${c.date}</div></div>
+        <div class="cs-item"><div class="cs-label">員工人數</div><div class="cs-val">${c.employees||'—'}</div></div>
+      </div>
+      <div class="card-progress">${progressHtml(c.stage)}</div>
+      <div class="card-prog-label">${c.stage} · 第 ${STAGE_ORDER.indexOf(c.stage)+1}/7 階段</div>
+      <div class="card-ai-hint">AI Summary 可查看</div>
+    </div>`).join('');
+  renderPagination();
+}
+
+// ── TABLE ──
+function renderTable(){
+  const data = paginate();
+  const tbody = document.getElementById('table-body');
+  const empty = document.getElementById('table-empty');
+  if(!filtered.length){ tbody.innerHTML=''; empty.style.display='block'; renderPagination(); return; }
+  empty.style.display='none';
+  tbody.innerHTML = data.map(c=>`
+    <tr onclick="openDrawer(${c.id})">
+      <td><div class="cn">${c.name}</div><div class="cc">${c.code||'—'}</div></td>
+      <td><span class="chip">${c.industry}</span></td>
+      <td>${badgeHtml(c.stage)}</td>
+      <td><div class="pb">${progressHtml(c.stage)}</div></td>
+      <td><span class="dm">${c.market||'—'}</span></td>
+      <td><span class="raise">${c.raise||'—'}</span></td>
+      <td><span class="dm">${c.date}</span></td>
+      <td onclick="event.stopPropagation()">
+        <button class="tbl-watch${watchedIds.has(c.id)?' on':''}" onclick="toggleWatch(${c.id},this)">${watchedIds.has(c.id)?'✓ 追蹤中':'+ 追蹤'}</button>
+      </td>
+    </tr>`).join('');
+  renderPagination();
+}
+
+// ── PAGINATION ──
+function renderPagination(){
+  const total = Math.ceil(filtered.length / PAGE_SIZE);
+  const pg = document.getElementById('pagination');
+  if(total<=1){ pg.innerHTML=''; return; }
+  let html = `<button class="pg-btn" onclick="goPage(${currentPage-1})" ${currentPage===1?'disabled':''}>← 上一頁</button>`;
+  for(let i=1;i<=total;i++){
+    if(i===1||i===total||Math.abs(i-currentPage)<=1){
+      html += `<button class="pg-btn${currentPage===i?' on':''}" onclick="goPage(${i})">${i}</button>`;
+    } else if(Math.abs(i-currentPage)===2){
+      html += `<span class="pg-info">…</span>`;
+    }
+  }
+  html += `<button class="pg-btn" onclick="goPage(${currentPage+1})" ${currentPage===total?'disabled':''}>下一頁 →</button>`;
+  pg.innerHTML = html;
+}
+function goPage(p){
+  const total = Math.ceil(filtered.length/PAGE_SIZE);
+  if(p<1||p>total) return;
+  currentPage=p;
+  render();
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function render(){
+  if(currentView==='cards') renderCards();
+  else renderTable();
+}
+
+// ── VIEW TOGGLE ──
+document.querySelectorAll('.vt').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.vt').forEach(b=>b.classList.remove('on'));
+    btn.classList.add('on');
+    currentView = btn.dataset.view;
+    document.getElementById('view-cards').style.display = currentView==='cards'?'block':'none';
+    document.getElementById('view-table-wrap').style.display = currentView==='table'?'block':'none';
+    render();
+  });
+});
+
+// ── FILTERS ──
+document.querySelectorAll('.fc').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    const g = chip.dataset.f;
+    document.querySelectorAll(`.fc[data-f="${g}"]`).forEach(c=>c.classList.remove('on','purple','amber','green'));
+    chip.classList.add('on');
+    if(chip.dataset.c) chip.classList.add(chip.dataset.c);
+    if(g==='stage')    stageF    = chip.dataset.v;
+    if(g==='industry') industryF = chip.dataset.v;
+    if(g==='market')   marketF   = chip.dataset.v;
+    applyFilters();
+  });
+});
+document.getElementById('search-in').addEventListener('input',e=>{ searchQ=e.target.value; applyFilters(); });
+document.getElementById('sort-sel').addEventListener('change',e=>{ sortBy=e.target.value; applyFilters(); });
+
+// ── WATCH ──
+function toggleWatch(id, btn){
+  if(watchedIds.has(id)){ watchedIds.delete(id); btn.textContent='+ 追蹤'; btn.classList.remove('on'); }
+  else{ watchedIds.add(id); btn.textContent='✓ 追蹤中'; btn.classList.add('on'); }
+}
+function toggleDrawerWatch(){
+  if(!openCo) return;
+  const id=openCo.id;
+  if(watchedIds.has(id)) watchedIds.delete(id); else watchedIds.add(id);
+  document.getElementById('d-watch').textContent = watchedIds.has(id)?'✓ 已追蹤，取消':'🔔 訂閱通知';
+  render();
+}
+
+// ── DRAWER ──
+function openDrawer(id){
+  const c = allData.find(x=>x.id===id);
+  if(!c) return;
+  openCo = c;
+  document.getElementById('d-avatar').textContent = INDUSTRY_EMOJI[c.industry]||'🏢';
+  document.getElementById('d-name').textContent = c.name;
+  document.getElementById('d-sub').textContent = `${c.code||'—'} · ${c.market||'—'} · ${c.industry}`;
+  document.getElementById('d-meta').innerHTML =
+    `${badgeHtml(c.stage)}<span class="chip">${c.market||'—'}</span><span class="chip">${c.industry}</span>`;
+  document.getElementById('d-watch').textContent = watchedIds.has(c.id)?'✓ 已追蹤，取消':'🔔 訂閱通知';
+  document.getElementById('d-ai').innerHTML = c.ai||'AI 摘要尚未產生';
+  document.getElementById('d-info').innerHTML = `
+    <div class="ii"><div class="ii-label">當前階段</div><div class="ii-val">${c.stage}</div></div>
+    <div class="ii"><div class="ii-label">目標市場</div><div class="ii-val mono">${c.market||'—'}</div></div>
+    <div class="ii"><div class="ii-label">募資規模</div><div class="ii-val mono">${c.raise||'—'}</div></div>
+    <div class="ii"><div class="ii-label">最新異動</div><div class="ii-val mono">${c.date}</div></div>
+    <div class="ii"><div class="ii-label">成立年份</div><div class="ii-val mono">${c.founded||'—'}</div></div>
+    <div class="ii"><div class="ii-label">員工人數</div><div class="ii-val">${c.employees||'—'} 人</div></div>`;
+  // stages
+  const sp = c.stageProgress||[];
+  document.getElementById('d-stages').innerHTML = STAGE_ORDER.map(s=>{
+    const found = sp.find(x=>x.s===s);
+    const state = found ? (found.active?'active':'done') : 'idle';
+    return `<div class="stage-tl-item">
+      <div class="stl-dot ${state}"></div>
+      <div class="stl-body">
+        <div class="stl-name">${s}</div>
+        <div class="stl-date">${found&&found.date ? found.date : found&&found.active&&!found.date ? '進行中' : '—'}</div>
+      </div>
+    </div>`;
+  }).join('');
+  document.getElementById('d-events').innerHTML = (c.events||[]).map(e=>`
+    <div class="ev-item">
+      <span class="ev-date">${e.date}</span>
+      <div class="ev-dot ${e.color||''}"></div>
+      <span class="ev-desc"><b>${e.desc}</b></span>
+    </div>`).join('');
+  document.getElementById('d-docs').innerHTML = (c.docs||[]).map(d=>`
+    <a class="doc-item" href="${d.url||'#'}" onclick="event.stopPropagation()">
+      <span class="doc-icon">📄</span>
+      <span class="doc-name">${d.name}</span>
+      <span class="doc-meta">${d.type} · ${d.date}</span>
+      <span class="doc-dl">↓ 下載</span>
+    </a>`).join('');
+  document.getElementById('drawer-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeDrawer(){
+  document.getElementById('drawer-overlay').classList.remove('open');
+  document.body.style.overflow='';
+  openCo=null;
+}
+
+loadData();
+</script>
 </body>
 </html>

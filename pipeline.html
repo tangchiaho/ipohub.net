@@ -1,140 +1,616 @@
 <!DOCTYPE html>
-<html lang="zh-Hant">
+<html lang="zh-TW">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — IPO 管線｜追蹤募資進度與發行窗口</title>
-  <meta name="description" content="IPOHub IPO 管線彙整 IPO 申報、預估上市時間與狀態，協助台灣投資人掌握募資進度、發行窗口與市場熱度。">
-  <meta name="keywords" content="IPO 管線, IPO pipeline, 募資進度, 發行窗口, 台灣 IPO, 新股申報">
-  <meta property="og:title" content="IPOHub — IPO 管線｜追蹤募資進度與發行窗口">
-  <meta property="og:description" content="透過 IPOHub IPO 管線掌握全球與台灣 IPO 申報狀態與募資進度。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ipohub.net/pipeline.html">
-  <meta property="og:site_name" content="IPOHub">
-  <meta property="og:locale" content="zh_TW">
-  <link rel="stylesheet" href="style.css">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IPO Pipeline — IPOHub</title>
+<meta name="description" content="台灣 IPO 完整管線追蹤，依階段、產業、時間篩選，三種視圖切換。">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400;500&family=Noto+Sans+TC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#070910;--bg2:#0d1017;--bg3:#13171f;--bg4:#181d28;
+  --b1:rgba(255,255,255,.06);--b2:rgba(255,255,255,.11);--b3:rgba(255,255,255,.18);
+  --tx:#dde1e9;--tx2:#7c8494;--tx3:#434a58;
+  --blue:#4f8ef7;--blue2:#2563eb;--purple:#9d7dfa;
+  --teal:#2dd4bf;--green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --mono:'DM Mono',monospace;--sans:'DM Sans','Noto Sans TC',sans-serif;
+}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--tx);font-family:var(--sans);font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;overflow-x:hidden}
+
+/* AMBIENT */
+.ambient{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+.orb{position:absolute;border-radius:50%;filter:blur(130px);animation:drift 20s ease-in-out infinite alternate}
+.orb1{width:600px;height:400px;top:-150px;left:-80px;background:radial-gradient(circle,#2b4ef0,transparent 70%);opacity:.12}
+.orb2{width:400px;height:300px;bottom:20%;right:-60px;background:radial-gradient(circle,#6d28d9,transparent 70%);opacity:.08;animation-delay:-10s}
+@keyframes drift{0%{transform:translate(0,0) scale(1)}50%{transform:translate(30px,20px) scale(1.06)}100%{transform:translate(-15px,40px) scale(.96)}}
+body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(255,255,255,.016) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.016) 1px,transparent 1px);background-size:48px 48px}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:0 36px;height:56px;background:rgba(7,9,16,.85);backdrop-filter:blur(20px);border-bottom:1px solid var(--b1)}
+.nav-logo{font-family:var(--mono);font-size:15px;font-weight:500;color:var(--tx);text-decoration:none;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.nav-mark{width:26px;height:26px;border-radius:6px;background:linear-gradient(135deg,#3b5ff7,#7c3aed);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:#fff}
+.nav-logo em{color:var(--blue);font-style:normal}
+.ai-pill{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--purple);background:rgba(157,125,250,.08);border:1px solid rgba(157,125,250,.2);padding:3px 10px;border-radius:20px}
+.ai-dot{width:6px;height:6px;border-radius:50%;background:var(--purple);animation:sparkle 2.5s ease-in-out infinite}
+@keyframes sparkle{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.75)}}
+.nav-links{display:flex;gap:24px;align-items:center}
+.nav-links a{color:var(--tx2);text-decoration:none;font-size:13px;transition:color .15s}
+.nav-links a:hover,.nav-links a.active{color:var(--tx)}
+.nav-links a.active{color:#fff}
+.nav-cta{background:linear-gradient(135deg,var(--blue2),#4f46e5);color:#fff !important;padding:6px 18px;border-radius:7px;font-weight:500 !important;font-size:13px !important;box-shadow:0 0 20px rgba(79,142,247,.25);transition:opacity .15s,transform .1s !important}
+.nav-cta:hover{opacity:.88 !important;transform:translateY(-1px)}
+
+/* PAGE HEADER */
+.page-header{position:relative;z-index:1;padding:88px 36px 0;max-width:1200px;margin:0 auto}
+.page-kicker{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;margin-bottom:8px}
+.page-title{font-size:clamp(28px,4vw,42px);font-weight:300;letter-spacing:-.04em;color:#fff;margin-bottom:8px}
+.page-title em{font-style:normal;background:linear-gradient(135deg,#4f8ef7,#9d7dfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.page-sub{font-size:14px;color:var(--tx2);margin-bottom:32px}
+
+/* TOOLBAR */
+.toolbar{position:relative;z-index:1;padding:0 36px 28px;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:14px}
+.toolbar-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:340px}
+.search-wrap svg{position:absolute;left:12px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:var(--tx3);fill:none;pointer-events:none}
+.search-in{width:100%;background:var(--bg2);border:1px solid var(--b2);border-radius:8px;padding:9px 12px 9px 36px;color:var(--tx);font-family:var(--sans);font-size:13px;outline:none;transition:border-color .15s}
+.search-in::placeholder{color:var(--tx3)}
+.search-in:focus{border-color:var(--blue);box-shadow:0 0 0 3px rgba(79,142,247,.1)}
+.view-toggle{display:flex;background:var(--bg2);border:1px solid var(--b1);border-radius:8px;overflow:hidden;margin-left:auto}
+.vt-btn{padding:8px 14px;background:transparent;border:none;cursor:pointer;color:var(--tx3);font-size:13px;font-family:var(--sans);display:flex;align-items:center;gap:6px;transition:color .15s,background .15s;white-space:nowrap}
+.vt-btn:hover{color:var(--tx);background:rgba(255,255,255,.04)}
+.vt-btn.active{color:#fff;background:rgba(79,142,247,.15)}
+.vt-btn svg{width:14px;height:14px;stroke:currentColor;fill:none;flex-shrink:0}
+.result-count{font-family:var(--mono);font-size:11px;color:var(--tx3);letter-spacing:.05em;white-space:nowrap}
+
+/* FILTERS */
+.filters{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.filter-label{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.07em;margin-right:4px}
+.filter-chip{padding:5px 14px;border-radius:20px;border:1px solid var(--b1);background:var(--bg2);color:var(--tx2);font-size:12px;font-family:var(--mono);cursor:pointer;transition:all .15s;white-space:nowrap;letter-spacing:.02em}
+.filter-chip:hover{border-color:var(--b2);color:var(--tx)}
+.filter-chip.active{background:rgba(79,142,247,.12);border-color:rgba(79,142,247,.3);color:var(--blue)}
+.filter-chip.active.purple{background:rgba(157,125,250,.12);border-color:rgba(157,125,250,.3);color:var(--purple)}
+.filter-chip.active.amber{background:rgba(251,191,36,.1);border-color:rgba(251,191,36,.28);color:var(--amber)}
+.filter-chip.active.green{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.28);color:var(--green)}
+.filter-divider{width:1px;height:20px;background:var(--b1);margin:0 4px}
+.sort-select{background:var(--bg2);border:1px solid var(--b1);border-radius:8px;padding:5px 12px;color:var(--tx2);font-family:var(--mono);font-size:11px;outline:none;cursor:pointer;letter-spacing:.04em;transition:border-color .15s}
+.sort-select:focus{border-color:var(--blue)}
+option{background:var(--bg2)}
+
+/* MAIN CONTENT */
+.main{position:relative;z-index:1;padding:0 36px 80px;max-width:1200px;margin:0 auto}
+
+/* ── TABLE VIEW ── */
+#view-table{display:block}
+#view-kanban,#view-timeline{display:none}
+.pt{width:100%;border-collapse:collapse;font-size:13px}
+.pt thead tr{border-bottom:1px solid var(--b2)}
+.pt th{text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:.08em;color:var(--tx3);padding:0 16px 12px;font-weight:400;text-transform:uppercase;cursor:pointer;user-select:none;white-space:nowrap}
+.pt th:hover{color:var(--tx2)}
+.pt th .sort-arrow{display:inline-block;margin-left:4px;opacity:.4;font-size:9px}
+.pt th.sorted .sort-arrow{opacity:1;color:var(--blue)}
+.pt td{padding:14px 16px;border-top:1px solid var(--b1);vertical-align:middle}
+.pt tr{transition:background .12s;cursor:pointer}
+.pt tbody tr:hover td{background:rgba(255,255,255,.02)}
+.cn{font-weight:500;color:var(--tx);font-size:14px}
+.cc{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-top:2px}
+.badge{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:10px;letter-spacing:.04em;padding:3px 10px;border-radius:20px;font-weight:500;white-space:nowrap}
+.badge::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0}
+.be{background:rgba(157,125,250,.1);color:var(--purple);border:1px solid rgba(157,125,250,.22)}
+.bt{background:rgba(251,191,36,.1);color:var(--amber);border:1px solid rgba(251,191,36,.22)}
+.bp{background:rgba(79,142,247,.1);color:var(--blue);border:1px solid rgba(79,142,247,.22)}
+.bpub{background:rgba(100,110,130,.1);color:var(--tx2);border:1px solid var(--b2)}
+.bl{background:rgba(52,211,153,.1);color:var(--green);border:1px solid rgba(52,211,153,.22)}
+.bred{background:rgba(248,113,113,.1);color:var(--red);border:1px solid rgba(248,113,113,.22)}
+.pb{display:flex;gap:3px}
+.pp{width:22px;height:3px;border-radius:2px;background:var(--bg4)}
+.pp.d{background:var(--blue)}.pp.a{background:var(--amber)}
+.dm{font-family:var(--mono);font-size:12px;color:var(--tx2)}
+.chip{font-size:11px;color:var(--tx3);background:var(--bg3);padding:2px 9px;border-radius:4px;border:1px solid var(--b1)}
+.raise{font-family:var(--mono);font-size:12px;color:var(--tx2)}
+.ai-tag-sm{display:inline-flex;align-items:center;gap:4px;font-family:var(--mono);font-size:9px;letter-spacing:.06em;color:var(--purple);background:rgba(157,125,250,.08);border:1px solid rgba(157,125,250,.18);padding:2px 7px;border-radius:10px}
+.row-action{display:flex;align-items:center;gap:8px}
+.watch-btn{background:transparent;border:1px solid var(--b1);border-radius:6px;padding:4px 10px;color:var(--tx3);font-family:var(--mono);font-size:10px;cursor:pointer;transition:all .15s;white-space:nowrap}
+.watch-btn:hover{border-color:var(--blue);color:var(--blue)}
+.watch-btn.watching{border-color:rgba(52,211,153,.4);color:var(--green);background:rgba(52,211,153,.08)}
+.detail-btn{color:var(--tx3);font-size:16px;transition:color .15s;background:none;border:none;cursor:pointer;padding:2px 6px}
+.detail-btn:hover{color:var(--blue)}
+
+/* ── KANBAN VIEW ── */
+.kanban{display:grid;grid-template-columns:repeat(7,minmax(180px,1fr));gap:12px;overflow-x:auto;padding-bottom:8px}
+.kb-col{background:var(--bg2);border:1px solid var(--b1);border-radius:12px;min-height:400px;display:flex;flex-direction:column}
+.kb-header{padding:14px 14px 10px;border-bottom:1px solid var(--b1);display:flex;align-items:center;justify-content:space-between}
+.kb-stage-name{font-family:var(--mono);font-size:10px;letter-spacing:.07em;color:var(--tx3);text-transform:uppercase}
+.kb-count{font-family:var(--mono);font-size:11px;color:var(--tx2);background:var(--bg3);padding:2px 7px;border-radius:10px}
+.kb-cards{padding:10px;display:flex;flex-direction:column;gap:8px;flex:1}
+.kb-card{background:var(--bg3);border:1px solid var(--b1);border-radius:8px;padding:12px;cursor:pointer;transition:border-color .15s,transform .12s}
+.kb-card:hover{border-color:var(--b2);transform:translateY(-2px)}
+.kb-co{font-size:13px;font-weight:500;color:var(--tx);margin-bottom:4px}
+.kb-meta{font-family:var(--mono);font-size:10px;color:var(--tx3);margin-bottom:8px}
+.kb-footer{display:flex;align-items:center;justify-content:space-between}
+.kb-date{font-family:var(--mono);font-size:10px;color:var(--tx3)}
+.kb-industry{font-size:10px;color:var(--tx3);background:var(--bg4);padding:1px 7px;border-radius:3px;border:1px solid var(--b1)}
+
+/* ── TIMELINE VIEW ── */
+.timeline{display:flex;flex-direction:column;gap:0;position:relative}
+.timeline::before{content:'';position:absolute;left:120px;top:0;bottom:0;width:1px;background:linear-gradient(to bottom,transparent,var(--b2) 5%,var(--b2) 95%,transparent)}
+.tl-group{margin-bottom:32px}
+.tl-month{font-family:var(--mono);font-size:11px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;padding:0 0 12px 152px}
+.tl-item{display:flex;align-items:flex-start;gap:0;padding:6px 0;position:relative}
+.tl-date{font-family:var(--mono);font-size:11px;color:var(--tx3);width:120px;text-align:right;padding-right:28px;padding-top:12px;flex-shrink:0}
+.tl-dot{width:10px;height:10px;border-radius:50%;margin-top:14px;flex-shrink:0;position:relative;z-index:1}
+.tl-dot.blue  {background:var(--blue);box-shadow:0 0 8px rgba(79,142,247,.5)}
+.tl-dot.amber {background:var(--amber);box-shadow:0 0 8px rgba(251,191,36,.4)}
+.tl-dot.purple{background:var(--purple);box-shadow:0 0 8px rgba(157,125,250,.4)}
+.tl-dot.green {background:var(--green);box-shadow:0 0 8px rgba(52,211,153,.4)}
+.tl-dot.gray  {background:var(--tx3)}
+.tl-card{flex:1;background:var(--bg2);border:1px solid var(--b1);border-radius:10px;padding:14px 18px;margin-left:18px;cursor:pointer;transition:border-color .15s}
+.tl-card:hover{border-color:var(--b2)}
+.tl-card-top{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.tl-co{font-size:14px;font-weight:500;color:var(--tx)}
+.tl-card-meta{font-size:13px;color:var(--tx2);line-height:1.5}
+.tl-card-footer{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+
+/* ── COMPANY MODAL ── */
+.modal-overlay{position:fixed;inset:0;z-index:500;background:rgba(7,9,16,.85);backdrop-filter:blur(8px);display:flex;align-items:flex-start;justify-content:flex-end;opacity:0;pointer-events:none;transition:opacity .25s}
+.modal-overlay.open{opacity:1;pointer-events:all}
+.modal-panel{width:520px;height:100vh;background:var(--bg2);border-left:1px solid var(--b2);overflow-y:auto;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1)}
+.modal-overlay.open .modal-panel{transform:translateX(0)}
+.modal-header{padding:24px 28px;border-bottom:1px solid var(--b1);display:flex;align-items:flex-start;justify-content:space-between;gap:16px;position:sticky;top:0;background:var(--bg2);z-index:10}
+.modal-close{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:20px;line-height:1;padding:2px 6px;transition:color .15s}
+.modal-close:hover{color:var(--tx)}
+.modal-body{padding:24px 28px}
+.modal-co-name{font-size:22px;font-weight:500;color:#fff;letter-spacing:-.03em;margin-bottom:4px}
+.modal-co-sub{font-family:var(--mono);font-size:11px;color:var(--tx3);margin-bottom:16px}
+.modal-stage-bar{display:flex;gap:4px;margin-bottom:24px}
+.ms-pip{flex:1;height:4px;border-radius:2px;background:var(--bg4)}
+.ms-pip.d{background:var(--blue)}.ms-pip.a{background:var(--amber)}
+.modal-section{margin-bottom:24px}
+.modal-section-title{font-family:var(--mono);font-size:10px;letter-spacing:.1em;color:var(--tx3);text-transform:uppercase;margin-bottom:12px;padding-bottom:8px;border-bottom:1px solid var(--b1)}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-item{}
+.info-label{font-family:var(--mono);font-size:10px;color:var(--tx3);letter-spacing:.06em;margin-bottom:3px}
+.info-val{font-size:14px;color:var(--tx);font-weight:500}
+.info-val.mono{font-family:var(--mono);font-size:13px}
+.modal-ai-box{background:var(--bg3);border:1px solid rgba(157,125,250,.2);border-radius:10px;padding:16px;margin-bottom:24px;position:relative;overflow:hidden}
+.modal-ai-box::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse at top left,rgba(157,125,250,.06),transparent 60%);pointer-events:none}
+.modal-ai-label{display:inline-flex;align-items:center;gap:5px;font-family:var(--mono);font-size:9px;letter-spacing:.08em;color:var(--purple);background:rgba(157,125,250,.1);border:1px solid rgba(157,125,250,.22);padding:3px 9px;border-radius:20px;margin-bottom:10px}
+.modal-ai-label::before{content:'◆';font-size:7px;animation:sparkle 2.5s ease-in-out infinite}
+.modal-ai-text{font-size:13px;color:var(--tx2);line-height:1.75}
+.modal-ai-text b{color:var(--tx);font-weight:400}
+.event-list{display:flex;flex-direction:column;gap:8px}
+.event-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--b1)}
+.event-item:last-child{border-bottom:none}
+.event-date{font-family:var(--mono);font-size:11px;color:var(--tx3);min-width:72px}
+.event-desc{font-size:13px;color:var(--tx2)}
+.event-desc b{color:var(--tx);font-weight:400}
+.modal-actions{display:flex;gap:10px;margin-top:8px}
+.ma-btn{flex:1;padding:10px;border-radius:8px;font-size:13px;font-weight:500;cursor:pointer;border:none;transition:all .15s;text-align:center}
+.ma-primary{background:linear-gradient(135deg,var(--blue2),#4f46e5);color:#fff;box-shadow:0 0 16px rgba(79,142,247,.25)}
+.ma-primary:hover{opacity:.9}
+.ma-ghost{background:var(--bg3);color:var(--tx2);border:1px solid var(--b2)}
+.ma-ghost:hover{border-color:var(--b3);color:var(--tx)}
+
+/* EMPTY */
+.empty-state{text-align:center;padding:80px 20px;color:var(--tx3);font-family:var(--mono);font-size:13px}
+.empty-state div{font-size:32px;margin-bottom:12px;opacity:.4}
+
+@media(max-width:768px){
+  nav{padding:0 20px}.nav-links{display:none}
+  .page-header,.toolbar,.main{padding-left:20px;padding-right:20px}
+  .kanban{grid-template-columns:repeat(3,240px)}
+  .modal-panel{width:100vw}
+  .timeline::before{left:72px}
+  .tl-date{width:72px}
+}
+</style>
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="container">
-      <a href="index.html" class="logo">IPO<span>Hub</span></a>
-      <nav class="nav-links">
-        <a href="index.html">首頁</a>
-        <a href="radar.html">IPO 雷達</a>
-        <a href="pipeline.html" class="active">IPO 管線</a>
-        <a href="companies.html">公司名單</a>
-        <a href="industry.html">產業情報</a>
-      </nav>
+<div class="ambient"><div class="orb orb1"></div><div class="orb orb2"></div></div>
+
+<!-- NAV -->
+<nav>
+  <a class="nav-logo" href="index.html"><div class="nav-mark">I</div>IPO<em>Hub</em></a>
+  <div class="ai-pill"><div class="ai-dot"></div>Powered by AI</div>
+  <div class="nav-links">
+    <a href="radar.html">IPO Radar</a>
+    <a href="pipeline.html" class="active">Pipeline</a>
+    <a href="companies.html">公司名單</a>
+    <a href="industry.html">產業情報</a>
+    <a href="index.html#subscribe" class="nav-cta">訂閱通知</a>
+  </div>
+</nav>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <div class="page-kicker">IPO Pipeline</div>
+  <h1 class="page-title">台灣 <em>IPO 管線</em> 完整追蹤</h1>
+  <p class="page-sub">整合 MOPS · TPEx · TWSE，追蹤每家公司從公開發行到掛牌的每個節點 · 最後更新：<span id="last-updated" style="font-family:var(--mono)">—</span></p>
+</div>
+
+<!-- TOOLBAR -->
+<div class="toolbar">
+  <div class="toolbar-top">
+    <div class="search-wrap">
+      <svg viewBox="0 0 16 16"><circle cx="6.5" cy="6.5" r="4.5"/><path d="M10 10l3 3" stroke-linecap="round"/></svg>
+      <input type="text" class="search-in" id="search-input" placeholder="搜尋公司名稱或股票代號…">
     </div>
-  </header>
+    <span class="result-count" id="result-count">— 筆資料</span>
+    <div class="view-toggle">
+      <button class="vt-btn active" data-view="table">
+        <svg viewBox="0 0 14 14"><rect x="1" y="1" width="12" height="3" rx="1"/><rect x="1" y="5.5" width="12" height="3" rx="1"/><rect x="1" y="10" width="12" height="3" rx="1"/></svg>
+        表格
+      </button>
+      <button class="vt-btn" data-view="kanban">
+        <svg viewBox="0 0 14 14"><rect x="1" y="1" width="3.5" height="12" rx="1"/><rect x="5.25" y="1" width="3.5" height="8" rx="1"/><rect x="9.5" y="1" width="3.5" height="10" rx="1"/></svg>
+        看板
+      </button>
+      <button class="vt-btn" data-view="timeline">
+        <svg viewBox="0 0 14 14"><circle cx="3" cy="3.5" r="1.5"/><circle cx="3" cy="7" r="1.5"/><circle cx="3" cy="10.5" r="1.5"/><path d="M5.5 3.5h7M5.5 7h5M5.5 10.5h6" stroke-linecap="round"/></svg>
+        時間軸
+      </button>
+    </div>
+  </div>
+  <div class="filters" id="filters">
+    <span class="filter-label">階段</span>
+    <button class="filter-chip active" data-filter="stage" data-value="all">全部</button>
+    <button class="filter-chip" data-filter="stage" data-value="公開發行">公開發行</button>
+    <button class="filter-chip" data-filter="stage" data-value="登錄興櫃" data-color="purple">登錄興櫃</button>
+    <button class="filter-chip" data-filter="stage" data-value="申請上櫃" data-color="blue">申請上櫃</button>
+    <button class="filter-chip" data-filter="stage" data-value="申請上市" data-color="amber">申請上市</button>
+    <button class="filter-chip" data-filter="stage" data-value="審議中" data-color="amber">審議中</button>
+    <button class="filter-chip" data-filter="stage" data-value="掛牌上市" data-color="green">掛牌上市</button>
+    <div class="filter-divider"></div>
+    <span class="filter-label">產業</span>
+    <button class="filter-chip active" data-filter="industry" data-value="all">全部</button>
+    <button class="filter-chip" data-filter="industry" data-value="半導體">半導體</button>
+    <button class="filter-chip" data-filter="industry" data-value="生技醫療">生技醫療</button>
+    <button class="filter-chip" data-filter="industry" data-value="AI 應用">AI 應用</button>
+    <button class="filter-chip" data-filter="industry" data-value="金融">金融</button>
+    <button class="filter-chip" data-filter="industry" data-value="其他">其他</button>
+    <div class="filter-divider"></div>
+    <select class="sort-select" id="sort-select">
+      <option value="date-desc">最新異動 ↓</option>
+      <option value="date-asc">最新異動 ↑</option>
+      <option value="stage">依階段排序</option>
+      <option value="name">依公司名稱</option>
+    </select>
+  </div>
+</div>
 
-  <main>
-    <section class="hero fade-in">
-      <div class="container">
-        <h1 class="headline">IPO 管線</h1>
-        <p class="subheadline">從申報到上市，檢視每一檔 IPO 的進度與狀態，掌握募資進度與發行窗口。</p>
+<!-- MAIN -->
+<div class="main">
+
+  <!-- TABLE VIEW -->
+  <div id="view-table">
+    <table class="pt">
+      <thead>
+        <tr>
+          <th data-col="name">公司 <span class="sort-arrow">↕</span></th>
+          <th data-col="industry">產業 <span class="sort-arrow">↕</span></th>
+          <th data-col="stage">階段 <span class="sort-arrow">↕</span></th>
+          <th>進度</th>
+          <th data-col="raise">募資規模 <span class="sort-arrow">↕</span></th>
+          <th data-col="date">最新異動 <span class="sort-arrow">↕</span></th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="table-body"></tbody>
+    </table>
+    <div class="empty-state" id="table-empty" style="display:none">
+      <div>🔍</div>沒有符合條件的公司
+    </div>
+  </div>
+
+  <!-- KANBAN VIEW -->
+  <div id="view-kanban">
+    <div class="kanban" id="kanban-board"></div>
+  </div>
+
+  <!-- TIMELINE VIEW -->
+  <div id="view-timeline">
+    <div class="timeline" id="timeline-list"></div>
+    <div class="empty-state" id="timeline-empty" style="display:none">
+      <div>📅</div>沒有符合條件的資料
+    </div>
+  </div>
+
+</div>
+
+<!-- COMPANY MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal-panel" id="modal-panel">
+    <div class="modal-header">
+      <div>
+        <div class="modal-co-name" id="m-name">—</div>
+        <div class="modal-co-sub" id="m-sub">—</div>
       </div>
-    </section>
+      <button class="modal-close" onclick="closeModal()">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="modal-stage-bar" id="m-stage-bar"></div>
 
-    <section class="section fade-in">
-      <div class="container">
-        <h2 class="h2">管線總覽</h2>
-        <p class="subtitle">以下資料由 data/pipeline.json 動態載入，可擴充更多筆 IPO 管線紀錄。</p>
+      <div class="modal-section">
+        <div class="modal-section-title">基本資訊</div>
+        <div class="info-grid" id="m-info-grid"></div>
+      </div>
 
-        <div class="table-wrapper">
-          <table id="pipeline-table">
-            <thead>
-              <tr>
-                <th>公司</th>
-                <th>產業</th>
-                <th>市場</th>
-                <th>狀態</th>
-                <th>申報日期</th>
-                <th>備註</th>
-              </tr>
-            </thead>
-            <tbody id="pipeline-table-body">
-            </tbody>
-          </table>
+      <div class="modal-ai-box">
+        <div class="modal-ai-label">AI Summary</div>
+        <div class="modal-ai-text" id="m-ai-text">—</div>
+      </div>
+
+      <div class="modal-section">
+        <div class="modal-section-title">進度時間軸</div>
+        <div class="event-list" id="m-events"></div>
+      </div>
+
+      <div class="modal-actions">
+        <button class="ma-btn ma-primary" id="m-watch-btn" onclick="toggleWatchModal()">🔔 訂閱通知</button>
+        <button class="ma-btn ma-ghost">查看原始文件</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── DATA ─────────────────────────────────────────
+const STAGE_ORDER = ['公開發行','公開說明書','登錄興櫃','申請上櫃','申請上市','審議中','掛牌上市'];
+const STAGE_COLOR = {
+  '公開發行':'gray','公開說明書':'gray','登錄興櫃':'purple',
+  '申請上櫃':'blue','申請上市':'amber','審議中':'amber','掛牌上市':'green'
+};
+const BADGE_CLASS = {
+  '公開發行':'bpub','公開說明書':'bpub','登錄興櫃':'be',
+  '申請上櫃':'bp','申請上市':'bt','審議中':'bt','掛牌上市':'bl'
+};
+
+// Placeholder data — replaced by data/pipeline.json when available
+const SAMPLE_DATA = [
+  {id:1,name:'達易特科技',code:'申請中',industry:'半導體',stage:'申請上市',raise:'NT$1.8B',date:'2025-03-10',market:'TWSE',desc:'晶圓代工製程設備，客戶涵蓋台積電供應鏈，本輪IPO預計籌資18億。',ai:'AI 摘要：Q3 法說披露毛利率 <b>38.2%</b>，YoY 成長 <b>+28%</b>。申請上市文件已送件，目標 <b>2025Q3 掛牌</b>。主要風險：單一大客戶佔比 51%。',events:[{date:'2025-03-10',desc:'申請上市文件送件'},{date:'2024-11-15',desc:'完成興櫃輔導期'},{date:'2024-03-20',desc:'登錄興櫃'},{date:'2023-06-10',desc:'公開發行'}]},
+  {id:2,name:'睿捷科技',code:'興 8888',industry:'AI 應用',stage:'登錄興櫃',raise:'NT$0.6B',date:'2025-03-07',market:'TPEx',desc:'AI 伺服器散熱模組，主要客戶為 ODM 大廠，興櫃輔導期進行中。',ai:'AI 摘要：Q4 營收 <b>NT$2.3B</b>，YoY <b>+34%</b>，超越預期。散熱模組佔營收 <b>58%</b>。預計 <b>2025H1 完成輔導期</b>，申請上市目標 2025Q4。毛利率 32.1%。',events:[{date:'2025-03-07',desc:'正式登錄興櫃交易'},{date:'2025-01-10',desc:'興櫃輔導啟動'},{date:'2024-08-15',desc:'完成公開說明書'}]},
+  {id:3,name:'圓展科技',code:'5284',industry:'其他',stage:'申請上櫃',raise:'NT$0.9B',date:'2025-02-28',market:'TPEx',desc:'視訊會議設備製造商，海外業務佔比超過 70%，申請上櫃審查中。',ai:'AI 摘要：海外營收佔比 <b>73%</b>，主要市場為北美與歐洲。申請上櫃審查預計 <b>2025Q2 結果出爐</b>。財務面穩健，流動比率 2.1。',events:[{date:'2025-02-28',desc:'申請上櫃審查送件'},{date:'2024-09-01',desc:'登錄興櫃滿兩年'},{date:'2022-08-20',desc:'登錄興櫃'}]},
+  {id:4,name:'皇達投資',code:'公發中',industry:'金融',stage:'公開發行',raise:'—',date:'2025-02-20',market:'TWSE',desc:'金融控股旗下投資事業，預計完成公開發行後申請興櫃。',ai:'AI 摘要：母公司為上市金控，本次公開發行為切割子公司獨立上市前置作業。<b>公開說明書尚未送件</b>，預計 2025Q3 申請興櫃。',events:[{date:'2025-02-20',desc:'完成公開發行'},{date:'2024-12-05',desc:'董事會決議申請公發'}]},
+  {id:5,name:'台灣精銳',code:'申請中',industry:'半導體',stage:'登錄興櫃',raise:'NT$0.4B',date:'2025-03-14',market:'TPEx',desc:'精密機械製造，半導體設備零件供應商，預計本季正式登錄興櫃。',ai:'AI 摘要：主要客戶涵蓋國內外半導體設備廠，訂單能見度達 <b>18 個月</b>。招股說明書已送件，預計 <b>2025Q2 登錄興櫃</b>。毛利率約 29%。',events:[{date:'2025-03-14',desc:'招股說明書送件'},{date:'2025-01-08',desc:'公開說明書完成'}]},
+  {id:6,name:'聯亞生技',code:'審議中',industry:'生技醫療',stage:'審議中',raise:'NT$2.2B',date:'2025-03-10',market:'TWSE',desc:'新藥開發公司，主力產品為癌症免疫療法，TWSE 審議通過，等待掛牌。',ai:'AI 摘要：核心新藥 <b>Phase III 臨床試驗</b>已完成，TWSE 審議通過。預計 <b>2025Q2 正式掛牌</b>，股票代號待公告。本輪 IPO 籌資 22 億用於新藥商業化。',events:[{date:'2025-03-10',desc:'TWSE 審議通過'},{date:'2024-11-20',desc:'申請上市送件'},{date:'2023-05-10',desc:'登錄興櫃'}]},
+  {id:7,name:'緯穎子公司',code:'申請中',industry:'AI 應用',stage:'申請上市',raise:'NT$3.1B',date:'2025-03-12',market:'TWSE',desc:'AI 伺服器零組件供應商，由上市母公司切割，完成興櫃輔導期正式遞件。',ai:'AI 摘要：AI 伺服器需求強勁，<b>Q4 營收 YoY +67%</b>。完成興櫃輔導期，申請上市文件於 3/12 送件。預計 <b>2025Q4 掛牌</b>，本輪籌資 31 億元。',events:[{date:'2025-03-12',desc:'申請上市送件'},{date:'2025-01-15',desc:'完成興櫃輔導期'},{date:'2023-10-01',desc:'由母公司切割獨立'}]},
+  {id:8,name:'鈞洋科技',code:'興 9012',industry:'生技醫療',stage:'登錄興櫃',raise:'NT$0.5B',date:'2025-01-18',market:'TPEx',desc:'醫療耗材製造，主要市場為東南亞，興櫃登錄後預計兩年內申請上櫃。',ai:'AI 摘要：東南亞業務佔比 <b>62%</b>，疫後醫療需求持續成長。興櫃登錄首日成交量 <b>820 張</b>。管理層規劃 <b>2026Q4 申請上櫃</b>。',events:[{date:'2025-01-18',desc:'正式登錄興櫃'},{date:'2024-10-20',desc:'公開說明書完成'}]},
+];
+
+let allData = [...SAMPLE_DATA];
+let filteredData = [...allData];
+let stageFilter = 'all';
+let industryFilter = 'all';
+let sortBy = 'date-desc';
+let searchQ = '';
+let currentView = 'table';
+let watchedIds = new Set();
+let openCompany = null;
+
+// Try to load real data
+async function loadData(){
+  try{
+    const d = await(await fetch('data/pipeline.json')).json();
+    if(d && d.length){ allData = d; filteredData = [...d]; }
+    document.getElementById('last-updated').textContent = new Date().toLocaleDateString('zh-TW');
+  }catch(e){
+    document.getElementById('last-updated').textContent = '示範資料';
+  }
+  applyFilters();
+}
+
+// ── FILTER & SORT ─────────────────────────────
+function applyFilters(){
+  filteredData = allData.filter(c=>{
+    const matchStage    = stageFilter==='all' || c.stage===stageFilter;
+    const matchIndustry = industryFilter==='all' || c.industry===industryFilter;
+    const q = searchQ.toLowerCase();
+    const matchSearch   = !q || c.name.toLowerCase().includes(q) || (c.code||'').toLowerCase().includes(q) || c.industry.toLowerCase().includes(q);
+    return matchStage && matchIndustry && matchSearch;
+  });
+  filteredData.sort((a,b)=>{
+    if(sortBy==='date-desc') return b.date.localeCompare(a.date);
+    if(sortBy==='date-asc')  return a.date.localeCompare(b.date);
+    if(sortBy==='stage')     return STAGE_ORDER.indexOf(a.stage)-STAGE_ORDER.indexOf(b.stage);
+    if(sortBy==='name')      return a.name.localeCompare(b.name,'zh-TW');
+    return 0;
+  });
+  document.getElementById('result-count').textContent = filteredData.length+' 筆資料';
+  renderCurrent();
+}
+
+// ── BADGE HELPERS ─────────────────────────────
+function badgeHtml(stage){
+  return `<span class="badge ${BADGE_CLASS[stage]||'bpub'}">${stage}</span>`;
+}
+function progressHtml(stage){
+  const idx = STAGE_ORDER.indexOf(stage);
+  return STAGE_ORDER.map((_,i)=>`<div class="pp${i<idx?' d':i===idx?' a':''}"></div>`).join('');
+}
+
+// ── TABLE RENDER ──────────────────────────────
+function renderTable(){
+  const tbody = document.getElementById('table-body');
+  const empty = document.getElementById('table-empty');
+  if(!filteredData.length){ tbody.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  tbody.innerHTML = filteredData.map(c=>`
+    <tr onclick="openModal(${c.id})">
+      <td><div class="cn">${c.name}</div><div class="cc">${c.code||'—'}</div></td>
+      <td><span class="chip">${c.industry}</span></td>
+      <td>${badgeHtml(c.stage)}</td>
+      <td><div class="pb">${progressHtml(c.stage)}</div></td>
+      <td><span class="raise">${c.raise||'—'}</span></td>
+      <td><span class="dm">${c.date}</span></td>
+      <td>
+        <div class="row-action" onclick="event.stopPropagation()">
+          <button class="watch-btn${watchedIds.has(c.id)?' watching':''}" onclick="toggleWatch(${c.id},this)">${watchedIds.has(c.id)?'✓ 追蹤中':'+ 追蹤'}</button>
+          <button class="detail-btn" onclick="openModal(${c.id})">→</button>
         </div>
-      </div>
-    </section>
-  </main>
+      </td>
+    </tr>`).join('');
+}
 
-  <script>
-  (function () {
-    var tbody = document.getElementById('pipeline-table-body');
-    if (!tbody) return;
+// ── KANBAN RENDER ─────────────────────────────
+function renderKanban(){
+  const board = document.getElementById('kanban-board');
+  board.innerHTML = STAGE_ORDER.map(stage=>{
+    const cards = filteredData.filter(c=>c.stage===stage);
+    return `
+      <div class="kb-col">
+        <div class="kb-header">
+          <span class="kb-stage-name">${stage}</span>
+          <span class="kb-count">${cards.length}</span>
+        </div>
+        <div class="kb-cards">
+          ${cards.map(c=>`
+            <div class="kb-card" onclick="openModal(${c.id})">
+              <div class="kb-co">${c.name}</div>
+              <div class="kb-meta">${c.code||'—'} · ${c.market||'—'}</div>
+              <div class="kb-footer">
+                <span class="kb-date">${c.date}</span>
+                <span class="kb-industry">${c.industry}</span>
+              </div>
+            </div>`).join('')}
+          ${!cards.length?'<div style="color:var(--tx3);font-size:12px;font-family:var(--mono);text-align:center;padding:20px 0">無資料</div>':''}
+        </div>
+      </div>`;
+  }).join('');
+}
 
-    var SECTOR_LABELS = {
-      'Consumer Internet': '消費性網路',
-      'SaaS': 'SaaS',
-      'Semiconductors': '半導體',
-      'Consumer': '消費',
-      'Fintech': '金融科技'
-    };
-    var STATUS_LABELS = {
-      filed: '已申報',
-      listed: '已上市',
-      priced: '已訂價',
-      expected: '預期',
-      withdrawn: '撤回'
-    };
+// ── TIMELINE RENDER ───────────────────────────
+function renderTimeline(){
+  const list = document.getElementById('timeline-list');
+  const empty = document.getElementById('timeline-empty');
+  if(!filteredData.length){ list.innerHTML=''; empty.style.display='block'; return; }
+  empty.style.display='none';
+  const grouped = {};
+  filteredData.forEach(c=>{
+    const m = c.date.slice(0,7);
+    if(!grouped[m]) grouped[m]=[];
+    grouped[m].push(c);
+  });
+  list.innerHTML = Object.keys(grouped).sort((a,b)=>b.localeCompare(a)).map(month=>{
+    const [y,m] = month.split('-');
+    const label = `${y} 年 ${parseInt(m)} 月`;
+    return `
+      <div class="tl-group">
+        <div class="tl-month">${label}</div>
+        ${grouped[month].map(c=>`
+          <div class="tl-item">
+            <div class="tl-date">${c.date.slice(5)}</div>
+            <div class="tl-dot ${STAGE_COLOR[c.stage]||'gray'}"></div>
+            <div class="tl-card" onclick="openModal(${c.id})">
+              <div class="tl-card-top">
+                <span class="tl-co">${c.name}</span>
+                ${badgeHtml(c.stage)}
+              </div>
+              <div class="tl-card-meta">${c.desc||''}</div>
+              <div class="tl-card-footer">
+                <span class="chip">${c.industry}</span>
+                ${c.raise&&c.raise!=='—'?`<span class="dm">${c.raise}</span>`:''}
+                <span class="ai-tag-sm">◆ AI摘要</span>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }).join('');
+}
 
-    function formatDate(value) {
-      if (!value || String(value).toUpperCase() === 'TBD') return 'TBD';
-      var date = new Date(value);
-      if (Number.isNaN(date.getTime())) return value;
-      return date.toLocaleDateString('zh-TW');
-    }
+function renderCurrent(){
+  if(currentView==='table') renderTable();
+  else if(currentView==='kanban') renderKanban();
+  else renderTimeline();
+}
 
-    function escapeHtml(s) {
-      if (s == null) return '';
-      var div = document.createElement('div');
-      div.textContent = s;
-      return div.innerHTML;
-    }
+// ── VIEW TOGGLE ───────────────────────────────
+document.querySelectorAll('.vt-btn').forEach(btn=>{
+  btn.addEventListener('click',()=>{
+    document.querySelectorAll('.vt-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    currentView = btn.dataset.view;
+    document.getElementById('view-table').style.display   = currentView==='table'?'block':'none';
+    document.getElementById('view-kanban').style.display  = currentView==='kanban'?'block':'none';
+    document.getElementById('view-timeline').style.display= currentView==='timeline'?'block':'none';
+    renderCurrent();
+  });
+});
 
-    function createRow(r) {
-      var statusKey = String(r.status || '').toLowerCase();
-      var tr = document.createElement('tr');
-      tr.innerHTML =
-        '<td class="company-name">' + escapeHtml(r.company) + '</td>' +
-        '<td>' + escapeHtml(SECTOR_LABELS[r.sector] || r.sector) + '</td>' +
-        '<td>' + escapeHtml(r.market === 'Expected' ? '預期' : r.market) + '</td>' +
-        '<td><span class="pill ' + statusKey + '">' + escapeHtml(STATUS_LABELS[statusKey] || r.status) + '</span></td>' +
-        '<td>' + formatDate(r.filingDate) + '</td>' +
-        '<td>' + escapeHtml(r.note || '—') + '</td>';
-      return tr;
-    }
+// ── FILTERS ───────────────────────────────────
+document.querySelectorAll('.filter-chip').forEach(chip=>{
+  chip.addEventListener('click',()=>{
+    const group = chip.dataset.filter;
+    document.querySelectorAll(`.filter-chip[data-filter="${group}"]`).forEach(c=>{
+      c.classList.remove('active','purple','amber','green','blue');
+    });
+    chip.classList.add('active');
+    const color = chip.dataset.color;
+    if(color) chip.classList.add(color);
+    if(group==='stage') stageFilter = chip.dataset.value;
+    if(group==='industry') industryFilter = chip.dataset.value;
+    applyFilters();
+  });
+});
 
-    function render(records) {
-      tbody.innerHTML = '';
-      if (!records || !records.length) {
-        var tr = document.createElement('tr');
-        tr.innerHTML = '<td colspan="6">目前沒有可顯示的管線資料。</td>';
-        tbody.appendChild(tr);
-        return;
-      }
-      records.forEach(function (r) { tbody.appendChild(createRow(r)); });
-    }
+document.getElementById('search-input').addEventListener('input',e=>{
+  searchQ = e.target.value; applyFilters();
+});
+document.getElementById('sort-select').addEventListener('change',e=>{
+  sortBy = e.target.value; applyFilters();
+});
 
-    fetch('data/pipeline.json')
-      .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
-      .then(render)
-      .catch(function () { render([]); });
-  })();
-  </script>
+// ── MODAL ─────────────────────────────────────
+function openModal(id){
+  const c = allData.find(x=>x.id===id);
+  if(!c) return;
+  openCompany = c;
+  document.getElementById('m-name').textContent = c.name;
+  document.getElementById('m-sub').textContent  = `${c.code||'—'} · ${c.market||'—'} · ${c.industry}`;
+  document.getElementById('m-stage-bar').innerHTML =
+    STAGE_ORDER.map((_,i)=>{
+      const idx = STAGE_ORDER.indexOf(c.stage);
+      return `<div class="ms-pip${i<idx?' d':i===idx?' a':''}"></div>`;
+    }).join('');
+  document.getElementById('m-info-grid').innerHTML = `
+    <div class="info-item"><div class="info-label">當前階段</div><div class="info-val">${badgeHtml(c.stage)}</div></div>
+    <div class="info-item"><div class="info-label">目標市場</div><div class="info-val mono">${c.market||'—'}</div></div>
+    <div class="info-item"><div class="info-label">募資規模</div><div class="info-val mono">${c.raise||'—'}</div></div>
+    <div class="info-item"><div class="info-label">最新異動</div><div class="info-val mono">${c.date}</div></div>
+    <div class="info-item"><div class="info-label">所屬產業</div><div class="info-val">${c.industry}</div></div>
+    <div class="info-item"><div class="info-label">股票代號</div><div class="info-val mono">${c.code||'申請中'}</div></div>`;
+  document.getElementById('m-ai-text').innerHTML = c.ai||'AI 摘要尚未產生';
+  document.getElementById('m-events').innerHTML = (c.events||[]).map(e=>`
+    <div class="event-item">
+      <span class="event-date">${e.date}</span>
+      <span class="event-desc"><b>${e.desc}</b></span>
+    </div>`).join('');
+  const wb = document.getElementById('m-watch-btn');
+  wb.textContent = watchedIds.has(c.id)?'✓ 已追蹤，取消':'🔔 訂閱通知';
+  document.getElementById('modal-overlay').classList.add('open');
+  document.body.style.overflow='hidden';
+}
+function closeModal(){
+  document.getElementById('modal-overlay').classList.remove('open');
+  document.body.style.overflow='';
+  openCompany=null;
+}
+function toggleWatchModal(){
+  if(!openCompany) return;
+  const id = openCompany.id;
+  if(watchedIds.has(id)) watchedIds.delete(id); else watchedIds.add(id);
+  document.getElementById('m-watch-btn').textContent = watchedIds.has(id)?'✓ 已追蹤，取消':'🔔 訂閱通知';
+  renderCurrent();
+}
+function toggleWatch(id,btn){
+  if(watchedIds.has(id)){ watchedIds.delete(id); btn.textContent='+ 追蹤'; btn.classList.remove('watching'); }
+  else{ watchedIds.add(id); btn.textContent='✓ 追蹤中'; btn.classList.add('watching'); }
+}
 
-  <footer class="footer">
-    <div class="container">
-      <p>IPOHub IPO 管線 · 協助台灣投資人掌握全球與台灣的發行節奏與市場熱度。</p>
-    </div>
-  </footer>
-
+// ── INIT ──────────────────────────────────────
+loadData();
+</script>
 </body>
 </html>
