@@ -1,90 +1,84 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
     <meta charset="UTF-8">
-    <title>Industry Intelligence | IPOHub</title>
+    <title>產業情報｜IPOHub｜產業趨勢與估值訊號</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="IPOHub 產業情報整理 AI、半導體、生技、金融科技、消費性網路與綠能等關鍵產業的趨勢與估值訊號，協助台灣投資人掌握長期投資主題。">
+    <meta name="keywords" content="產業情報, industry intelligence, 產業趨勢, 估值訊號, IPO 產業, AI 產業, 半導體產業, 金融科技產業">
+    <meta property="og:title" content="產業情報｜IPOHub｜產業趨勢與估值訊號">
+    <meta property="og:description" content="透過 IPOHub 的產業情報，以主題方式觀察 AI、半導體、生技、金融科技、消費性網路與綠能等產業。">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ipohub.net/industry.html">
+    <meta property="og:site_name" content="IPOHub">
+    <meta property="og:locale" content="zh_TW">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Navigation Bar -->
-    <nav class="navbar">
-        <div class="container">
-            <a href="index.html" class="logo">IPOHUB</a>
-            <ul class="nav-links">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="industry.html" class="active">Industry Intelligence</a></li>
-                <li><a href="ipos.html">Upcoming IPOs</a></li>
-                <li><a href="insights.html">Insights</a></li>
-                <li><a href="about.html">About</a></li>
-            </ul>
+    <header class="navbar">
+        <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+            <a href="index.html" class="logo">IPO<span>Hub</span></a>
+            <nav class="nav-links" style="display:flex;gap:28px;">
+                <a href="index.html">首頁</a>
+                <a href="radar.html">IPO 雷達</a>
+                <a href="pipeline.html">IPO 管線</a>
+                <a href="companies.html">公司名單</a>
+                <a href="industry.html" class="active">產業情報</a>
+            </nav>
         </div>
-    </nav>
+    </header>
 
     <!-- Main Content -->
     <main class="main-content container">
         <header class="page-header">
-            <h1>Industry Intelligence</h1>
-            <p class="subtitle">Sector trends, valuation signals, and market themes</p>
+            <h1>產業情報</h1>
+            <p class="subtitle">掌握產業趨勢、估值訊號與市場主題，協助台灣投資人研究 IPO 與上市公司時具備完整產業脈絡。</p>
+            <h2 class="h2">產業視角總覽</h2>
         </header>
 
-        <section class="sector-cards-grid">
-            <!-- AI Card -->
-            <div class="sector-card">
-                <h2>AI</h2>
-                <p class="card-desc">Artificial Intelligence is transforming industries through automation, data insights, and next-gen productivity tools.</p>
-                <div class="market-observation">
-                    <strong>Market Observation:</strong> Enterprise AI startups are seeing record valuations as generative models become mainstream.
-                </div>
-            </div>
-            <!-- Semiconductors Card -->
-            <div class="sector-card">
-                <h2>Semiconductors</h2>
-                <p class="card-desc">Semiconductors form the backbone of digital infrastructure, powering everything from mobile devices to cloud computing.</p>
-                <div class="market-observation">
-                    <strong>Market Observation:</strong> Supply chain easing has led to normalization in pricing after pandemic-related highs.
-                </div>
-            </div>
-            <!-- Biotech Card -->
-            <div class="sector-card">
-                <h2>Biotech</h2>
-                <p class="card-desc">Biotech companies push the boundaries of medicine with novel therapies and rapid innovation cycles.</p>
-                <div class="market-observation">
-                    <strong>Market Observation:</strong> Early-phase drug companies are attracting more strategic investors amid regulatory shifts.
-                </div>
-            </div>
-            <!-- Fintech Card -->
-            <div class="sector-card">
-                <h2>Fintech</h2>
-                <p class="card-desc">Fintech is reshaping financial services, enhancing access through digital banking, payments, and blockchain technology.</p>
-                <div class="market-observation">
-                    <strong>Market Observation:</strong> Valuations for payment processors remain robust despite broader tech market correction.
-                </div>
-            </div>
-            <!-- Consumer Internet Card -->
-            <div class="sector-card">
-                <h2>Consumer Internet</h2>
-                <p class="card-desc">Consumer Internet companies drive online engagement, shopping, social media, and entertainment worldwide.</p>
-                <div class="market-observation">
-                    <strong>Market Observation:</strong> Ad-based platforms are shifting to subscription models for revenue diversification.
-                </div>
-            </div>
-            <!-- Green Energy Card -->
-            <div class="sector-card">
-                <h2>Green Energy</h2>
-                <p class="card-desc">Green Energy firms lead the transition to renewables, battery storage, and sustainable infrastructure.</p>
-                <div class="market-observation">
-                    <strong>Market Observation:</strong> Clean tech IPOs gain steam as climate mandates fuel institutional interest.
-                </div>
-            </div>
+        <section class="sector-cards-grid" id="industries-grid">
+            <!-- Cards injected from data/industries.json -->
         </section>
     </main>
 
     <!-- Footer -->
     <footer class="footer">
         <div class="container">
-            <p>&copy; 2024 IPOHub. All rights reserved.</p>
+            <p>&copy; 2024 IPOHub. 版權所有。</p>
         </div>
     </footer>
+
+    <script>
+    (function () {
+      var grid = document.getElementById('industries-grid');
+      if (!grid) return;
+      function escapeHtml(s) {
+        if (s == null) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+      function render(records) {
+        grid.innerHTML = '';
+        if (!records || !records.length) {
+          grid.innerHTML = '<p class="subtitle">目前沒有可顯示的產業資料。</p>';
+          return;
+        }
+        records.forEach(function (r) {
+          var card = document.createElement('div');
+          card.className = 'sector-card';
+          card.innerHTML =
+            '<h2>' + escapeHtml(r.name) + '</h2>' +
+            '<p class="card-desc">' + escapeHtml(r.description || '') + '</p>' +
+            '<div class="market-observation"><strong>市場觀察：</strong>' + escapeHtml(r.marketObservation || '') + '</div>';
+          grid.appendChild(card);
+        });
+      }
+      fetch('data/industries.json')
+        .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+        .then(render)
+        .catch(function () { render([]); });
+    })();
+    </script>
 </body>
 </html>

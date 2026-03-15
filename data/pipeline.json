@@ -1,0 +1,50 @@
+[
+  {
+    "company": "Reddit",
+    "sector": "Consumer Internet",
+    "market": "NYSE",
+    "status": "Listed",
+    "filingDate": "2024-03-21",
+    "note": "大型社群平台，市場關注度高。"
+  },
+  {
+    "company": "Klaviyo",
+    "sector": "SaaS",
+    "market": "NYSE",
+    "status": "Listed",
+    "filingDate": "2023-09-20",
+    "note": "MarTech 代表性標的，與電商品牌高度綁定。"
+  },
+  {
+    "company": "Arm",
+    "sector": "Semiconductors",
+    "market": "Nasdaq",
+    "status": "Listed",
+    "filingDate": "2023-09-14",
+    "note": "高關注度晶片 IP 公司，與 AI 需求高度連動。"
+  },
+  {
+    "company": "Birkenstock",
+    "sector": "Consumer",
+    "market": "NYSE",
+    "status": "Priced",
+    "filingDate": "2023-10-11",
+    "note": "品牌與獲利穩定，屬消費股觀察指標。"
+  },
+  {
+    "company": "Stripe",
+    "sector": "Fintech",
+    "market": "Expected",
+    "status": "Expected",
+    "filingDate": "TBD",
+    "note": "市場高度期待的金融科技 IPO，時程仍待觀察。"
+  },
+  {
+    "company": "Instacart",
+    "sector": "Consumer Internet",
+    "market": "Nasdaq",
+    "status": "Listed",
+    "filingDate": "2023-09-19",
+    "note": "美國生鮮外送龍頭，反映線上消費與物流整合趨勢。"
+  }
+]

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "ai",
+    "name": "人工智慧（AI）",
+    "description": "人工智慧透過自動化、資料洞見與新一代生產力工具，持續改變各個產業。",
+    "marketObservation": "隨著生成式 AI 普及，企業級 AI 新創估值屢創新高，成為資本市場關注焦點。"
+  },
+  {
+    "id": "semiconductors",
+    "name": "半導體",
+    "description": "半導體是數位基礎建設的核心，支撐從行動裝置到雲端運算的關鍵運算能力。",
+    "marketObservation": "供應鏈壓力緩解後，價格逐步回到常態，但 AI 與高效能運算需求仍推升先進製程產能吃緊。"
+  },
+  {
+    "id": "biotech",
+    "name": "生技",
+    "description": "生技公司透過新藥與創新療法，持續推進醫療邊界，研發周期長且高度仰賴資本。",
+    "marketObservation": "在監管環境變化下，早期臨床階段公司更依賴策略型投資人與大藥廠合作。"
+  },
+  {
+    "id": "fintech",
+    "name": "金融科技",
+    "description": "金融科技透過數位銀行、支付與區塊鏈服務，重塑金流與資本市場基礎設施。",
+    "marketObservation": "即使科技股經歷修正，支付與金流相關標的估值仍相對有撐。"
+  },
+  {
+    "id": "consumer-internet",
+    "name": "消費性網路",
+    "description": "消費性網路公司涵蓋社群、電商與串流娛樂，是用戶時間與廣告預算的主要戰場。",
+    "marketObservation": "以廣告為主的商業模式逐漸導入訂閱制，以分散營收結構並提升變現效率。"
+  },
+  {
+    "id": "green-energy",
+    "name": "綠能",
+    "description": "綠能企業推動再生能源、儲能與永續基礎建設，加速能源轉型。",
+    "marketObservation": "在減碳與政策推動下，潔淨科技相關 IPO 再度受到機構資金關注。"
+  }
+]

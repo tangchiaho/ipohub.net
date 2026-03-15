@@ -3,34 +3,29 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — IPO 雷達｜台灣 IPO Radar 與申報管線</title>
-  <meta name="description" content="IPOHub IPO 雷達為台灣投資人提供即時 IPO radar 與申報管線資訊，包含公司、產業、上市市場、狀態與申報日期。">
-  <meta name="keywords" content="IPO 雷達, IPO radar Taiwan, 台灣 IPO, IPO 申報, 新股雷達, IPO 管線, IPO 情報">
-  <meta property="og:title" content="IPOHub — IPO 雷達｜台灣 IPO Radar 與申報管線">
-  <meta property="og:description" content="使用 IPOHub 的 IPO 雷達，追蹤台灣與全球市場的 IPO 申報與上市進度。">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://ipohub.net/radar.html">
-  <meta property="og:site_name" content="IPOHub">
-  <meta property="og:locale" content="zh_TW">
+  <title>IPOHub — IPO 雷達｜即時追蹤全球與台灣 IPO 管線</title>
+  <meta name="description" content="IPOHub IPO 雷達為台灣投資人提供即時 IPO 管線資訊，涵蓋申報狀態、上市市場、產業別與申報日期，搭配 AI 整理的重點資訊，協助掌握關鍵發行時點。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300..700;1,9..40,300..700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="../style.css">
 </head>
 <body>
 
-  <header class="navbar">
-    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
-      <a href="index.html" class="logo">IPO<span>Hub</span></a>
-      <nav class="nav-links" style="display:flex;gap:28px;">
-        <a href="index.html">首頁</a>
-        <a href="radar.html" class="active">IPO 雷達</a>
-        <a href="pipeline.html">IPO 管線</a>
-        <a href="companies.html">公司名單</a>
-        <a href="industry.html">產業情報</a>
-      </nav>
+  <nav class="navbar">
+    <div class="container">
+      <a href="/" class="logo">IPOHub</a>
+      <ul class="nav-links">
+        <li><a href="/">首頁</a></li>
+        <li><a href="/ipo-radar/" class="active">IPO 雷達</a></li>
+        <li><a href="/ipo-companies/">公司名單</a></li>
+        <li><a href="/ipo-pipeline/">IPO 管線</a></li>
+        <li><a href="/industry/">產業情報</a></li>
+        <li><a href="/insights/">洞見</a></li>
+        <li><a href="/about/">關於 IPOHub</a></li>
+      </ul>
     </div>
-  </header>
+  </nav>
 
   <main>
     <section class="hero fade-in">
@@ -59,7 +54,6 @@
               </tr>
             </thead>
             <tbody id="ipo-table-body">
-              <!-- Rows will be injected from data/ipo.json -->
             </tbody>
           </table>
         </div>
@@ -89,7 +83,7 @@
       };
 
       function formatDate(value) {
-        if (!value || value.toUpperCase() === 'TBD') return 'TBD';
+        if (!value || String(value).toUpperCase() === 'TBD') return 'TBD';
         const date = new Date(value);
         if (Number.isNaN(date.getTime())) return value;
         return date.toLocaleDateString('zh-TW');
@@ -133,7 +127,7 @@
           const tr = document.createElement('tr');
           const td = document.createElement('td');
           td.colSpan = 5;
-          td.textContent = 'No IPOs found.';
+          td.textContent = '目前沒有可顯示的 IPO 資料。';
           tr.appendChild(td);
           tbody.appendChild(tr);
           return;
@@ -143,7 +137,7 @@
         });
       }
 
-      fetch('data/ipo.json')
+      fetch('../data/ipo.json')
         .then(function (res) {
           if (!res.ok) throw new Error('Network response was not ok');
           return res.json();
@@ -157,7 +151,7 @@
     })();
   </script>
 
-  <footer>
+  <footer class="footer">
     <div class="container">
       <p>IPOHub IPO 雷達 · 為投資人、券商與發行人提供 AI 驅動的 IPO 情報。</p>
     </div>
@@ -165,3 +159,4 @@
 
 </body>
 </html>
+

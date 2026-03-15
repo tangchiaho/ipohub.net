@@ -1,9 +1,17 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-Hant">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>IPOHub — Companies</title>
+  <title>IPOHub — 公司名單｜IPO 公司資料庫與觀察名單</title>
+  <meta name="description" content="IPOHub 公司名單作為 IPO companies database，整理重點上市公司與潛在 IPO 標的，提供產業別、交易市場與簡要描述，協助台灣投資人建立觀察名單。">
+  <meta name="keywords" content="IPO 公司, IPO companies database, 公司名單, 新股公司, 上市公司資料, IPO 觀察名單, IPOHub">
+  <meta property="og:title" content="IPOHub — 公司名單｜IPO 公司資料庫">
+  <meta property="og:description" content="瀏覽 IPOHub 精選的上市公司與潛在 IPO 標的，掌握產業與市場分布。">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://ipohub.net/companies.html">
+  <meta property="og:site_name" content="IPOHub">
+  <meta property="og:locale" content="zh_TW">
   <link rel="stylesheet" href="style.css">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -151,86 +159,68 @@
   </style>
 </head>
 <body>
-  <header>
-    <div class="container navbar">
-      <a class="nav-logo" href="index.html">IPOHub</a>
-      <nav>
-        <ul>
-          <li><a href="index.html">Home</a></li>
-          <li><a href="radar.html">IPO Radar</a></li>
-          <li><a class="active" href="companies.html">Companies</a></li>
-        </ul>
+  <header class="navbar">
+    <div class="container" style="display:flex;align-items:center;justify-content:space-between;">
+      <a href="index.html" class="logo">IPO<span>Hub</span></a>
+      <nav class="nav-links" style="display:flex;gap:28px;">
+        <a href="index.html">首頁</a>
+        <a href="radar.html">IPO 雷達</a>
+        <a href="pipeline.html">IPO 管線</a>
+        <a href="companies.html" class="active">公司名單</a>
+        <a href="industry.html">產業情報</a>
       </nav>
     </div>
   </header>
   <main>
     <div class="container">
-      <h1 class="page-title">Companies</h1>
-      <div class="subtitle">Explore public companies and IPO candidates</div>
-      <div class="company-grid">
-        <div class="company-card">
-          <div class="company-name">Stripe, Inc.</div>
-          <div class="company-meta">
-            <span>Fintech</span> <span>—</span>
-          </div>
-          <div class="company-desc">Leading online payments platform powering businesses globally.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">Databricks</div>
-          <div class="company-meta">
-            <span>Software / Data</span> <span>—</span>
-          </div>
-          <div class="company-desc">Unified data analytics and AI platform for enterprises.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">Klaviyo Inc.</div>
-          <div class="company-meta">
-            <span>Software</span> <span>NYSE</span>
-          </div>
-          <div class="company-desc">Marketing automation and customer data for eCommerce brands.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">Arm Holdings plc</div>
-          <div class="company-meta">
-            <span>Semiconductors</span> <span>Nasdaq</span>
-          </div>
-          <div class="company-desc">Designs microchips powering billions of smart devices worldwide.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">Birkenstock Holding plc</div>
-          <div class="company-meta">
-            <span>Consumer</span> <span>NYSE</span>
-          </div>
-          <div class="company-desc">Iconic footwear company known for comfort and craftsmanship.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">SpaceX</div>
-          <div class="company-meta">
-            <span>Aerospace</span> <span>—</span>
-          </div>
-          <div class="company-desc">Innovative private company revolutionizing space transport.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">Shein</div>
-          <div class="company-meta">
-            <span>eCommerce</span> <span>—</span>
-          </div>
-          <div class="company-desc">Global fast-fashion retailer leveraging digital supply chains.</div>
-        </div>
-        <div class="company-card">
-          <div class="company-name">Reddit, Inc.</div>
-          <div class="company-meta">
-            <span>Internet</span> <span>NYSE</span>
-          </div>
-          <div class="company-desc">Social platform for online discussions and communities.</div>
-        </div>
+      <h1 class="page-title">公司名單</h1>
+      <p class="subtitle">瀏覽重點上市公司與潛在 IPO 標的，建立個人觀察名單。</p>
+      <h2 class="h2">IPO 公司資料庫</h2>
+      <p class="subtitle" style="margin-bottom:24px;">
+        此頁示範 IPOHub 未來公司資料庫的呈現方式，可依產業、上市市場與 IPO 狀態進行篩選，協助台灣投資人快速縮小研究範圍。
+      </p>
+      <div class="company-grid" id="companies-grid">
+        <!-- Cards injected from data/companies.json -->
       </div>
     </div>
   </main>
   <footer>
     <div class="container">
-      IPOHub · AI-driven IPO &amp; public market intelligence for investors, banks, and issuers.
+      IPOHub · 為投資人、券商與發行人提供 AI 驅動的 IPO 與公開市場情報。
     </div>
   </footer>
+
+  <script>
+    (function () {
+      var grid = document.getElementById('companies-grid');
+      if (!grid) return;
+      function render(records) {
+        grid.innerHTML = '';
+        if (!records || !records.length) {
+          grid.innerHTML = '<p class="subtitle">目前沒有可顯示的公司資料。</p>';
+          return;
+        }
+        records.forEach(function (r) {
+          var card = document.createElement('div');
+          card.className = 'company-card';
+          card.innerHTML =
+            '<div class="company-name">' + escapeHtml(r.name) + '</div>' +
+            '<div class="company-meta"><span>' + escapeHtml(r.sector) + '</span> <span>' + escapeHtml(r.market || '—') + '</span></div>' +
+            '<div class="company-desc">' + escapeHtml(r.description || '') + '</div>';
+          grid.appendChild(card);
+        });
+      }
+      function escapeHtml(s) {
+        if (s == null) return '';
+        var div = document.createElement('div');
+        div.textContent = s;
+        return div.innerHTML;
+      }
+      fetch('data/companies.json')
+        .then(function (res) { return res.ok ? res.json() : Promise.reject(); })
+        .then(render)
+        .catch(function () { render([]); });
+    })();
+  </script>
 </body>
 </html>
